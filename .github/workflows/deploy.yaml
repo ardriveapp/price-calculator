@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [PE-65/add-github-action]
+    branches: [master]
 
   workflow_dispatch:
     inputs:
