@@ -9,6 +9,16 @@
         "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
         "lint": "eslint --fix ."
     },
+    "license": "AGPL-3.0-or-later",
+    "author": {
+        "name": "Permanent Data Solutions Inc",
+        "email": "info@ardrive.io",
+        "website": "https://ardrive.io"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ardriveapp/price-calculator.git"
+    },
     "dependencies": {
         "react": "^17.0.2",
         "react-dom": "^17.0.2"
