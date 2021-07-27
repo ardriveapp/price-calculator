@@ -1,0 +1,6 @@
+## To explicitly exclude folders
+## !(folderA|folderB)
+./*.{js,jsx,ts,tsx,json}:
+    - prettier --write
+    - eslint --cache --fix
+    - tsc-files --noEmit
