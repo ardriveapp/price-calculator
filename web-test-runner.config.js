@@ -3,7 +3,7 @@ process.env.NODE_ENV = 'test';
 module.exports = {
     coverage: true,
     coverageConfig: {
-        exclude: ['**/*/_snowpack/**/*']
+        exclude: ['**/*/snowpack/**/*', '**/*.proxy.js']
     },
     plugins: [require('@snowpack/web-test-runner-plugin')()]
 };

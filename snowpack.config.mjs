@@ -33,6 +33,9 @@ export default {
         /* ... */
     },
     buildOptions: {
-        sourcemap: true
+        // Enable source maps for coverage
+        sourcemap: true,
+        // put the meta snowpack build files under snowpack instead of _snowpack since Github special-cases underscore prefixed folders
+        metaUrlPath: 'snowpack'
     }
 };

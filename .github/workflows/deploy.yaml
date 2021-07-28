@@ -21,7 +21,24 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: JamesIves/github-pages-deploy-action@4.1.4
+
+      - name: Read .nvmrc
+        id: node_version
+        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+
+      - name: Set Up node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ steps.node_version.outputs.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: yarn --immutable-cache
+
+      - name: Test and Build Codebase
+        run: yarn ci
+
+      - name: Deploy build to gh-pages
+        uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
           folder: build
