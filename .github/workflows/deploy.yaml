@@ -44,7 +44,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn --prefer-offline
+        run: yarn
 
       - name: Test and Build Codebase
         run: yarn ci
