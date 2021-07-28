@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [master]
+    branches: [PE-89/react-app-setup]
 
   workflow_dispatch:
     inputs:
@@ -32,7 +32,7 @@ jobs:
           node-version: ${{ steps.node_version.outputs.NODE_VERSION }}
 
       - name: Install dependencies
-        run: yarn --immutable-cache
+        run: yarn install
 
       - name: Test and Build Codebase
         run: yarn ci
