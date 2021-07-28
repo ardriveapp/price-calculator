@@ -1968,7 +1968,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mocha@npm:^8.2.0, @types/mocha@npm:^8.2.2":
+"@types/mocha@npm:^8.2.0":
   version: 8.2.3
   resolution: "@types/mocha@npm:8.2.3"
   checksum: b43ed1b642a2ee62bf10792a07d5d21d66ab8b4d2cf5d822c8a7643e77b90009aecc000eefab5f6ddc9eb69004192f84119a6f97a8499e1a13ea082e7a5e71bf
@@ -8452,7 +8452,6 @@ fsevents@~2.1.2:
     "@testing-library/react": ^11.2.6
     "@types/chai": ^4.2.17
     "@types/eslint": ^7
-    "@types/mocha": ^8.2.2
     "@types/react": ^17.0.4
     "@types/react-dom": ^17.0.3
     "@types/sinon": ^10.0.2
