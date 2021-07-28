@@ -7,6 +7,7 @@ export default {
     plugins: [
         '@snowpack/plugin-react-refresh',
         '@snowpack/plugin-dotenv',
+        /** Enabling Webpack is recommended by Snowpack for production */
         // '@snowpack/plugin-webpack',
         [
             '@snowpack/plugin-typescript',
@@ -22,7 +23,8 @@ export default {
     ],
     optimize: {
         /* Example: Bundle your final build: */
-        // "bundle": true,
+        bundle: true,
+        minify: true
     },
     packageOptions: {
         /* ... */
@@ -31,6 +33,6 @@ export default {
         /* ... */
     },
     buildOptions: {
-        /* ... */
+        sourcemap: true
     }
 };

@@ -7,7 +7,7 @@ import App from './App';
 
 describe('<App>', () => {
     // Test if React is working
-    it('renders learn react link', () => {
+    it('renders hello world', () => {
         const { getByText } = render(<App />);
         const linkElement = getByText(/Hello World, React/);
         expect(document.body.contains(linkElement));
@@ -21,8 +21,8 @@ describe('<App>', () => {
         // Returns stubbed div
         const stubbedApp = stub(appObject, 'App').returns(<div className="App">Goodbye World</div>);
 
-        // Run test as normal, expecting
-        const { getByText } = render(appObject.App({}));
+        // Run test as normal
+        const { getByText } = render(appObject.App());
         const linkElement = getByText(/Goodbye World/);
 
         expect(document.body.contains(linkElement));

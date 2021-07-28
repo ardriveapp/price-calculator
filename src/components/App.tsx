@@ -1,9 +1,14 @@
 import './App.css';
 
-import React from 'react';
+import * as React from 'react';
 
-interface AppProps {}
-
-export default function App({}: AppProps) {
-    return <div className="App">Hello World, React 👋</div>;
+export default function App(): JSX.Element {
+    return (
+        <div className="App">
+            Hello World, React
+            <span role="img" aria-label="Hand waving emoji">
+                👋
+            </span>
+        </div>
+    );
 }

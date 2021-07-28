@@ -5,7 +5,7 @@
     "scripts": {
         "start": "snowpack dev",
         "build": "snowpack build",
-        "test": "web-test-runner \"src/**/*.test.tsx\"",
+        "test": "web-test-runner \"src/**/*.test.{ts,tsx}\"",
         "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
         "lint": "eslint --fix ."
     },
@@ -32,7 +32,6 @@
         "@testing-library/react": "^11.2.6",
         "@types/chai": "^4.2.17",
         "@types/eslint": "^7",
-        "@types/mocha": "^8.2.2",
         "@types/react": "^17.0.4",
         "@types/react-dom": "^17.0.3",
         "@types/sinon": "^10.0.2",

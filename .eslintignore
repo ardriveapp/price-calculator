@@ -3,4 +3,4 @@ node_modules
 .yarn
 .github
 .vscode
-nyc.config.js
+web-test-runner.config.js

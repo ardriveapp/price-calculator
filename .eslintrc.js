@@ -30,27 +30,6 @@ module.exports = {
     plugins: ['simple-import-sort', 'import'],
     rules: {
         'prettier/prettier': ['error', {}, { usePrettierrc: true }], // Use our .prettierrc file as source
-        'react/react-in-jsx-scope': 'off',
-        'react/prop-types': 'off',
-        'simple-import-sort/imports': 'error',
-        'simple-import-sort/exports': 'error',
-        'import/first': 'error',
-        'import/newline-after-import': 'error',
-        'import/no-duplicates': 'error'
-    },
-    overrides: [
-        {
-            files: '*.js',
-            env: { node: true },
-            rules: {
-                'simple-import-sort/imports': 'off',
-                'import/order': [
-                    'error',
-                    {
-                        'newlines-between': 'always'
-                    }
-                ]
-            }
-        }
-    ]
+        'react/react-in-jsx-scope': 'off'
+    }
 };
