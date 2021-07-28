@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [PE-89/react-app-setup]
+    branches: [master]
 
   workflow_dispatch:
     inputs:
