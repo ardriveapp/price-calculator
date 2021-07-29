@@ -1,63 +1,63 @@
 {
-    "name": "price-calculator",
-    "version": "0.0.1",
-    "description": "ArDrive Price Calculator",
-    "scripts": {
-        "start": "snowpack dev",
-        "build": "yarn clean && snowpack build",
-        "test": "web-test-runner \"src/**/*.test.{ts,tsx}\"",
-        "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
-        "lint": "eslint --fix .",
-        "ci": "yarn test && yarn build",
-        "clean": "rimraf build"
-    },
-    "license": "AGPL-3.0-or-later",
-    "author": {
-        "name": "Permanent Data Solutions Inc",
-        "email": "info@ardrive.io",
-        "website": "https://ardrive.io"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/ardriveapp/price-calculator.git"
-    },
-    "dependencies": {
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2"
-    },
-    "devDependencies": {
-        "@snowpack/plugin-dotenv": "^2.1.0",
-        "@snowpack/plugin-react-refresh": "^2.5.0",
-        "@snowpack/plugin-typescript": "^1.2.1",
-        "@snowpack/plugin-webpack": "^3.0.0",
-        "@snowpack/web-test-runner-plugin": "^0.2.2",
-        "@testing-library/react": "^11.2.6",
-        "@types/chai": "^4.2.17",
-        "@types/eslint": "^7",
-        "@types/react": "^17.0.4",
-        "@types/react-dom": "^17.0.3",
-        "@types/rimraf": "^3",
-        "@types/sinon": "^10.0.2",
-        "@types/snowpack-env": "^2.3.3",
-        "@typescript-eslint/eslint-plugin": "^4.28.5",
-        "@typescript-eslint/parser": "^4.28.5",
-        "@web/test-runner": "^0.13.3",
-        "chai": "^4.3.4",
-        "eslint": "^7.31.0",
-        "eslint-config-prettier": "^8.3.0",
-        "eslint-plugin-import": "^2.23.4",
-        "eslint-plugin-jsx-a11y": "^6.4.1",
-        "eslint-plugin-prettier": "^3.4.0",
-        "eslint-plugin-react": "^7.24.0",
-        "eslint-plugin-react-hooks": "^4.2.0",
-        "eslint-plugin-simple-import-sort": "^7.0.0",
-        "husky": "^7.0.1",
-        "lint-staged": "^11.1.1",
-        "prettier": "^2.3.2",
-        "rimraf": "^3.0.2",
-        "sinon": "^11.1.1",
-        "snowpack": "^3.3.7",
-        "tsc-files": "^1.1.2",
-        "typescript": "^4.2.4"
-    }
+	"name": "price-calculator",
+	"version": "0.0.1",
+	"description": "ArDrive Price Calculator",
+	"scripts": {
+		"start": "snowpack dev",
+		"build": "yarn clean && snowpack build",
+		"test": "web-test-runner \"src/**/*.test.{ts,tsx}\"",
+		"format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+		"lint": "eslint --fix .",
+		"ci": "yarn test && yarn build",
+		"clean": "rimraf build"
+	},
+	"license": "AGPL-3.0-or-later",
+	"author": {
+		"name": "Permanent Data Solutions Inc",
+		"email": "info@ardrive.io",
+		"website": "https://ardrive.io"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ardriveapp/price-calculator.git"
+	},
+	"dependencies": {
+		"react": "^17.0.2",
+		"react-dom": "^17.0.2"
+	},
+	"devDependencies": {
+		"@snowpack/plugin-dotenv": "^2.1.0",
+		"@snowpack/plugin-react-refresh": "^2.5.0",
+		"@snowpack/plugin-typescript": "^1.2.1",
+		"@snowpack/plugin-webpack": "^3.0.0",
+		"@snowpack/web-test-runner-plugin": "^0.2.2",
+		"@testing-library/react": "^11.2.6",
+		"@types/chai": "^4.2.17",
+		"@types/eslint": "^7",
+		"@types/react": "^17.0.4",
+		"@types/react-dom": "^17.0.3",
+		"@types/rimraf": "^3",
+		"@types/sinon": "^10.0.2",
+		"@types/snowpack-env": "^2.3.3",
+		"@typescript-eslint/eslint-plugin": "^4.28.5",
+		"@typescript-eslint/parser": "^4.28.5",
+		"@web/test-runner": "^0.13.3",
+		"chai": "^4.3.4",
+		"eslint": "^7.31.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-import": "^2.23.4",
+		"eslint-plugin-jsx-a11y": "^6.4.1",
+		"eslint-plugin-prettier": "^3.4.0",
+		"eslint-plugin-react": "^7.24.0",
+		"eslint-plugin-react-hooks": "^4.2.0",
+		"eslint-plugin-simple-import-sort": "^7.0.0",
+		"husky": "^7.0.1",
+		"lint-staged": "^11.1.1",
+		"prettier": "^2.3.2",
+		"rimraf": "^3.0.2",
+		"sinon": "^11.1.1",
+		"snowpack": "^3.3.7",
+		"tsc-files": "^1.1.2",
+		"typescript": "^4.2.4"
+	}
 }
