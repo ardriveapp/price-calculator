@@ -3,3 +3,4 @@ node_modules
 .yarn
 .vscode
 .github
+tsconfig.json
