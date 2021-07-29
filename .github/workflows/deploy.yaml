@@ -42,12 +42,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn --immutable-cache
-
       - name: Resolve nodeLinker
         run: yarn add --cached
+
+      - name: Install dependencies
+        run: yarn --immutable --immutable-cache
 
       - name: Test and Build Codebase
         run: yarn ci
