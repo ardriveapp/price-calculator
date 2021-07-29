@@ -1867,6 +1867,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/glob@npm:*":
+  version: 7.1.4
+  resolution: "@types/glob@npm:7.1.4"
+  dependencies:
+    "@types/minimatch": "*"
+    "@types/node": "*"
+  checksum: 6911a956448f5eddea1e4371f814bf92072e8ceedba83de6ce2a6745938a6f0327376e1c0072fa0d7b3b73d84e255aafda53c1dff148225cfe542a8cc5d54b02
+  languageName: node
+  linkType: hard
+
 "@types/http-assert@npm:*":
   version: 1.5.1
   resolution: "@types/http-assert@npm:1.5.1"
@@ -1968,6 +1978,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/minimatch@npm:*":
+  version: 3.0.5
+  resolution: "@types/minimatch@npm:3.0.5"
+  checksum: c41d136f67231c3131cf1d4ca0b06687f4a322918a3a5adddc87ce90ed9dbd175a3610adee36b106ae68c0b92c637c35e02b58c8a56c424f71d30993ea220b92
+  languageName: node
+  linkType: hard
+
 "@types/mocha@npm:^8.2.0":
   version: 8.2.3
   resolution: "@types/mocha@npm:8.2.3"
@@ -2052,6 +2069,16 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: e99fc7cc6265407987b30deda54c1c24bb1478803faf6037557a774b2f034c5b097ffd65847daa87e82a61a250d919f35c3588654b0fdaa816906650f596d1b0
+  languageName: node
+  linkType: hard
+
+"@types/rimraf@npm:^3":
+  version: 3.0.1
+  resolution: "@types/rimraf@npm:3.0.1"
+  dependencies:
+    "@types/glob": "*"
+    "@types/node": "*"
+  checksum: 7c921220715d969c365b4fa37de9d0578aaf0ff78d445d4d13035cfc5edee76f392b9356291af5176cded5f0482370ef40608e55d502054059bf16425c39e868
   languageName: node
   linkType: hard
 
@@ -8454,6 +8481,7 @@ fsevents@~2.1.2:
     "@types/eslint": ^7
     "@types/react": ^17.0.4
     "@types/react-dom": ^17.0.3
+    "@types/rimraf": ^3
     "@types/sinon": ^10.0.2
     "@types/snowpack-env": ^2.3.3
     "@typescript-eslint/eslint-plugin": ^4.28.5
@@ -8473,6 +8501,7 @@ fsevents@~2.1.2:
     prettier: ^2.3.2
     react: ^17.0.2
     react-dom: ^17.0.2
+    rimraf: ^3.0.2
     sinon: ^11.1.1
     snowpack: ^3.3.7
     tsc-files: ^1.1.2
