@@ -1,4 +1,8 @@
-/** @type {import("snowpack").SnowpackUserConfig } */
+/**
+ * @type {import("snowpack").SnowpackUserConfig }
+ *
+ * This is the Snowpack configuration file
+ */
 export default {
     mount: {
         public: { url: '/', static: true },
@@ -21,8 +25,11 @@ export default {
         /* Enable an SPA Fallback in development: */
         // {"match": "routes", "src": ".*", "dest": "/index.html"},
     ],
+    /**
+     * Using Snowpack's optimize options for building:
+     * https://www.snowpack.dev/guides/optimize-and-bundle#option-1-built-in-optimizations
+     */
     optimize: {
-        /* Example: Bundle your final build: */
         bundle: true,
         minify: true
     },
