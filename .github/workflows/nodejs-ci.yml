@@ -32,7 +32,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn
+        run: yarn --immutable-cache
 
       - name: Resolve nodeLinker
         run: yarn add --cached
