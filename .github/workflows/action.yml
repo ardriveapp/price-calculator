@@ -25,3 +25,12 @@ jobs:
       - name: Test and Build Codebase
         run: yarn ci
 
+      - name: Deploy gh-pages if on master
+        if: ${{ github.ref == 'refs/heads/PE-89/react-app-setup' }}
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: build
+        
+
+
