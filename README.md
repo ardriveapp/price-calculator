@@ -37,7 +37,7 @@ Follow these steps to get NVM up and running on your system:
 1. Install NVM using [these installation instructions][nvm-install].
 2. Navigate to this project's root directory
 3. Ensure that the correct version of Node is installed by performing: `nvm install`
-4. **Every time you start a new terminal session**, you should set the correct version of Node by running: `nvm use`
+4. **Every time you start a new terminal session or switch to this project from another NPM project**, you should set the correct version of Node by running: `nvm use`
 
 ### Recommended Visual Studio Code extensions
 
