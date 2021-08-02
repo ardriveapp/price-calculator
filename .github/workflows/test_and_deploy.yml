@@ -1,6 +1,6 @@
 name: Node.js CI
 
-on: [ push, pull_request ]
+on: [ push ]
 jobs:
   build:
 
@@ -24,4 +24,13 @@ jobs:
 
       - name: Test and Build Codebase
         run: yarn ci
+
+      - name: Deploy gh-pages if on master
+        if: ${{ github.ref == 'refs/heads/master' }}
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: build
+        
+
 

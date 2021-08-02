@@ -16,7 +16,11 @@ brew install yarn
 npm install -g yarn
 ```
 
-We also use husky. To enable hooks locally, you will need to run:
+We also use husky to manage the git commit hooks that help to improve the quality of our commits. Without installing husky, you risk committing non-compliant code to the repository.
+
+Using husky triggers two pre-commit hooks. The first will run `lint-staged` on each staged file, which includes running prettier to format, eslint for linting, and also tsc-files for quickly checking that TypeScript can compile the code. The second hook will test the codebase prior to committing, ensuring that all tests must pass.
+
+To enable hooks locally, you will need to run:
 
 ```shell
 yarn husky install
@@ -33,7 +37,7 @@ Follow these steps to get NVM up and running on your system:
 1. Install NVM using [these installation instructions][nvm-install].
 2. Navigate to this project's root directory
 3. Ensure that the correct version of Node is installed by performing: `nvm install`
-4. Use the correct version of Node, by using: `nvm use`
+4. **Every time you start a new terminal session or switch to this project from another NPM project**, you should set the correct version of Node by running: `nvm use`
 
 ### Recommended Visual Studio Code extensions
 
