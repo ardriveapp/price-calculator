@@ -14,9 +14,9 @@ const StyledContainer = styled.div`
 	background-color: white;
 	border-style: none;
 	padding: 10px;
-	width: 20rem;
-	height: 1.5rem;
-	margin: 1rem;
+	width: 100%;
+	height: 4rem;
+	//margin: 1rem;
 	border-radius: 5px;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 `;
