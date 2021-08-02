@@ -9,7 +9,7 @@ describe('<App>', () => {
 	// Test if React is working
 	it('renders hello world', () => {
 		const { getByText } = render(<App />);
-		const linkElement = getByText(/Hello World, React/);
+		const linkElement = getByText(/How much storage do I need?/);
 		expect(document.body.contains(linkElement));
 	});
 
