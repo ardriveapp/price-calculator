@@ -4,10 +4,14 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import App from './components/App';
+import StateProvider from './state/state';
+import { reducer } from './state/reducer';
 
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+		<StateProvider reducer={reducer}>
+			<App />
+		</StateProvider>
 	</React.StrictMode>,
 	document.getElementById('root')
 );
