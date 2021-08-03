@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 export default function DownArrowIcon(): JSX.Element {
 	return (
 		<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="currentColor" viewBox="4.5 6.49 11.01 7.01">
