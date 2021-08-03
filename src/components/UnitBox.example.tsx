@@ -9,7 +9,8 @@ interface UnitBoxProps {
 /**
  * This is a temporary component that was made for testing the state
  * management setup. The pattern used here will be integrated into the
- * statically framed elements during the upcoming AR -> Data ticket
+ * statically framed elements during the upcoming AR -> Data ticket:
+ * PE-67: https://ardrive.atlassian.net/browse/PE-67?atlOrigin=eyJpIjoiMzRhY2VkNjYwMzBlNDVmNDk0MWQ5NGI0NmMwMjg3ODEiLCJwIjoiaiJ9
  */
 export function UnitBox({ field }: UnitBoxProps): JSX.Element {
 	const [{ unitBoxes }, dispatch] = useStateValue();
