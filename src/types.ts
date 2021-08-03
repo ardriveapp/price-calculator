@@ -23,13 +23,13 @@ interface UnitBox {
 }
 
 export interface BytesUnitBox extends UnitBox {
-	currUnit: ByteUnitTypes;
-	units: readonly ByteUnitTypes[];
+	currUnit: ByteUnitType;
+	units: readonly ByteUnitType[];
 }
 
 export interface FiatUnitBox extends UnitBox {
-	currUnit: FiatUnitTypes;
-	units: readonly FiatUnitTypes[];
+	currUnit: FiatUnitType;
+	units: readonly FiatUnitType[];
 }
 
 export interface ArUnitBox extends UnitBox {
@@ -37,7 +37,7 @@ export interface ArUnitBox extends UnitBox {
 }
 
 export const byteUnitTypes = ['KB', 'MB', 'GB'] as const;
-export type ByteUnitTypes = typeof byteUnitTypes[number];
+export type ByteUnitType = typeof byteUnitTypes[number];
 
 // prettier-ignore
 export const fiatUnitTypes = ['USD', 'EUR', 'JPY', 'CNY', 'GBP', 'IDR', 'TWD',
@@ -45,7 +45,7 @@ export const fiatUnitTypes = ['USD', 'EUR', 'JPY', 'CNY', 'GBP', 'IDR', 'TWD',
     'CLP', 'CZK', 'DKK', 'HKD', 'HUF', 'ILS', 'INR', 'KWD', 'LKR', 'MMK', 'MXN',
     'MYR', 'NGN', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'SAR', 'SEK', 'SGD', 'THB',
     'TRY', 'UAH', 'VEF', 'VND', 'ZAR', 'XDR', 'XAG','XAU'] as const;
-export type FiatUnitTypes = typeof fiatUnitTypes[number];
+export type FiatUnitType = typeof fiatUnitTypes[number];
 
 export interface UnitBoxes {
 	bytes: BytesUnitBox;
