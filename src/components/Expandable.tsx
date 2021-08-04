@@ -1,26 +1,24 @@
 import * as React from 'react';
-import { useState } from 'react';
 import { ExpandableContainer, ExpandableTitle, ExpandableTrailingIcon } from './Expandable.style';
 import DownArrowIcon from './icons/DownArrowIcon';
 
 interface ExpandableProps {
 	title: string;
 	description: string;
-	hidden?: boolean;
+	expanded: boolean;
+	setExpanded: () => void;
 }
 
-export default function Expandable({ title, description }: ExpandableProps): JSX.Element {
-	const [hidden, setHidden] = useState(true);
-
+export default function Expandable({ title, description, expanded, setExpanded }: ExpandableProps): JSX.Element {
 	return (
 		<ExpandableContainer>
-			<ExpandableTitle onClick={() => setHidden(!hidden)}>
+			<ExpandableTitle onClick={() => setExpanded()}>
 				{title}
 				<ExpandableTrailingIcon>
 					<DownArrowIcon />
 				</ExpandableTrailingIcon>
 			</ExpandableTitle>{' '}
-			{!hidden && <p>{description}</p>}
+			{expanded && <p>{description}</p>}
 		</ExpandableContainer>
 	);
 }

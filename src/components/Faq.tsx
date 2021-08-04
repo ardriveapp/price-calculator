@@ -1,35 +1,23 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Expandable from './Expandable';
+import { faqQuestionsAnswers } from './Faq.content';
 import { FaqContainer } from './Faq.style';
 
 export default function Faq(): JSX.Element {
+	const [expanded, setExpanded] = useState<number | undefined>(undefined);
+
 	return (
 		<FaqContainer>
 			<h1>FAQ</h1>
-			<Expandable
-				title={'How are fees calculated?'}
-				description={
-					'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...'
-				}
-			></Expandable>
-			<Expandable
-				title={'What is AR?'}
-				description={
-					'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...'
-				}
-			></Expandable>
-			<Expandable
-				title={'Is the price of data consistent?'}
-				description={
-					'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...'
-				}
-			></Expandable>
-			<Expandable
-				title={'How do I know how big a file is?'}
-				description={
-					'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...'
-				}
-			></Expandable>
+			{faqQuestionsAnswers.map((qa, index) => (
+				<Expandable
+					key={qa.question}
+					title={qa.question}
+					description={qa.answer}
+					expanded={index === expanded}
+					setExpanded={() => (index === expanded ? setExpanded(undefined) : setExpanded(index))}
+				></Expandable>
+			))}
 		</FaqContainer>
 	);
 }
