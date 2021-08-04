@@ -1,11 +1,14 @@
 import styled from 'styled-components';
 
 export const ExpandableContainer = styled.div`
-	border-bottom: 1px;
-	border-color: black;
-	border-bottom-style: solid;
 	padding: 1rem;
 	font-family: 'Wavehaus-Book';
+
+	:not(:last-child) {
+		border-bottom: 1px;
+		border-color: black;
+		border-bottom-style: solid;
+	}
 `;
 
 export const ExpandableTitle = styled.div`
