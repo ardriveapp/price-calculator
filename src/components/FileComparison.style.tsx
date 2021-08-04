@@ -2,9 +2,9 @@ import styled from 'styled-components';
 
 export const FileComparisonContainer = styled.div`
 	display: flex;
-	justify-content: flex-start;
 	align-items: center;
-	translate: -0.75rem;
+	transform: translate(-0.75rem);
+
 	@media (min-width: 500px) {
 		font-size: 16px;
 	}
