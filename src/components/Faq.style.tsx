@@ -2,6 +2,12 @@ import styled from 'styled-components';
 
 export const FaqContainer = styled.section`
 	width: 100%;
-	margin: 0 0.5rem;
+	align-self: flex-start;
 	font-family: 'Wavehaus-Extra';
+
+	padding-top: 2rem;
+
+	@media (min-width: 720px) {
+		padding-top: 0rem;
+	}
 `;
