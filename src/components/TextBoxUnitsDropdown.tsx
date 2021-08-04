@@ -3,10 +3,8 @@ import styled from 'styled-components';
 import { useState } from 'react';
 
 const StyledDropdown = styled.ul`
-	font-size: 1rem;
 	list-style: none;
 	margin: 1rem;
-
 	align-self: center;
 `;
 
@@ -15,9 +13,7 @@ const StyledButton = styled.button`
 	border: none;
 `;
 
-const CurrentUnit = styled.p`
-	font-size: 1rem;
-`;
+const CurrentUnit = styled.p``;
 
 interface TextBoxUnitDropdownProps {
 	units: string[];

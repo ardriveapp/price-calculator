@@ -5,20 +5,21 @@ import TextBoxUnitDropdown from './TextBoxUnitsDropdown';
 
 const StyledInput = styled.input`
 	border: none;
-	width: 60%;
+	width: 80%;
+	background-color: #fafafa;
+	margin: 0.5rem;
 `;
 
 const StyledContainer = styled.div`
 	display: flex;
 	justify-content: space-between;
-	background-color: white;
 	border-style: none;
-	padding: 10px;
 	width: 100%;
-	height: 4rem;
+	height: 75px;
 	//margin: 1rem;
-	border-radius: 5px;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	border-radius: 8px;
+	background-color: #fafafa;
+	box-shadow: 0 0 10px 5px rgba(213, 213, 213, 0.5);
 `;
 
 interface TextBoxProps {

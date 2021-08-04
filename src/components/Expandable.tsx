@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
+import DownArrowIcon from './icons/DownArrowIcon';
 const StyledExpandable = styled.div`
 	border-bottom: 1px;
 	border-color: black;
@@ -11,7 +13,6 @@ const StyledTitle = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	font-size: 24px;
 	margin: 0.5rem;
 `;
 
@@ -22,16 +23,21 @@ const IconContainer = styled.div`
 interface ExpandableProps {
 	title: string;
 	description: string;
+	hidden?: boolean;
 }
 
 export default function Expandable({ title, description }: ExpandableProps): JSX.Element {
+	const [hidden, setHidden] = useState(true);
+
 	return (
 		<StyledExpandable>
-			<StyledTitle>
+			<StyledTitle onClick={() => setHidden(!hidden)}>
 				{title}
-				<IconContainer>T</IconContainer>
+				<IconContainer>
+					<DownArrowIcon />
+				</IconContainer>
 			</StyledTitle>{' '}
-			<p>{description}</p>
+			{!hidden && <p>{description}</p>}
 		</StyledExpandable>
 	);
 }
