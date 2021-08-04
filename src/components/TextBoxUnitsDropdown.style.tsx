@@ -1,24 +1,15 @@
 import styled from 'styled-components';
 
 export const DropDownList = styled.ul`
-	list-style: none;
 	margin: 1rem;
 	align-self: center;
 `;
 
 export const DropDownListItem = styled.button`
 	padding: 1rem;
-	border: none;
 `;
 
-export const CurrentUnit = styled.button`
-	border: none;
-	font-size: inherit;
-	background-color: inherit;
-	pointer-events: auto;
-	:hover {
-	}
-`;
+export const CurrentUnit = styled.button``;
 
 export const UnitsDropDownContainer = styled.ul`
 	padding: 1rem;

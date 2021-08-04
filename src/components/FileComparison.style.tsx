@@ -17,7 +17,6 @@ export const FileComparisonContainer = styled.div`
 `;
 
 export const FileComparisonTypeIconContainer = styled.div`
-	border-style: none;
 	width: 1.5rem;
 	height: 1.5rem;
 	margin-right: 1rem;

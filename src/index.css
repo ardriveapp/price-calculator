@@ -10,9 +10,19 @@ ul {
     list-style: none;
 }
 
+input {
+    font-size: inherit;
+    font-family: inherit;
+    background-color: inherit;
+    border: none;
+}
+
 button {
     background-color: inherit;
+    font-family: inherit;
     font-size: inherit;
+    border: none;
+    cursor: pointer;
 }
 
 body {
