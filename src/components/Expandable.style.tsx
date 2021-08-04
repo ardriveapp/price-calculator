@@ -5,6 +5,7 @@ export const ExpandableContainer = styled.div`
 	border-color: black;
 	border-bottom-style: solid;
 	padding: 1rem;
+	font-family: 'Wavehaus-Book';
 `;
 
 export const ExpandableTitle = styled.div`

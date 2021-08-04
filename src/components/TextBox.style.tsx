@@ -17,4 +17,5 @@ export const TextBoxContainer = styled.div`
 	border-radius: 8px;
 	background-color: #fafafa;
 	box-shadow: 0 0 10px 5px rgba(213, 213, 213, 0.5);
+	font-family: 'Wavehaus-Bold';
 `;

@@ -1,33 +1,43 @@
 import styled from 'styled-components';
-
 import { createGlobalStyle } from 'styled-components';
-import Wavehaus from '../fonts/Wavehaus/Wavehaus-42Light.woff';
+
+import WavehausBook from '../fonts/Wavehaus/Wavehaus-66Book.woff';
 import WavehausBold from '../fonts/Wavehaus/Wavehaus-128Bold.woff';
+import WavehausSemiBold from '../fonts/Wavehaus/Wavehaus-95SemiBold.woff';
+import WavehausExtraBold from '../fonts/Wavehaus/Wavehaus-158ExtraBold.woff';
 
 export const GlobalStyle = createGlobalStyle`
   	@font-face {
-        font-family: 'Wavehaus';
-		    font-style: normal;
-        src: local('Wavehaus'), url(${Wavehaus}) format('woff');
-    }
-	  @font-face {
-        font-family: 'Wavehaus';
-        font-style: normal;
-        font-weight:900;
-        src: local('Wavehaus'), url(${WavehausBold}) format('woff');
+        font-family: 'Wavehaus-Book';
+        src: local('Wavehaus-Book'), url(${WavehausBook}) format('woff');
     }
 
+    @font-face {
+        font-family: 'Wavehaus-Semi';
+        src: local('Wavehaus-Semi'), url(${WavehausSemiBold}) format('woff');
+    }
+
+    @font-face {
+        font-family: 'Wavehaus-Extra';
+        src: local('Wavehaus-Extra'), url(${WavehausExtraBold}) format('woff');
+    }
+
+	  @font-face {
+        font-family: 'Wavehaus-Bold';
+        src: local('Wavehaus-Bold'), url(${WavehausBold}) format('woff');
+    }
 `;
 
 export const AppContainer = styled.section`
-	font-family: 'Wavehaus';
 	align-items: center;
 	justify-content: center;
 	padding: 1rem;
 	max-width: 1080px;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	font-size: 16px;
+	letter-spacing: 0.19px;
 
 	@media (min-width: 500px) {
 		padding-right: 2rem;
