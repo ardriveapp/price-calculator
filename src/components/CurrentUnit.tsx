@@ -2,7 +2,12 @@ import * as React from 'react';
 import { useState } from 'react';
 import { ExpandableTrailingIcon } from './Expandable.style';
 import DownArrowIcon from './icons/DownArrowIcon';
-import { CurrentUnitContainer, UnitsDropDownContainer, DropDownListItem } from './CurrentUnit.style';
+import {
+	UnitsDropDownContainer,
+	DropDownListItem,
+	CurrentUnitButtonContainer,
+	CurrentUnitDivContainer
+} from './CurrentUnit.style';
 
 interface CurrentUnitProps {
 	units: string[];
@@ -10,15 +15,24 @@ interface CurrentUnitProps {
 }
 
 export default function CurrentUnit({ units }: CurrentUnitProps): JSX.Element {
-	const [hidden, setHidden] = useState(false);
+	const [hidden, setHidden] = useState(true);
+
+	if (units.length > 1) {
+		return (
+			<CurrentUnitButtonContainer onClick={() => setHidden(!hidden)}>
+				<span>MB</span>
+				<ExpandableTrailingIcon>
+					<DownArrowIcon />
+				</ExpandableTrailingIcon>
+				{!hidden && <UnitDropDown units={units} />}
+			</CurrentUnitButtonContainer>
+		);
+	}
+
 	return (
-		<CurrentUnitContainer onClick={() => setHidden(!hidden)}>
-			<span>MB</span>
-			<ExpandableTrailingIcon>
-				<DownArrowIcon />
-			</ExpandableTrailingIcon>
-			{hidden && units.length > 1 && <UnitDropDown units={units} />}
-		</CurrentUnitContainer>
+		<CurrentUnitDivContainer>
+			<span>AR</span>
+		</CurrentUnitDivContainer>
 	);
 }
 

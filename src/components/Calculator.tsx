@@ -14,7 +14,7 @@ export default function Calculator(): JSX.Element {
 				<FileComparison></FileComparison>
 				<FileComparison></FileComparison>
 			</DashedDivider>
-			<TextBox units={['KB', 'MB', 'GB']}></TextBox>
+			<TextBox units={['AR']}></TextBox>
 		</CalculatorContainer>
 	);
 }

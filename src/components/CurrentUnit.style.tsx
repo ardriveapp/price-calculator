@@ -1,14 +1,23 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const DropDownListItem = styled.button`
 	padding: 1rem;
 `;
 
-export const CurrentUnitContainer = styled.button`
+const CurrentUnitCSS = css`
 	display: flex;
 	justify-content: center;
 	padding-right: 2rem;
 	align-items: center;
+`;
+
+export const CurrentUnitButtonContainer = styled.button`
+	${CurrentUnitCSS}
+`;
+
+export const CurrentUnitDivContainer = styled.div`
+	${CurrentUnitCSS}
+	padding-right: 3.5rem;
 `;
 
 export const UnitsDropDownContainer = styled.ul`
