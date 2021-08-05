@@ -24,7 +24,8 @@
 	"dependencies": {
 		"ardrive-core-js": "^0.5.0",
 		"react": "^17.0.2",
-		"react-dom": "^17.0.2"
+		"react-dom": "^17.0.2",
+		"regression": "^2.0.1"
 	},
 	"devDependencies": {
 		"@snowpack/plugin-dotenv": "^2.1.0",
@@ -37,6 +38,7 @@
 		"@types/eslint": "^7",
 		"@types/react": "^17.0.4",
 		"@types/react-dom": "^17.0.3",
+		"@types/regression": "^2",
 		"@types/rimraf": "^3",
 		"@types/sinon": "^10.0.2",
 		"@types/snowpack-env": "^2.3.3",
