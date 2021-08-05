@@ -4,7 +4,7 @@ export const DropDownListItem = styled.button`
 	padding: 1rem;
 `;
 
-export const CurrentUnit = styled.button`
+export const CurrentUnitContainer = styled.button`
 	display: flex;
 	justify-content: center;
 	padding-right: 2rem;

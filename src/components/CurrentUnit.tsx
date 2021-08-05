@@ -2,31 +2,31 @@ import * as React from 'react';
 import { useState } from 'react';
 import { ExpandableTrailingIcon } from './Expandable.style';
 import DownArrowIcon from './icons/DownArrowIcon';
-import { CurrentUnit, UnitsDropDownContainer, DropDownListItem } from './TextBoxUnitsDropdown.style';
+import { CurrentUnitContainer, UnitsDropDownContainer, DropDownListItem } from './CurrentUnit.style';
 
-interface TextBoxUnitDropdownProps {
+interface CurrentUnitProps {
 	units: string[];
 	onChange: (input: string) => void;
 }
 
-interface UnitDropDown {
-	units: string[];
-}
-
-export default function TextBoxUnitDropdown({ units }: TextBoxUnitDropdownProps): JSX.Element {
+export default function CurrentUnit({ units }: CurrentUnitProps): JSX.Element {
 	const [hidden, setHidden] = useState(false);
 	return (
-		<CurrentUnit onClick={() => setHidden(!hidden)}>
+		<CurrentUnitContainer onClick={() => setHidden(!hidden)}>
 			<span>MB</span>
 			<ExpandableTrailingIcon>
 				<DownArrowIcon />
 			</ExpandableTrailingIcon>
-			{hidden && <UnitDropDown units={units}></UnitDropDown>}
-		</CurrentUnit>
+			{hidden && units.length > 1 && <UnitDropDown units={units} />}
+		</CurrentUnitContainer>
 	);
 }
 
-function UnitDropDown({ units }: UnitDropDown): JSX.Element {
+interface UnitDropDownProps {
+	units: string[];
+}
+
+function UnitDropDown({ units }: UnitDropDownProps): JSX.Element {
 	return (
 		<UnitsDropDownContainer>
 			{units.map((val) => (

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TextBoxContainer, TextBoxInput } from './TextBox.style';
-import TextBoxUnitDropdown from './TextBoxUnitsDropdown';
+import CurrentUnit from './CurrentUnit';
 
 interface TextBoxProps {
 	input?: number;
@@ -11,7 +11,7 @@ export default function TextBox({ input, units }: TextBoxProps): JSX.Element {
 	return (
 		<TextBoxContainer>
 			<TextBoxInput type="text" name="textbox" value={input} />
-			<TextBoxUnitDropdown onChange={(val) => console.log(val)} units={units}></TextBoxUnitDropdown>
+			<CurrentUnit onChange={(val) => console.log(val)} units={units}></CurrentUnit>
 		</TextBoxContainer>
 	);
 }
