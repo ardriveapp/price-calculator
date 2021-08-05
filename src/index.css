@@ -28,6 +28,7 @@ button {
     font-size: inherit;
     border: none;
     cursor: pointer;
+    padding: 0;
 }
 
 body {

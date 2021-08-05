@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const ExpandableContainer = styled.div`
-	padding: 1rem;
+	padding: 1.5rem 1rem 1.5rem 0;
 	font-family: 'Wavehaus-Book';
 
 	:not(:last-child) {
@@ -11,11 +11,12 @@ export const ExpandableContainer = styled.div`
 	}
 `;
 
-export const ExpandableTitle = styled.div`
+export const ExpandableTitle = styled.button`
 	display: flex;
 	justify-content: space-between;
+	width: 100%;
 	align-items: center;
-	margin: 0.5rem;
+	text-align: left;
 `;
 
 export const ExpandableTrailingIcon = styled.div`
