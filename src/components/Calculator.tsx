@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TextBox from './TextBox';
 import FileComparison from './FileComparison';
-import { CalculatorContainer, SolidDivider, DashedDivider } from './Calculator.style';
+import { CalculatorContainer, SolidDivider, DottedDivider } from './Calculator.style';
 
 export default function Calculator(): JSX.Element {
 	return (
@@ -9,11 +9,11 @@ export default function Calculator(): JSX.Element {
 			<TextBox units={['KB', 'MB', 'GB']}></TextBox>
 			<SolidDivider></SolidDivider>
 			<TextBox units={['KB', 'MB', 'GB']}></TextBox>
-			<DashedDivider>
+			<DottedDivider>
 				<FileComparison></FileComparison>
 				<FileComparison></FileComparison>
 				<FileComparison></FileComparison>
-			</DashedDivider>
+			</DottedDivider>
 			<TextBox units={['KB', 'MB', 'GB']}></TextBox>
 		</CalculatorContainer>
 	);

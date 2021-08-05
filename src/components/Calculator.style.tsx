@@ -17,10 +17,11 @@ export const SolidDivider = styled.div`
 	height: 5rem;
 	margin-left: 5rem;
 `;
-export const DashedDivider = styled.div`
-	border-left-style: dashed;
-	border-left-color: black;
-	border-left-width: 1px;
+export const DottedDivider = styled.div`
+	background-image: linear-gradient(black 33%, rgba(255, 255, 255, 0) 0%);
+	background-position: left;
+	background-size: 1px 10px;
+	background-repeat: repeat-y;
 	height: 15rem;
 	margin-left: 5rem;
 	display: flex;
