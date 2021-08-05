@@ -10,7 +10,7 @@ interface TextBoxProps {
 export default function TextBox({ input, units }: TextBoxProps): JSX.Element {
 	return (
 		<TextBoxContainer>
-			<TextBoxInput type="text" name="textbox" value={input} />
+			<TextBoxInput type="number" name="textbox" value={input} />
 			<CurrentUnit onChange={(val) => console.log(val)} units={units}></CurrentUnit>
 		</TextBoxContainer>
 	);
