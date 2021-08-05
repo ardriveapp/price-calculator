@@ -22,4 +22,6 @@ export const ExpandableTrailingIcon = styled.div`
 	padding-left: 1rem;
 	height: 1rem;
 	width: 1rem;
+	display: flex;
+	justify-content: center;
 `;

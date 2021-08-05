@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { DropDownList, CurrentUnit, UnitsDropDownContainer, DropDownListItem } from './TextBoxUnitsDropdown.style';
+import { ExpandableTrailingIcon } from './Expandable.style';
+import DownArrowIcon from './icons/DownArrowIcon';
+import { CurrentUnit, UnitsDropDownContainer, DropDownListItem } from './TextBoxUnitsDropdown.style';
 
 interface TextBoxUnitDropdownProps {
 	units: string[];
@@ -14,10 +16,13 @@ interface UnitDropDown {
 export default function TextBoxUnitDropdown({ units }: TextBoxUnitDropdownProps): JSX.Element {
 	const [hidden, setHidden] = useState(false);
 	return (
-		<DropDownList>
-			<CurrentUnit onClick={() => setHidden(!hidden)}>MB</CurrentUnit>
-			{hidden ? <UnitDropDown units={units}></UnitDropDown> : <div></div>}
-		</DropDownList>
+		<CurrentUnit onClick={() => setHidden(!hidden)}>
+			<span>MB</span>
+			<ExpandableTrailingIcon>
+				<DownArrowIcon />
+			</ExpandableTrailingIcon>
+			{hidden && <UnitDropDown units={units}></UnitDropDown>}
+		</CurrentUnit>
 	);
 }
 

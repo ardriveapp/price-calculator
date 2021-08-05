@@ -8,6 +8,7 @@ export const TextBoxInput = styled.input`
 export const TextBoxContainer = styled.div`
 	display: flex;
 	justify-content: space-between;
+	align-content: center;
 	height: 75px;
 	border-radius: 8px;
 	background-color: #fafafa;

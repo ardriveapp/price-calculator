@@ -1,18 +1,19 @@
 import styled from 'styled-components';
 
-export const DropDownList = styled.ul`
-	margin: 1rem;
-	align-self: center;
-`;
-
 export const DropDownListItem = styled.button`
 	padding: 1rem;
 `;
 
-export const CurrentUnit = styled.button``;
+export const CurrentUnit = styled.button`
+	display: flex;
+	justify-content: center;
+	padding-right: 2rem;
+	align-items: center;
+`;
 
 export const UnitsDropDownContainer = styled.ul`
 	padding: 1rem;
+	align-self: flex-start;
 	background-color: white;
 	overflow-y: scroll;
 	max-height: 10rem;
