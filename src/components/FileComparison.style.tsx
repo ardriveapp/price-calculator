@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const FileComparisonContainer = styled.div`
 	display: flex;
 	align-items: center;
-	transform: translate(-0.75rem);
+	transform: translate(-1rem);
 
 	@media (min-width: 500px) {
 		font-size: 16px;
@@ -19,6 +19,9 @@ export const FileComparisonContainer = styled.div`
 export const FileComparisonTypeIconContainer = styled.div`
 	width: 1.5rem;
 	height: 1.5rem;
+	padding: 0.25rem;
+	display: flex;
+	justify-content: center;
 	margin-right: 1rem;
 	border-radius: 4px;
 	background-color: #fafafa;
