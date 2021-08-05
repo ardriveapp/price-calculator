@@ -12,7 +12,7 @@ interface ExpandableProps {
 export default function Expandable({ title, description, expanded, setExpanded }: ExpandableProps): JSX.Element {
 	return (
 		<ExpandableContainer>
-			<ExpandableTitle onClick={() => setExpanded()}>
+			<ExpandableTitle aria-label={expanded ? 'Hide answer' : 'Expand answer'} onClick={() => setExpanded()}>
 				{title}
 				<ExpandableTrailingIcon>
 					<DownArrowIcon />

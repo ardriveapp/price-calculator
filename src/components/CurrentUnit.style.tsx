@@ -27,6 +27,7 @@ export const UnitsDropDownContainer = styled.ul`
 	overflow-y: scroll;
 	max-height: 10rem;
 	position: absolute;
+	z-index: 2;
 	border-radius: 8px;
 	box-shadow: 0 0 10px 5px rgba(213, 213, 213, 0.5);
 `;

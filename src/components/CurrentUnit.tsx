@@ -19,7 +19,10 @@ export default function CurrentUnit({ units }: CurrentUnitProps): JSX.Element {
 
 	if (units.length > 1) {
 		return (
-			<CurrentUnitButtonContainer onClick={() => setHidden(!hidden)}>
+			<CurrentUnitButtonContainer
+				onClick={() => setHidden(!hidden)}
+				aria-label={`${hidden ? 'Open' : 'Close'} unit selector dropdown`}
+			>
 				<span>MB</span>
 				<ExpandableTrailingIcon>
 					<DownArrowIcon />
@@ -45,7 +48,9 @@ function UnitDropDown({ units }: UnitDropDownProps): JSX.Element {
 		<UnitsDropDownContainer>
 			{units.map((val) => (
 				<li key={val}>
-					<DropDownListItem onClick={() => console.log(val)}>{val}</DropDownListItem>
+					<DropDownListItem aria-label="Set current unit" onClick={() => console.log(val)}>
+						{val}
+					</DropDownListItem>
 				</li>
 			))}
 		</UnitsDropDownContainer>
