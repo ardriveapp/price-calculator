@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ExpandableTrailingIcon } from './Expandable.style';
 import DownArrowIcon from './icons/DownArrowIcon';
 import {
@@ -8,6 +7,7 @@ import {
 	CurrentUnitButtonContainer,
 	CurrentUnitDivContainer
 } from './CurrentUnit.style';
+import useOnOutsideClick from '../hooks/useOnOutsideClick';
 
 interface CurrentUnitProps {
 	units?: string[];
@@ -16,19 +16,19 @@ interface CurrentUnitProps {
 }
 
 export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): JSX.Element {
-	const [hidden, setHidden] = useState(true);
+	const [dropdownOpen, setDropdownOpen] = useState(false);
 
 	if (units && units?.length > 1) {
 		return (
 			<CurrentUnitButtonContainer
-				onClick={() => setHidden(!hidden)}
-				aria-label={`${hidden ? 'Open' : 'Close'} unit selector dropdown`}
+				onClick={() => setDropdownOpen(!dropdownOpen)}
+				aria-label={`${dropdownOpen ? 'Close' : 'Open'} unit selector dropdown`}
 			>
 				<span>{currentUnit}</span>
 				<ExpandableTrailingIcon>
 					<DownArrowIcon />
 				</ExpandableTrailingIcon>
-				{!hidden && <UnitDropDown units={units} />}
+				{dropdownOpen && <UnitDropDown closeDropdown={() => setDropdownOpen(false)} units={units} />}
 			</CurrentUnitButtonContainer>
 		);
 	}
@@ -42,11 +42,15 @@ export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): J
 
 interface UnitDropDownProps {
 	units: string[];
+	closeDropdown: () => void;
 }
 
-function UnitDropDown({ units }: UnitDropDownProps): JSX.Element {
+function UnitDropDown({ units, closeDropdown }: UnitDropDownProps): JSX.Element {
+	const dropDownRef = useRef(null);
+	useOnOutsideClick(dropDownRef, () => closeDropdown());
+
 	return (
-		<UnitsDropDownContainer>
+		<UnitsDropDownContainer ref={dropDownRef}>
 			{units.map((val) => (
 				<li key={val}>
 					<DropDownListItem aria-label="Set current unit" onClick={() => console.log(val)}>
