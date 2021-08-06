@@ -18,9 +18,9 @@ export const SolidDivider = styled.div`
 	margin-left: 5rem;
 `;
 export const DottedDivider = styled.div`
-	background-image: linear-gradient(black 33%, rgba(255, 255, 255, 0) 0%);
+	background-image: linear-gradient(grey 17%, rgba(255, 255, 255, 0) 0%);
 	background-position: left;
-	background-size: 1px 10px;
+	background-size: 2px 10px;
 	background-repeat: repeat-y;
 	height: 21rem;
 	margin-left: 5rem;
