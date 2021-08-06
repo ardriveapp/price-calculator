@@ -29,5 +29,6 @@ export const UnitsDropDownContainer = styled.ul`
 	position: absolute;
 	z-index: 2;
 	border-radius: 8px;
+	transform: translateY(1.75rem);
 	box-shadow: 0 0 10px 5px rgba(213, 213, 213, 0.5);
 `;
