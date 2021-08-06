@@ -31,9 +31,9 @@ export default function Calculator(): JSX.Element {
 
 	return (
 		<CalculatorContainer>
-			<TextBox field={'bytes'}></TextBox>
-			<SolidDivider></SolidDivider>
 			<TextBox field={'fiat'}></TextBox>
+			<SolidDivider></SolidDivider>
+			<TextBox field={'bytes'}></TextBox>
 			<DottedDivider>
 				{fileComparisons.map((fileComparison) => (
 					<FileComparison
