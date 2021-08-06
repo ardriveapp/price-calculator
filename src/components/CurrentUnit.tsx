@@ -24,17 +24,18 @@ export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): J
 
 	if (units && units?.length > 1) {
 		return (
-			<CurrentUnitButtonContainer
-				onClick={() => setDropdownOpen(!dropdownOpen)}
-				ref={dropdownOpen ? dropDownRef : null}
-				aria-label={`${dropdownOpen ? 'Close' : 'Open'} unit selector dropdown`}
-			>
-				<span>{currentUnit}</span>
-				<ExpandableTrailingIcon expanded={dropdownOpen}>
-					<UpArrowIcon />
-				</ExpandableTrailingIcon>
+			<div ref={dropdownOpen ? dropDownRef : null}>
+				<CurrentUnitButtonContainer
+					onClick={() => setDropdownOpen(!dropdownOpen)}
+					aria-label={`${dropdownOpen ? 'Close' : 'Open'} unit selector dropdown`}
+				>
+					<span>{currentUnit}</span>
+					<ExpandableTrailingIcon expanded={dropdownOpen}>
+						<UpArrowIcon />
+					</ExpandableTrailingIcon>
+				</CurrentUnitButtonContainer>
 				{dropdownOpen && <UnitDropDown units={units} />}
-			</CurrentUnitButtonContainer>
+			</div>
 		);
 	}
 

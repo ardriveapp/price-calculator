@@ -22,7 +22,7 @@ export const CurrentUnitDivContainer = styled.div`
 
 export const UnitsDropDownContainer = styled.ul`
 	padding: 1rem;
-	align-self: flex-start;
+	transform: translateX(-1.5rem) translateY(-1rem);
 	background-color: white;
 	overflow-y: scroll;
 	max-height: 10rem;
