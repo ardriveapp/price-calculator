@@ -19,17 +19,21 @@ interface CurrentUnitProps {
 export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): JSX.Element {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 
+	const dropDownRef = useRef(null);
+	useOnOutsideClick(dropDownRef, () => setDropdownOpen(false));
+
 	if (units && units?.length > 1) {
 		return (
 			<CurrentUnitButtonContainer
 				onClick={() => setDropdownOpen(!dropdownOpen)}
+				ref={dropdownOpen ? dropDownRef : null}
 				aria-label={`${dropdownOpen ? 'Close' : 'Open'} unit selector dropdown`}
 			>
 				<span>{currentUnit}</span>
 				<ExpandableTrailingIcon expanded={dropdownOpen}>
 					<UpArrowIcon />
 				</ExpandableTrailingIcon>
-				{dropdownOpen && <UnitDropDown closeDropdown={() => setDropdownOpen(false)} units={units} />}
+				{dropdownOpen && <UnitDropDown units={units} />}
 			</CurrentUnitButtonContainer>
 		);
 	}
@@ -43,15 +47,12 @@ export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): J
 
 interface UnitDropDownProps {
 	units: string[];
-	closeDropdown: () => void;
 }
 
-function UnitDropDown({ units, closeDropdown }: UnitDropDownProps): JSX.Element {
-	const dropDownRef = useRef(null);
-	useOnOutsideClick(dropDownRef, () => closeDropdown());
-
+/** @TODO Pass down and use `setCurrentUnit` prop */
+function UnitDropDown({ units }: UnitDropDownProps): JSX.Element {
 	return (
-		<UnitsDropDownContainer ref={dropDownRef}>
+		<UnitsDropDownContainer>
 			{units.map((val) => (
 				<li key={val}>
 					<DropDownListItem aria-label="Set current unit" onClick={() => console.log(val)}>
