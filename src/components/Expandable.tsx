@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ExpandableContainer, ExpandableTitle, ExpandableTrailingIcon } from './Expandable.style';
-import DownArrowIcon from './icons/DownArrowIcon';
 import UpArrowIcon from './icons/UpArrowIcon';
 
 interface ExpandableProps {
@@ -19,7 +18,9 @@ export default function Expandable({ title, description, expanded, setExpanded }
 				expanded={expanded}
 			>
 				{title}
-				<ExpandableTrailingIcon>{expanded ? <UpArrowIcon /> : <DownArrowIcon />}</ExpandableTrailingIcon>
+				<ExpandableTrailingIcon expanded={expanded}>
+					<UpArrowIcon />
+				</ExpandableTrailingIcon>
 			</ExpandableTitle>{' '}
 			{expanded && <p>{description}</p>}
 		</ExpandableContainer>

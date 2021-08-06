@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const ExpandableContainer = styled.div`
 	padding: 1.5rem 1rem 1.5rem 0;
@@ -23,10 +23,18 @@ export const ExpandableTitle = styled.button<{ expanded: boolean }>`
 	font-family: ${(p) => (p.expanded ? 'Wavehaus-Semi' : 'Wavehaus-Book')};
 `;
 
-export const ExpandableTrailingIcon = styled.div`
+export const flipIcon = css`
+	transform: scaleY(-1);
+	-moz-transform: scaleY(-1);
+	-webkit-transform: scaleY(-1);
+	-ms-transform: scaleY(-1);
+`;
+
+export const ExpandableTrailingIcon = styled.div<{ expanded: boolean }>`
 	padding-left: 1rem;
 	height: 1rem;
 	width: 1rem;
 	display: flex;
 	justify-content: center;
+	${(p) => !p.expanded && flipIcon};
 `;

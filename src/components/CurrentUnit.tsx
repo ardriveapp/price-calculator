@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { ExpandableTrailingIcon } from './Expandable.style';
-import DownArrowIcon from './icons/DownArrowIcon';
+
 import {
 	UnitsDropDownContainer,
 	DropDownListItem,
@@ -8,6 +8,7 @@ import {
 	CurrentUnitDivContainer
 } from './CurrentUnit.style';
 import useOnOutsideClick from '../hooks/useOnOutsideClick';
+import UpArrowIcon from './icons/UpArrowIcon';
 
 interface CurrentUnitProps {
 	units?: string[];
@@ -25,8 +26,8 @@ export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): J
 				aria-label={`${dropdownOpen ? 'Close' : 'Open'} unit selector dropdown`}
 			>
 				<span>{currentUnit}</span>
-				<ExpandableTrailingIcon>
-					<DownArrowIcon />
+				<ExpandableTrailingIcon expanded={dropdownOpen}>
+					<UpArrowIcon />
 				</ExpandableTrailingIcon>
 				{dropdownOpen && <UnitDropDown closeDropdown={() => setDropdownOpen(false)} units={units} />}
 			</CurrentUnitButtonContainer>
