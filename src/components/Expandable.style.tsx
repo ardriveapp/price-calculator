@@ -5,18 +5,22 @@ export const ExpandableContainer = styled.div`
 	font-family: 'Wavehaus-Book';
 
 	:not(:last-child) {
-		border-bottom: 1px;
-		border-color: black;
+		border-bottom: 0.25px;
+		border-color: #121212;
 		border-bottom-style: solid;
+	}
+	p {
+		padding-top: 1rem;
 	}
 `;
 
-export const ExpandableTitle = styled.button`
+export const ExpandableTitle = styled.button<{ expanded: boolean }>`
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
 	align-items: center;
 	text-align: left;
+	font-family: ${(p) => (p.expanded ? 'Wavehaus-Semi' : 'Wavehaus-Book')};
 `;
 
 export const ExpandableTrailingIcon = styled.div`
