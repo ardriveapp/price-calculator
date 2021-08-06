@@ -14,6 +14,14 @@ export const FileComparisonContainer = styled.div`
 	@media (min-width: 1200px) {
 		font-size: 20px;
 	}
+
+	p {
+		font-family: 'Wavehaus-Book';
+	}
+
+	span {
+		font-family: 'Wavehaus-Bold';
+	}
 `;
 
 export const FileComparisonTypeIconContainer = styled.div`

@@ -11,7 +11,9 @@ export default function FileComparison(): JSX.Element {
 			<FileComparisonTypeIconContainer>
 				<PngIcon />
 			</FileComparisonTypeIconContainer>
-			<p>Lorem Ipsum</p>
+			<p>
+				Lorem <span>Ipsum</span>
+			</p>
 		</FileComparisonContainer>
 	);
 }
