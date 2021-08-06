@@ -22,7 +22,7 @@ export const DottedDivider = styled.div`
 	background-position: left;
 	background-size: 1px 10px;
 	background-repeat: repeat-y;
-	height: 15rem;
+	height: 21rem;
 	margin-left: 5rem;
 	display: flex;
 	justify-content: space-evenly;

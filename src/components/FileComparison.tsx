@@ -1,18 +1,22 @@
 import * as React from 'react';
 import { FileComparisonTypeIconContainer, FileComparisonContainer } from './FileComparison.style';
-import DocIcon from './icons/DocIcon';
-import MovIcon from './icons/MovIcon';
-import Mp3Icon from './icons/Mp3Icon';
-import PngIcon from './icons/PngIcon';
 
-export default function FileComparison(): JSX.Element {
+interface FileComparisonProps {
+	fileIcon: JSX.Element;
+	comparisonText: string;
+}
+
+export default function FileComparison({ fileIcon, comparisonText }: FileComparisonProps): JSX.Element {
+	const indexOfTilde = comparisonText.indexOf('~');
+
+	const wavehausBookComparisonText = comparisonText.substr(0, indexOfTilde - 1);
+	const wavehausBoldComparisonText = comparisonText.substr(indexOfTilde);
+
 	return (
 		<FileComparisonContainer>
-			<FileComparisonTypeIconContainer>
-				<PngIcon />
-			</FileComparisonTypeIconContainer>
+			<FileComparisonTypeIconContainer>{fileIcon}</FileComparisonTypeIconContainer>
 			<p>
-				Lorem <span>Ipsum</span>
+				{wavehausBookComparisonText} <span>{wavehausBoldComparisonText}</span>
 			</p>
 		</FileComparisonContainer>
 	);

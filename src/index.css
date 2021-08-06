@@ -15,6 +15,10 @@ h1 {
     font-size: inherit;
 }
 
+p {
+    margin: 0;
+}
+
 input {
     font-size: inherit;
     font-family: inherit;
