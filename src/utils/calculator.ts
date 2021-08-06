@@ -1,4 +1,5 @@
 import { GatewayOracle } from 'ardrive-core-js';
+import type { ArweaveOracle } from 'ardrive-core-js/lib/arweave_oracle';
 import regression, { DataPoint } from 'regression';
 
 export class Calculator {
@@ -10,15 +11,16 @@ export class Calculator {
 	private sampleWinstonValues: number[] = [];
 	private regressionInstance?: regression.Result;
 
+	constructor(private oracle: ArweaveOracle = new GatewayOracle()) {}
+
 	public async setup(): Promise<void> {
 		await this.fetchData();
 		this.runTheLinearRegression();
 	}
 
 	private async fetchData(): Promise<void> {
-		const oracle = new GatewayOracle();
 		const winstonSamplesQuery = Calculator.sampleByteVolumes.map((sampleByteCount) =>
-			oracle.getWinstonPriceForByteCount(sampleByteCount)
+			this.oracle.getWinstonPriceForByteCount(sampleByteCount)
 		);
 		const winstonSamplesResult = await Promise.all(winstonSamplesQuery);
 		this.sampleWinstonValues = winstonSamplesResult;
