@@ -31,9 +31,9 @@ export default function Calculator(): JSX.Element {
 
 	return (
 		<CalculatorContainer>
-			<TextBox units={['KB', 'MB', 'GB']}></TextBox>
+			<TextBox field={'bytes'}></TextBox>
 			<SolidDivider></SolidDivider>
-			<TextBox units={['USD', 'JPY', 'EUR']}></TextBox>
+			<TextBox field={'fiat'}></TextBox>
 			<DottedDivider>
 				{fileComparisons.map((fileComparison) => (
 					<FileComparison
@@ -43,7 +43,7 @@ export default function Calculator(): JSX.Element {
 					/>
 				))}
 			</DottedDivider>
-			<TextBox units={['AR']}></TextBox>
+			<TextBox field={'ar'}></TextBox>
 		</CalculatorContainer>
 	);
 }

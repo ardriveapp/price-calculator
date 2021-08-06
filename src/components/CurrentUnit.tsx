@@ -10,20 +10,21 @@ import {
 } from './CurrentUnit.style';
 
 interface CurrentUnitProps {
-	units: string[];
+	units?: string[];
+	currentUnit?: string;
 	onChange: (input: string) => void;
 }
 
-export default function CurrentUnit({ units }: CurrentUnitProps): JSX.Element {
+export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): JSX.Element {
 	const [hidden, setHidden] = useState(true);
 
-	if (units.length > 1) {
+	if (units && units?.length > 1) {
 		return (
 			<CurrentUnitButtonContainer
 				onClick={() => setHidden(!hidden)}
 				aria-label={`${hidden ? 'Open' : 'Close'} unit selector dropdown`}
 			>
-				<span>MB</span>
+				<span>{currentUnit}</span>
 				<ExpandableTrailingIcon>
 					<DownArrowIcon />
 				</ExpandableTrailingIcon>
@@ -34,7 +35,7 @@ export default function CurrentUnit({ units }: CurrentUnitProps): JSX.Element {
 
 	return (
 		<CurrentUnitDivContainer>
-			<span>AR</span>
+			<span>{currentUnit}</span>
 		</CurrentUnitDivContainer>
 	);
 }
