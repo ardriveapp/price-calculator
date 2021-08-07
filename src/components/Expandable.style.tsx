@@ -20,6 +20,7 @@ export const ExpandableTitle = styled.button<{ expanded: boolean }>`
 	width: 100%;
 	align-items: center;
 	text-align: left;
+	letter-spacing: 1.09px;
 	font-family: ${(p) => (p.expanded ? 'Wavehaus-Semi' : 'Wavehaus-Book')};
 `;
 

@@ -4,7 +4,7 @@ export const FileComparisonContainer = styled.div`
 	display: flex;
 	align-items: center;
 	transform: translate(-1rem);
-
+	letter-spacing: 0.82px;
 	font-size: 12px;
 
 	@media (min-width: 500px) {
