@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ExpandableTrailingIcon } from './Expandable.style';
 
 import {
@@ -9,10 +9,11 @@ import {
 } from './CurrentUnit.style';
 import useOnOutsideClick from '../hooks/useOnOutsideClick';
 import UpArrowIcon from './icons/UpArrowIcon';
+import { useStateValue } from '../state/state';
 
 interface CurrentUnitProps {
 	units?: string[];
-	currentUnit?: string;
+	currentUnit: string;
 	onChange: (input: string) => void;
 }
 
@@ -34,7 +35,7 @@ export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): J
 						<UpArrowIcon />
 					</ExpandableTrailingIcon>
 				</CurrentUnitButtonContainer>
-				{dropdownOpen && <UnitDropDown units={units} />}
+				{dropdownOpen && <UnitDropDown units={units} closeDropDown={() => setDropdownOpen(false)} />}
 			</div>
 		);
 	}
@@ -48,15 +49,35 @@ export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): J
 
 interface UnitDropDownProps {
 	units: string[];
+	closeDropDown: () => void;
 }
 
 /** @TODO Pass down and use `setCurrentUnit` prop */
-function UnitDropDown({ units }: UnitDropDownProps): JSX.Element {
+function UnitDropDown({ units, closeDropDown }: UnitDropDownProps): JSX.Element {
+	const [{ unitBoxes }, dispatch] = useStateValue();
+
+	const isFiatUnitBox = units === unitBoxes.fiat.units;
+
+	function onUnitClick(unit: string): void {
+		if (isFiatUnitBox) {
+			dispatch({
+				type: 'setUnitBoxes',
+				payload: { ...unitBoxes, fiat: { ...unitBoxes.fiat, currUnit: unit } }
+			});
+		} else {
+			dispatch({
+				type: 'setUnitBoxes',
+				payload: { ...unitBoxes, bytes: { ...unitBoxes.bytes, currUnit: unit } }
+			});
+		}
+		closeDropDown();
+	}
+
 	return (
 		<UnitsDropDownContainer>
 			{units.map((val) => (
 				<li key={val}>
-					<DropDownListItem aria-label="Set current unit" onClick={() => console.log(val)}>
+					<DropDownListItem aria-label="Set current unit" onClick={() => onUnitClick(val)}>
 						{val}
 					</DropDownListItem>
 				</li>
