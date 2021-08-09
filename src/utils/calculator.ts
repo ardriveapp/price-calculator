@@ -13,6 +13,10 @@ export class Calculator {
 	private sampleWinstonValues: number[] = [];
 	private regressionInstance?: regression.Result;
 
+	private hasData = false;
+	private isSyncing = false;
+	private setupPromise?: Promise<void>;
+
 	constructor(doNotSetup = false, private oracle: ArweaveOracle = new GatewayOracle()) {
 		if (!doNotSetup) {
 			this.setup();
@@ -20,6 +24,21 @@ export class Calculator {
 	}
 
 	private async setup(): Promise<void> {
+		if (this.isSyncing) {
+			return this.setupPromise;
+		}
+		if (!this.hasData) {
+			this.isSyncing = true;
+			const workerPromise = this.setupWorker();
+			this.setupPromise = workerPromise;
+			await workerPromise;
+			this.isSyncing = false;
+			this.setupPromise = undefined;
+		}
+		this.hasData = true;
+	}
+
+	private async setupWorker(): Promise<void> {
 		await this.fetchData();
 		this.runTheLinearRegression();
 	}
@@ -39,7 +58,8 @@ export class Calculator {
 		this.regressionInstance = regression.linear(dataPoints);
 	}
 
-	public getPriceForBytes(byteCount: number): number | undefined {
+	public async getPriceForBytes(byteCount: number): Promise<number | undefined> {
+		await this.setup();
 		const predictedPoint = this.regressionInstance?.predict(byteCount);
 		const predictedValue = predictedPoint && predictedPoint[1];
 		return predictedValue;
