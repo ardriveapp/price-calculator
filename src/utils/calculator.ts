@@ -2,6 +2,8 @@ import { GatewayOracle } from 'ardrive-core-js';
 import type { ArweaveOracle } from 'ardrive-core-js/lib/arweave_oracle';
 import regression, { DataPoint } from 'regression';
 
+const SET = 'SET';
+
 export class Calculator {
 	private static readonly sampleByteVolumes = [
 		102_400, // 100 KiB
@@ -17,7 +19,7 @@ export class Calculator {
 		}
 	}
 
-	public async setup(): Promise<void> {
+	private async setup(): Promise<void> {
 		await this.fetchData();
 		this.runTheLinearRegression();
 	}
