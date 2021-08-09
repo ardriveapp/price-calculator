@@ -4,14 +4,18 @@ import regression, { DataPoint } from 'regression';
 
 export class Calculator {
 	private static readonly sampleByteVolumes = [
-		100000, // 100KB
-		100000000, // 100MB
-		10000000000 // 10GB
+		102_400, // 100 KiB
+		104_857_600, // 100 MiB
+		107_374_182_400 // 10 GiB
 	];
 	private sampleWinstonValues: number[] = [];
 	private regressionInstance?: regression.Result;
 
-	constructor(private oracle: ArweaveOracle = new GatewayOracle()) {}
+	constructor(doNotSetup = false, private oracle: ArweaveOracle = new GatewayOracle()) {
+		if (!doNotSetup) {
+			this.setup();
+		}
+	}
 
 	public async setup(): Promise<void> {
 		await this.fetchData();
@@ -34,6 +38,8 @@ export class Calculator {
 	}
 
 	public getPriceForBytes(byteCount: number): number | undefined {
-		return this.regressionInstance?.equation[byteCount];
+		const predictedPoint = this.regressionInstance?.predict(byteCount);
+		const predictedValue = predictedPoint && predictedPoint[1];
+		return predictedValue;
 	}
 }
