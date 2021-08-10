@@ -30,5 +30,8 @@ describe('ARDataPriceRegression class', () => {
 		expect(predictor.predictedPriceForByteCount(1000000)).to.deep.equal(new ARDataPrice(1000000, 1000000));
 	});
 
-	// TODO: ADD TESTS FOR Math.floor functionality of the regression!
+	it('predictedPriceForByteCount returns a rounded up estimate when the Winston price would otherwise be predicted as non-integer', () => {
+		const predictor = new ARDataPriceRegression([new ARDataPrice(0, 0), new ARDataPrice(2, 3)]);
+		expect(predictor.predictedPriceForByteCount(1)).to.deep.equal(new ARDataPrice(1, 2));
+	});
 });
