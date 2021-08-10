@@ -7,7 +7,7 @@ export class ARDataPrice {
 	 * @returns an ARDataPrice instance with the given byte count and Winston amount
 	 * @throws {@link Error} if negative or non-integer values are provided for either value
 	 */
-	constructor(private readonly numBytes: number, private readonly winstonPrice: number) {
+	constructor(readonly numBytes: number, readonly winstonPrice: number) {
 		if (numBytes < 0 || !Number.isInteger(numBytes) || winstonPrice < 0 || !Number.isInteger(winstonPrice)) {
 			throw new Error(
 				`numBytes (${numBytes}) and winstonPrice (${winstonPrice}) should be non-negative integer values.`
