@@ -1,7 +1,7 @@
 import { GatewayOracle } from './gateway_oracle';
 import type { ArweaveOracle } from './arweave_oracle';
 import { expect } from 'chai';
-import { SinonStubbedInstance, spy, stub } from 'sinon';
+import { SinonStubbedInstance, stub } from 'sinon';
 import { Calculator } from './calculator';
 
 const testPoints = [
@@ -30,7 +30,7 @@ describe('Ar<>Data calculator', () => {
 	});
 
 	it('Three oracle calls after the first price estimation request', async () => {
-		await calculator.getPriceForBytes(someValidByteCount);
+		await calculator.getWinstonPriceForByteCount(someValidByteCount);
 		return expect(spyedOracle.getWinstonPriceForByteCount.callCount).to.equal(3);
 	});
 
@@ -38,7 +38,7 @@ describe('Ar<>Data calculator', () => {
 		const results = await testPoints.forEach(async (point) => {
 			const bytesCount = point[0];
 			const winstonPrice = point[1];
-			const estimation = await calculator.getPriceForBytes(bytesCount);
+			const estimation = await calculator.getWinstonPriceForByteCount(bytesCount);
 			return expect(estimation).to.equal(winstonPrice);
 		});
 		return results;
