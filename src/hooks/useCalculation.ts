@@ -7,9 +7,10 @@ import { Calculator } from '../utils';
 const regressionCalculator = new Calculator(true);
 
 /**
- * Use calculation hook handles updating UnitBox values when state values are changed
+ * Use calculation hook listens to changes to the global unitBox state and will
+ * calculate the other boxes and update the unitBox state with one dispatch call
  *
- * @TODO Update to upcoming changes on PE-124 regression classes
+ * The hook is to be used once in the App component
  */
 export default function useCalculation(): void {
 	const [{ unitBoxes }, dispatch] = useStateValue();
@@ -34,7 +35,7 @@ export default function useCalculation(): void {
 				: Math.round(unitBoxes.fiat.value / currentFiatToArConversion);
 
 		/** @TODO Add ArDrive Community tip to winstonPrice */
-		const winstonPrice = await regressionCalculator.getPriceForBytes(byteCount);
+		const winstonPrice = await regressionCalculator.getWinstonPriceForByteCount(byteCount);
 
 		if (winstonPrice) {
 			const newUnitBoxes: UnitBoxes = {
