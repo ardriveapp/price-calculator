@@ -13,7 +13,7 @@ export type FiatToAr = {
 	[key: string]: number;
 };
 
-interface UnitBox {
+export interface UnitBox {
 	/** Value displayed on left on unit box */
 	value: number;
 	/** Current unit selected by the user */
