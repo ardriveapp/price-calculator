@@ -38,6 +38,6 @@ export class ARDataPriceRegression {
 		}
 
 		const regressionResult = this.regression.predict(numBytes);
-		return new ARDataPrice(regressionResult[0], regressionResult[1]);
+		return new ARDataPrice(regressionResult[0], Math.floor(regressionResult[1]));
 	}
 }

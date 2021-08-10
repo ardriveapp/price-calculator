@@ -29,4 +29,6 @@ describe('ARDataPriceRegression class', () => {
 		expect(predictor.predictedPriceForByteCount(0)).to.deep.equal(new ARDataPrice(0, 0));
 		expect(predictor.predictedPriceForByteCount(1000000)).to.deep.equal(new ARDataPrice(1000000, 1000000));
 	});
+
+	// TODO: ADD TESTS FOR Math.floor functionality of the regression!
 });
