@@ -4,39 +4,38 @@ import { expect } from 'chai';
 import { SinonStubbedInstance, stub } from 'sinon';
 import { Calculator } from './calculator';
 
-const testPoints = [
-	// [bytes, Winston]
-	[1_000, 2_061_216],
-	[1_000_000, 491_171_616],
-	[1_000_000_000, 489_601_571_616]
-];
-
-const someValidByteCount = testPoints[0][0];
-
 describe('Ar<>Data calculator', () => {
 	let spyedOracle: SinonStubbedInstance<ArweaveOracle>;
 	let calculator: Calculator;
 
 	before(() => {
+		// Set pricing algo up as x = y (bytes = Winston)
 		spyedOracle = stub(new GatewayOracle());
-		spyedOracle.getWinstonPriceForByteCount.onCall(0).resolves(51_706_656);
-		spyedOracle.getWinstonPriceForByteCount.onCall(1).resolves(51_339_852_576);
-		spyedOracle.getWinstonPriceForByteCount.onCall(2).resolves(52_570_401_274_656);
+		spyedOracle.getWinstonPriceForByteCount.callsFake((input) => Promise.resolve(input));
 		calculator = new Calculator(true, spyedOracle);
 	});
 
-	it('Three oracle calls after the first price estimation request', async () => {
-		await calculator.getWinstonPriceForByteCount(someValidByteCount);
-		return expect(spyedOracle.getWinstonPriceForByteCount.callCount).to.equal(3);
+	it('can be instantiated without making oracle calls', async () => {
+		const gatewayOracleStub = stub(new GatewayOracle());
+		gatewayOracleStub.getWinstonPriceForByteCount.callsFake(() => Promise.resolve(123));
+		new Calculator(true, gatewayOracleStub);
+		expect(gatewayOracleStub.getWinstonPriceForByteCount.notCalled).to.be.true;
 	});
 
-	it('The example values are correct', async () => {
-		const results = await testPoints.forEach(async (point) => {
-			const bytesCount = point[0];
-			const expectedWinstonPriceEstimation = point[1];
-			const actualWinstonPriceEstimation = await calculator.getWinstonPriceForByteCount(bytesCount);
-			return expect(actualWinstonPriceEstimation).to.equal(expectedWinstonPriceEstimation);
-		});
-		return results;
+	it('makes 3 oracle calls during routine instantiation', async () => {
+		const gatewayOracleStub = stub(new GatewayOracle());
+		gatewayOracleStub.getWinstonPriceForByteCount.callsFake(() => Promise.resolve(123));
+		new Calculator(false, gatewayOracleStub);
+		expect(gatewayOracleStub.getWinstonPriceForByteCount.calledThrice).to.be.true;
+	});
+
+	it('makes three oracle calls after the first price estimation request', async () => {
+		await calculator.getWinstonPriceForByteCount(0);
+		expect(spyedOracle.getWinstonPriceForByteCount.calledThrice).to.be.true;
+	});
+
+	it('getWinstonPriceForByteCount returns the expected value', async () => {
+		const actualWinstonPriceEstimation = await calculator.getWinstonPriceForByteCount(100);
+		expect(actualWinstonPriceEstimation).to.equal(100);
 	});
 });
