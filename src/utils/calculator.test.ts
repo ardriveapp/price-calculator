@@ -1,5 +1,5 @@
-import { GatewayOracle } from 'ardrive-core-js';
-import type { ArweaveOracle } from 'ardrive-core-js/lib/arweave_oracle';
+import { GatewayOracle } from './gateway_oracle';
+import type { ArweaveOracle } from './arweave_oracle';
 import { expect } from 'chai';
 import { SinonStubbedInstance, stub } from 'sinon';
 import { Calculator } from './calculator';
