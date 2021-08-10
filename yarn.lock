@@ -2083,6 +2083,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-is@npm:^17":
+  version: 17.0.2
+  resolution: "@types/react-is@npm:17.0.2"
+  dependencies:
+    "@types/react": "*"
+  checksum: ecd4f59e66858ebf13988c13de32e0f1753e9f0ec9a330bbf99c7c8ec75d3b52ad01965a7912c463615c0498965c1f17ea8a1a06606cf8edeb4b723f7ab74879
+  languageName: node
+  linkType: hard
+
 "@types/react@npm:*, @types/react@npm:^17.0.4":
   version: 17.0.15
   resolution: "@types/react@npm:17.0.15"
@@ -8587,6 +8596,7 @@ fsevents@~2.1.2:
     "@types/eslint": ^7
     "@types/react": ^17.0.4
     "@types/react-dom": ^17.0.3
+    "@types/react-is": ^17
     "@types/rimraf": ^3
     "@types/sinon": ^10.0.2
     "@types/snowpack-env": ^2.3.3
@@ -8608,6 +8618,7 @@ fsevents@~2.1.2:
     prettier: ^2.3.2
     react: ^17.0.2
     react-dom: ^17.0.2
+    react-is: ^17.0.2
     rimraf: ^3.0.2
     sinon: ^11.1.1
     snowpack: ^3.3.7
@@ -8802,7 +8813,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-is@npm:^17.0.1":
+"react-is@npm:^17.0.1, react-is@npm:^17.0.2":
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
   checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
