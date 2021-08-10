@@ -1,7 +1,7 @@
 import { GatewayOracle } from './gateway_oracle';
 import type { ArweaveOracle } from './arweave_oracle';
 import { expect } from 'chai';
-import { SinonStubbedInstance, stub } from 'sinon';
+import { SinonStubbedInstance, spy, stub } from 'sinon';
 import { Calculator } from './calculator';
 
 const testPoints = [
@@ -29,17 +29,12 @@ describe('Ar<>Data calculator', () => {
 		expect(spyedOracle.getWinstonPriceForByteCount.callCount).to.equal(0);
 	});
 
-	it('Undefined estimation if setup() not called', () => {
-		const estimation = calculator.getPriceForBytes(someValidByteCount);
-		expect(estimation).to.be.undefined;
-	});
-
-	it('Three oracle calls when set up', async () => {
-		await calculator.setup();
+	it('Three oracle calls after the first price estimation request', async () => {
+		await calculator.getPriceForBytes(someValidByteCount);
 		return expect(spyedOracle.getWinstonPriceForByteCount.callCount).to.equal(3);
 	});
 
-	it('The predicted values are correct', async () => {
+	it('The example values are correct', async () => {
 		const results = await testPoints.forEach(async (point) => {
 			const bytesCount = point[0];
 			const winstonPrice = point[1];
