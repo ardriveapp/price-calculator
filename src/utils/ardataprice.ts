@@ -3,14 +3,11 @@
  * of data that enforces valid number ranges for byte counts and Winston price values.
  */
 export class ARDataPrice {
-	readonly numBytes: number;
-	readonly winstonPrice: number;
-
 	/**
 	 * @returns an ARDataPrice instance with the given byte count and Winston amount
 	 * @throws {@link Error} if negative or non-integer values are provided for either value
 	 */
-	constructor(numBytes: number, winstonPrice: number) {
+	constructor(private readonly numBytes: number, private readonly winstonPrice: number) {
 		if (numBytes < 0 || !Number.isInteger(numBytes) || winstonPrice < 0 || !Number.isInteger(winstonPrice)) {
 			throw new Error(
 				`numBytes (${numBytes}) and winstonPrice (${winstonPrice}) should be non-negative integer values.`
