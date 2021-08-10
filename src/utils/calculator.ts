@@ -24,22 +24,21 @@ export class Calculator {
 			return this.setupPromise;
 		}
 
-		this.setupPromise = this.fetchData().then((pricingData) => new ARDataPriceRegression(pricingData));
+		// Fetch the price for a handful of reference data volumes and feed them into a linear regression
+		this.setupPromise = Promise.all(
+			// TODO: What to do if one fails?
+			Calculator.sampleByteVolumes.map(
+				async (sampleByteCount) =>
+					new ARDataPrice(sampleByteCount, await this.oracle.getWinstonPriceForByteCount(sampleByteCount))
+			)
+		).then((pricingData) => new ARDataPriceRegression(pricingData));
+
 		this.predictor = await this.setupPromise;
 		return this.predictor;
 	}
 
-	private async fetchData(): Promise<ARDataPrice[]> {
-		const winstonSamplesQuery = Calculator.sampleByteVolumes.map(async (sampleByteCount) => {
-			const price = await this.oracle.getWinstonPriceForByteCount(sampleByteCount);
-			return new ARDataPrice(sampleByteCount, price);
-		});
-
-		// TODO: What to do if one fails?
-		return await Promise.all(winstonSamplesQuery);
-	}
-
 	public async getWinstonPriceForByteCount(byteCount: number): Promise<number | undefined> {
+		// Lazily generate the price predictor
 		if (!this.predictor) {
 			await this.refreshPriceData();
 			if (!this.predictor) {

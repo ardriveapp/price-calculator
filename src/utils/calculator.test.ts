@@ -5,7 +5,7 @@ import { SinonStubbedInstance, stub } from 'sinon';
 import { Calculator } from './calculator';
 
 const testPoints = [
-	// [bytes, winstom]
+	// [bytes, Winston]
 	[1_000, 2_061_216],
 	[1_000_000, 491_171_616],
 	[1_000_000_000, 489_601_571_616]
@@ -25,10 +25,6 @@ describe('Ar<>Data calculator', () => {
 		calculator = new Calculator(true, spyedOracle);
 	});
 
-	it('Zero oracle calls when just constructed', () => {
-		expect(spyedOracle.getWinstonPriceForByteCount.callCount).to.equal(0);
-	});
-
 	it('Three oracle calls after the first price estimation request', async () => {
 		await calculator.getWinstonPriceForByteCount(someValidByteCount);
 		return expect(spyedOracle.getWinstonPriceForByteCount.callCount).to.equal(3);
@@ -37,9 +33,9 @@ describe('Ar<>Data calculator', () => {
 	it('The example values are correct', async () => {
 		const results = await testPoints.forEach(async (point) => {
 			const bytesCount = point[0];
-			const winstonPrice = point[1];
-			const estimation = await calculator.getWinstonPriceForByteCount(bytesCount);
-			return expect(estimation).to.equal(winstonPrice);
+			const expectedWinstonPriceEstimation = point[1];
+			const actualWinstonPriceEstimation = await calculator.getWinstonPriceForByteCount(bytesCount);
+			return expect(actualWinstonPriceEstimation).to.equal(expectedWinstonPriceEstimation);
 		});
 		return results;
 	});
