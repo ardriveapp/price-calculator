@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { ARDataPrice } from './ardataprice';
+import { ARDataPrice } from './ar_data_price';
 import { ARDataPriceRegression } from './data_price_regression';
 
 describe('ARDataPriceRegression class', () => {

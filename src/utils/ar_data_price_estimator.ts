@@ -1,7 +1,7 @@
 import { GatewayOracle } from './gateway_oracle';
 import type { ArweaveOracle } from './arweave_oracle';
 import { ARDataPriceRegression } from './data_price_regression';
-import { ARDataPrice } from './ardataprice';
+import { ARDataPrice } from './ar_data_price';
 
 export class ARDataPriceEstimator {
 	private static readonly sampleByteVolumes = [

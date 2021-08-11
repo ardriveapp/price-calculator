@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { ARDataPrice } from './ardataprice';
+import { ARDataPrice } from './ar_data_price';
 
 describe('ARDataPrice class', () => {
 	it('constructor throws an exception when a negative data volume is provided', () => {
