@@ -1,20 +1,22 @@
 import { useEffect, useState } from 'react';
 import type { UnitBoxes } from '../types';
 import { useStateValue } from '../state/state';
-import { Calculator } from '../utils';
+import { ARDataPriceEstimator } from '../utils';
 
-/** Regression calc instance, will fire off initial fetch calls when constructed */
-const regressionCalculator = new Calculator(true);
+/** ARDataPriceEstimator instance, will fire off initial fetch calls when constructed */
+const arDataPriceEstimator = new ARDataPriceEstimator();
 
 /**
- * Use calculation hook listens to changes to the global unitBox state and will
- * calculate the other boxes and update the unitBox state with one dispatch call
+ * Use calculation hook listens to changes to the global unitBox state. If a unitBox
+ * changes, it will re-calculate the boxes calculate the other boxes. Then, update
+ * the unitBox state with one dispatch call
  *
- * The hook is to be used once in the App component
+ * The hook is intended to be used once in the Calculator component
  */
 export default function useCalculation(): void {
 	const [{ unitBoxes }, dispatch] = useStateValue();
 
+	// Save previous fiat value to state for determining which byteCount to calculate from
 	const [prevFiatVal, setPrevFiatVal] = useState(unitBoxes.fiat.value);
 	const [sendingCalculation, setSendingCalculation] = useState(false);
 
@@ -28,16 +30,21 @@ export default function useCalculation(): void {
 		}
 		setSendingCalculation(true);
 
-		/** Change byte count before calculation if fiat.value has been changed */
+		/**
+		 * Change byte count before calculation
+		 *
+		 * If fiat value has not changed, gets price for current byteCount in state
+		 * Else byteCount is the new fiat value divided by its conversion from CoinGecko
+		 */
 		const byteCount =
 			unitBoxes.fiat.value === prevFiatVal
 				? unitBoxes.bytes.value
 				: Math.round(unitBoxes.fiat.value / currentFiatToArConversion);
 
-		/** @TODO Add ArDrive Community tip to winstonPrice */
-		const winstonPrice = await regressionCalculator.getWinstonPriceForByteCount(byteCount);
+		try {
+			/** @TODO Add ArDrive Community fee to winstonPrice */
+			const winstonPrice = await arDataPriceEstimator.getWinstonPriceForByteCount(byteCount);
 
-		if (winstonPrice) {
 			const newUnitBoxes: UnitBoxes = {
 				bytes: { ...unitBoxes.bytes, value: byteCount },
 				ar: { ...unitBoxes.ar, value: Number((winstonPrice * 0.000_000_000_001).toFixed(12)) },
@@ -46,15 +53,15 @@ export default function useCalculation(): void {
 
 			setPrevFiatVal(newUnitBoxes.fiat.value);
 			dispatchCalculatedUnitBoxes(newUnitBoxes);
-		} else {
-			console.error('Winston price could not be determined :', winstonPrice);
+		} catch (err) {
+			console.error('Prices could not be calculated:', err);
 			setSendingCalculation(false);
 		}
 	}
 
 	function dispatchCalculatedUnitBoxes(newUnitBoxes: UnitBoxes) {
 		if (unitBoxes === newUnitBoxes) {
-			// Don't dispatch to state if boxes are the same
+			// Don't dispatch to state if all boxes remain the same after calculation
 			setSendingCalculation(false);
 			return;
 		}
@@ -62,12 +69,12 @@ export default function useCalculation(): void {
 		dispatch({ type: 'setUnitBoxes', payload: newUnitBoxes });
 
 		setTimeout(() => {
-			// Short cool down before dispatching another calculation for performance concerns
+			// 0.25 second delay before dispatching another calculation to prevent UI jitter
 			setSendingCalculation(false);
 		}, 250);
 	}
 
-	/** Whenever unitBoxes change, start a new calculation */
+	/** Whenever unitBoxes change, starts a new calculation */
 	useEffect(() => {
 		calculateUnitBoxes();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
