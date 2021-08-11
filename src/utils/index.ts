@@ -1,1 +1,1 @@
-export { Calculator } from './calculator';
+export { ARDataPriceEstimator } from './ar_data_price_estimator';

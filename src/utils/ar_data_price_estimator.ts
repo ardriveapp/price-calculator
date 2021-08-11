@@ -3,7 +3,7 @@ import type { ArweaveOracle } from './arweave_oracle';
 import { ARDataPriceRegression } from './data_price_regression';
 import { ARDataPrice } from './ardataprice';
 
-export class Calculator {
+export class ARDataPriceEstimator {
 	private static readonly sampleByteVolumes = [
 		(2 ^ 10) * 100, // 100 KiB
 		(2 ^ 20) * 100, // 100 MiB
@@ -27,7 +27,7 @@ export class Calculator {
 		// Fetch the price for a handful of reference data volumes and feed them into a linear regression
 		this.setupPromise = Promise.all(
 			// TODO: What to do if one fails?
-			Calculator.sampleByteVolumes.map(
+			ARDataPriceEstimator.sampleByteVolumes.map(
 				async (sampleByteCount) =>
 					new ARDataPrice(sampleByteCount, await this.oracle.getWinstonPriceForByteCount(sampleByteCount))
 			)
