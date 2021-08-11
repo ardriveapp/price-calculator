@@ -1992,16 +1992,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node-fetch@npm:^2.5.12":
-  version: 2.5.12
-  resolution: "@types/node-fetch@npm:2.5.12"
-  dependencies:
-    "@types/node": "*"
-    form-data: ^3.0.0
-  checksum: ad63c85ba6a9477b8e057ec8682257738130d98e8ece4e31141789bd99df9d9147985cc8bc0cb5c8983ed5aa6bb95d46df23d1e055f4ad5cf8b82fc69cf626c7
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:*":
   version: 16.4.3
   resolution: "@types/node@npm:16.4.3"
@@ -8496,7 +8486,6 @@ fsevents@~2.1.2:
     "@testing-library/react": ^11.2.6
     "@types/chai": ^4.2.17
     "@types/eslint": ^7
-    "@types/node-fetch": ^2.5.12
     "@types/react": ^17.0.4
     "@types/react-dom": ^17.0.3
     "@types/regression": ^2
