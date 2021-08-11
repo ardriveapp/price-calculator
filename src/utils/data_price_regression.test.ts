@@ -34,4 +34,14 @@ describe('ARDataPriceRegression class', () => {
 		const predictor = new ARDataPriceRegression([new ARDataPrice(0, 0), new ARDataPrice(2, 3)]);
 		expect(predictor.predictedPriceForByteCount(1)).to.deep.equal(new ARDataPrice(1, 2));
 	});
+
+	it('baseWinstonPrice returns the correct base value', () => {
+		const predictor = new ARDataPriceRegression([new ARDataPrice(0, 100), new ARDataPrice(5, 600)]);
+		expect(predictor.baseWinstonPrice()).to.deep.equal(100);
+	});
+
+	it('marginalWinstonPrice returns the correct marginal value per', () => {
+		const predictor = new ARDataPriceRegression([new ARDataPrice(0, 1), new ARDataPrice(5, 11)]);
+		expect(predictor.marginalWinstonPrice()).to.deep.equal(2);
+	});
 });

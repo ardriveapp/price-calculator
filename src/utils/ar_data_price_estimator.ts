@@ -75,4 +75,26 @@ export class ARDataPriceEstimator {
 		const predictedPrice = this.predictor.predictedPriceForByteCount(byteCount);
 		return predictedPrice.winstonPrice;
 	}
+	/**
+	 * Generates a byteCount estimate, in bytes, from valid Winston value
+	 *
+	 * @throws On invalid winston values and on any issues generating pricing models
+	 *
+	 * @remarks Will fetch pricing data for regression modeling if a regression has not yet been run.
+	 */
+	public async getByteCountForWinston(winston: number): Promise<number> {
+		if (winston < 0 || !Number.isInteger(winston)) {
+			throw new Error('winston value should be a non-negative integer!');
+		}
+
+		// Lazily generate the price predictor
+		if (!this.predictor) {
+			await this.refreshPriceData();
+			if (!this.predictor) {
+				throw Error('Failed to generate pricing model!');
+			}
+		}
+
+		return Math.max(0, winston - this.predictor.baseWinstonPrice()) / this.predictor.marginalWinstonPrice();
+	}
 }

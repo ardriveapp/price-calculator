@@ -40,4 +40,12 @@ export class ARDataPriceRegression {
 		const regressionResult = this.regression.predict(numBytes);
 		return new ARDataPrice(regressionResult[0], Math.ceil(regressionResult[1]));
 	}
+
+	baseWinstonPrice(): number {
+		return this.regression.equation[1];
+	}
+
+	marginalWinstonPrice(): number {
+		return this.regression.equation[0];
+	}
 }
