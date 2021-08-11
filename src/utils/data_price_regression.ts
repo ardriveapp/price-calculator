@@ -1,5 +1,5 @@
 import regression, { DataPoint } from 'regression';
-import { ARDataPrice } from './ardataprice';
+import { ARDataPrice } from './ar_data_price';
 
 /**
  * A prediction tool for estimating the AR price (in Winston) for a data upload of a specified size based
@@ -38,6 +38,6 @@ export class ARDataPriceRegression {
 		}
 
 		const regressionResult = this.regression.predict(numBytes);
-		return new ARDataPrice(regressionResult[0], Math.floor(regressionResult[1]));
+		return new ARDataPrice(regressionResult[0], Math.ceil(regressionResult[1]));
 	}
 }
