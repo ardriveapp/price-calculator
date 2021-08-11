@@ -23,7 +23,9 @@
 	},
 	"dependencies": {
 		"react": "^17.0.2",
-		"react-dom": "^17.0.2"
+		"react-dom": "^17.0.2",
+		"react-is": "^17.0.2",
+		"styled-components": "^5.3.0"
 	},
 	"devDependencies": {
 		"@snowpack/plugin-dotenv": "^2.1.0",
@@ -36,9 +38,11 @@
 		"@types/eslint": "^7",
 		"@types/react": "^17.0.4",
 		"@types/react-dom": "^17.0.3",
+		"@types/react-is": "^17",
 		"@types/rimraf": "^3",
 		"@types/sinon": "^10.0.2",
 		"@types/snowpack-env": "^2.3.3",
+		"@types/styled-components": "^5",
 		"@typescript-eslint/eslint-plugin": "^4.28.5",
 		"@typescript-eslint/parser": "^4.28.5",
 		"@web/test-runner": "^0.13.3",
