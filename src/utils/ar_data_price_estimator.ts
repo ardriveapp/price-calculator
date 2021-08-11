@@ -3,6 +3,10 @@ import type { ArweaveOracle } from './arweave_oracle';
 import { ARDataPriceRegression } from './data_price_regression';
 import { ARDataPrice } from './ar_data_price';
 
+/**
+ * A utility class for Arweave data pricing estimation.
+ * Fetches Arweave data prices to build a linear regression model to use for estimations.
+ */
 export class ARDataPriceEstimator {
 	private static readonly sampleByteVolumes = [
 		(2 ^ 10) * 100, // 100 KiB
@@ -12,12 +16,25 @@ export class ARDataPriceEstimator {
 	private predictor?: ARDataPriceRegression;
 	private setupPromise?: Promise<ARDataPriceRegression>;
 
+	/**
+	 * Creates a new estimator. Fetches pricing data proactively unless `skipSetup` is true.
+	 *
+	 * @param skipSetup allows for instantiation without prefetching pricing data from the oracle
+	 * @param oracle a datasource for Arweave data pricing
+	 *
+	 * @returns an ARDataPriceEstimator
+	 */
 	constructor(skipSetup = false, private readonly oracle: ArweaveOracle = new GatewayOracle()) {
 		if (!skipSetup) {
 			this.refreshPriceData();
 		}
 	}
 
+	/**
+	 * Updates the regression model with fresh data from the pricing oracle
+	 *
+	 * @returns Promise for an {@link ARDataPriceRegression}
+	 */
 	public async refreshPriceData(): Promise<ARDataPriceRegression> {
 		// Don't kick off another refresh while refresh is in progress
 		if (this.setupPromise) {
@@ -37,7 +54,16 @@ export class ARDataPriceEstimator {
 		return this.predictor;
 	}
 
-	public async getWinstonPriceForByteCount(byteCount: number): Promise<number | undefined> {
+	/**
+	 * Generates a price estimate, in Winston, for an upload of size `byteCount`.
+	 *
+	 * @param byteCount the number of bytes for which a price estimate should be generated
+	 *
+	 * @returns Promise for the price of an upload of size `byteCount` in Winston
+	 *
+	 * @remarks Will fetch pricing data for regression modeling if a regression has not yet been run.
+	 */
+	public async getWinstonPriceForByteCount(byteCount: number): Promise<number> {
 		// Lazily generate the price predictor
 		if (!this.predictor) {
 			await this.refreshPriceData();
