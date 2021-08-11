@@ -6,6 +6,14 @@ import { ARDataPriceEstimator } from '../utils';
 /** ARDataPriceEstimator instance, will fire off initial fetch calls when constructed */
 const arDataPriceEstimator = new ARDataPriceEstimator();
 
+const winstonToArValue = 0.000_000_000_001;
+
+interface previousValues {
+	bytes: number;
+	fiat: number;
+	ar: number;
+}
+
 /**
  * Use calculation hook listens to changes to the global unitBox state. If a unitBox
  * changes, it will re-calculate the boxes calculate the other boxes. Then, update
@@ -15,13 +23,23 @@ const arDataPriceEstimator = new ARDataPriceEstimator();
  */
 export default function useCalculation(): void {
 	const [{ unitBoxes }, dispatch] = useStateValue();
-
-	// Save previous fiat value to state for determining which byteCount to calculate from
-	const [prevFiatVal, setPrevFiatVal] = useState(unitBoxes.fiat.value);
 	const [sendingCalculation, setSendingCalculation] = useState(false);
 
+	// Save previous  values for determining if a value has changed
+	const [prevUnitVals, setPrevUnitVals] = useState<previousValues>({
+		bytes: unitBoxes.ar.value,
+		fiat: unitBoxes.fiat.value,
+		ar: unitBoxes.ar.value
+	});
+
 	/** @TODO Conversion will come from fiatToArData[unitBoxes.fiat.currUnit] */
-	const currentFiatToArConversion = 0.000_000_000_014;
+	const currentFiatToWinstonConversion = 0.000_000_000_15;
+
+	/** Whenever unitBoxes change, starts a new calculation */
+	useEffect(() => {
+		calculateUnitBoxes();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [unitBoxes]);
 
 	async function calculateUnitBoxes(): Promise<void> {
 		if (sendingCalculation) {
@@ -30,33 +48,54 @@ export default function useCalculation(): void {
 		}
 		setSendingCalculation(true);
 
-		/**
-		 * Change byte count before calculation
-		 *
-		 * If fiat value has not changed, gets price for current byteCount in state
-		 * Else byteCount is the new fiat value divided by its conversion from CoinGecko
-		 */
-		const byteCount =
-			unitBoxes.fiat.value === prevFiatVal
-				? unitBoxes.bytes.value
-				: Math.round(unitBoxes.fiat.value / currentFiatToArConversion);
-
 		try {
-			/** @TODO Add ArDrive Community fee to winstonPrice */
-			const winstonPrice = await arDataPriceEstimator.getWinstonPriceForByteCount(byteCount);
+			// Price estimator has several error throwing cases, wrap all calls in try/catch
+
+			/** @TODO Add ArDrive Community fee to determined winstonPrice */
+			const [byteCount, winstonPrice] = await determineWinstonAndBytes();
 
 			const newUnitBoxes: UnitBoxes = {
 				bytes: { ...unitBoxes.bytes, value: byteCount },
 				ar: { ...unitBoxes.ar, value: Number((winstonPrice * 0.000_000_000_001).toFixed(12)) },
-				fiat: { ...unitBoxes.fiat, value: winstonPrice * currentFiatToArConversion }
+				fiat: { ...unitBoxes.fiat, value: Number((winstonPrice * currentFiatToWinstonConversion).toFixed(6)) }
 			};
 
-			setPrevFiatVal(newUnitBoxes.fiat.value);
+			// Save previous values to determine state changes
+			setPrevUnitVals({ bytes: newUnitBoxes.ar.value, fiat: newUnitBoxes.fiat.value, ar: newUnitBoxes.ar.value });
+
 			dispatchCalculatedUnitBoxes(newUnitBoxes);
 		} catch (err) {
 			console.error('Prices could not be calculated:', err);
 			setSendingCalculation(false);
 		}
+	}
+
+	async function determineWinstonAndBytes(): Promise<[byteCount: number, winstonPrice: number]> {
+		if (unitBoxes.ar.value !== prevUnitVals.ar) {
+			// AR value has changed, return winston price from byteCount -> Winston conversion
+			const winstonPrice = Math.round(unitBoxes.ar.value / winstonToArValue);
+			const byteCount = await arDataPriceEstimator.getByteCountForWinston(winstonPrice);
+			return [byteCount, winstonPrice];
+		}
+
+		let byteCount: number;
+		let winstonPrice: number;
+
+		if (unitBoxes.fiat.value !== prevUnitVals.fiat) {
+			// Fiat value has changed, use Fiat<>AR conversion from coinGecko to determine Winston
+			winstonPrice = Math.round(unitBoxes.fiat.value / currentFiatToWinstonConversion);
+			byteCount = await arDataPriceEstimator.getByteCountForWinston(winstonPrice);
+		} else if (unitBoxes.bytes.value !== prevUnitVals.bytes) {
+			// ByteCount has not been changed, use stored byteCount and winston values
+			byteCount = unitBoxes.bytes.value;
+			winstonPrice = await arDataPriceEstimator.getWinstonPriceForByteCount(byteCount);
+		} else {
+			// ByteCount has been changed, gather new Winston price estimation
+			byteCount = unitBoxes.bytes.value;
+			winstonPrice = await arDataPriceEstimator.getWinstonPriceForByteCount(byteCount);
+		}
+
+		return [byteCount, winstonPrice];
 	}
 
 	function dispatchCalculatedUnitBoxes(newUnitBoxes: UnitBoxes) {
@@ -73,10 +112,4 @@ export default function useCalculation(): void {
 			setSendingCalculation(false);
 		}, 250);
 	}
-
-	/** Whenever unitBoxes change, starts a new calculation */
-	useEffect(() => {
-		calculateUnitBoxes();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [unitBoxes]);
 }
