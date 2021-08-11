@@ -2103,6 +2103,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/regression@npm:^2":
+  version: 2.0.2
+  resolution: "@types/regression@npm:2.0.2"
+  checksum: 28ae464c5ffda1698cecf1b1c2e21ed016ae1d71623c7f40bc5404aa55569cca03ac33d29737805059851cc734946027b006858d13a642e12240267c96d49299
+  languageName: node
+  linkType: hard
+
 "@types/resolve@npm:1.17.1":
   version: 1.17.1
   resolution: "@types/resolve@npm:1.17.1"
@@ -8597,6 +8604,7 @@ fsevents@~2.1.2:
     "@types/react": ^17.0.4
     "@types/react-dom": ^17.0.3
     "@types/react-is": ^17
+    "@types/regression": ^2
     "@types/rimraf": ^3
     "@types/sinon": ^10.0.2
     "@types/snowpack-env": ^2.3.3
@@ -8619,6 +8627,7 @@ fsevents@~2.1.2:
     react: ^17.0.2
     react-dom: ^17.0.2
     react-is: ^17.0.2
+    regression: ^2.0.1
     rimraf: ^3.0.2
     sinon: ^11.1.1
     snowpack: ^3.3.7
@@ -9007,6 +9016,13 @@ fsevents@~2.1.2:
   bin:
     regjsparser: bin/parser
   checksum: 1c439ec46a0be7834ec82fbb109396e088b6b73f0e9562cd67c37e3bdf85cc7cffe0192b3324da4491c7f709ce2b06fb2d59e12f0f9836b2e0cf26d5e54263aa
+  languageName: node
+  linkType: hard
+
+"regression@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "regression@npm:2.0.1"
+  checksum: 2afb76ed65c87f22ef25dffb19fa95d70cded586ee9fcd5239f61d40993f5904bab0aae8fece73a8dddd35e19956a027004e727385ee4b4e7f800229a50edfb5
   languageName: node
   linkType: hard
 
