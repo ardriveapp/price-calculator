@@ -14,7 +14,6 @@ import { useStateValue } from '../state/state';
 interface CurrentUnitProps {
 	units?: string[];
 	currentUnit: string;
-	onChange: (input: string) => void;
 }
 
 export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): JSX.Element {
