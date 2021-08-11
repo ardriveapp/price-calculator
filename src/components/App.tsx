@@ -1,14 +1,13 @@
-import './App.css';
-
 import * as React from 'react';
+import { AppContainer } from './App.style';
+import Calculator from './Calculator';
+import Faq from './Faq';
 
 export default function App(): JSX.Element {
 	return (
-		<div className="App">
-			Hello World, React
-			<span role="img" aria-label="Hand waving emoji">
-				👋
-			</span>
-		</div>
+		<AppContainer>
+			<Calculator></Calculator>
+			<Faq></Faq>
+		</AppContainer>
 	);
 }
