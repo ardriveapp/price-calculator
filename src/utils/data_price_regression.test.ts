@@ -40,7 +40,7 @@ describe('ARDataPriceRegression class', () => {
 		expect(predictor.baseWinstonPrice()).to.deep.equal(100);
 	});
 
-	it('marginalWinstonPrice returns the correct marginal value per', () => {
+	it('marginalWinstonPrice returns the correct marginal value', () => {
 		const predictor = new ARDataPriceRegression([new ARDataPrice(0, 1), new ARDataPrice(5, 11)]);
 		expect(predictor.marginalWinstonPrice()).to.deep.equal(2);
 	});
