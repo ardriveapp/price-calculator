@@ -4,7 +4,7 @@
 	  "dbaeumer.vscode-eslint",
 	  "esbenp.prettier-vscode",
 	  "editorconfig.editorconfig",
-	  "sonarsource.sonarlint-vscode"
+	  "sonarsource.sonarlint-vscode",
 	  "deque-systems.vscode-axe-linter"
     ]
 }
