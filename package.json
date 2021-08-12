@@ -28,8 +28,7 @@
 		"react-is": "^17.0.2",
 		"regression": "^2.0.1",
 		"smartweave": "^0.4.41",
-		"styled-components": "^5.3.0",
-		"ts-sinon": "^2.0.1"
+		"styled-components": "^5.3.0"
 	},
 	"devDependencies": {
 		"@snowpack/plugin-dotenv": "^2.1.0",
