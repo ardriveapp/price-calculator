@@ -22,6 +22,7 @@
 		"url": "https://github.com/ardriveapp/price-calculator.git"
 	},
 	"dependencies": {
+		"coingecko-api": "^1.0.10",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
 		"react-is": "^17.0.2",
@@ -29,6 +30,7 @@
 		"styled-components": "^5.3.0"
 	},
 	"devDependencies": {
+		"@types/coingecko-api": "^1.0.2",
 		"@snowpack/plugin-dotenv": "^2.1.0",
 		"@snowpack/plugin-react-refresh": "^2.5.0",
 		"@snowpack/plugin-typescript": "^1.2.1",
