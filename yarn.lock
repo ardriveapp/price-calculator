@@ -1791,13 +1791,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/coingecko-api@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "@types/coingecko-api@npm:1.0.2"
-  checksum: cc307054d43667a1eb78680e758cae88659325ac8834446f75155972605c130ffc1936b81cc40bd6263c0f436a415c79d4b338edf712974fa53191c9e4c758c7
-  languageName: node
-  linkType: hard
-
 "@types/command-line-args@npm:^5.0.0":
   version: 5.0.1
   resolution: "@types/command-line-args@npm:5.0.1"
@@ -3714,13 +3707,6 @@ __metadata:
   version: 1.1.0
   resolution: "code-point-at@npm:1.1.0"
   checksum: 17d5666611f9b16d64fdf48176d9b7fb1c7d1c1607a189f7e600040a11a6616982876af148230336adb7d8fe728a559f743a4e29db3747e3b1a32fa7f4529681
-  languageName: node
-  linkType: hard
-
-"coingecko-api@npm:^1.0.10":
-  version: 1.0.10
-  resolution: "coingecko-api@npm:1.0.10"
-  checksum: c900f5f7261dbfa2ecf3f6a2b018eb9de445db17bf9ef331e2751904f24c4e361144e9aa8ab1501fb4e741fa900dd61007e330a6b95a778d35b48d2ca5b61148
   languageName: node
   linkType: hard
 
@@ -8614,7 +8600,6 @@ fsevents@~2.1.2:
     "@snowpack/web-test-runner-plugin": ^0.2.2
     "@testing-library/react": ^11.2.6
     "@types/chai": ^4.2.17
-    "@types/coingecko-api": ^1.0.2
     "@types/eslint": ^7
     "@types/react": ^17.0.4
     "@types/react-dom": ^17.0.3
@@ -8628,7 +8613,6 @@ fsevents@~2.1.2:
     "@typescript-eslint/parser": ^4.28.5
     "@web/test-runner": ^0.13.3
     chai: ^4.3.4
-    coingecko-api: ^1.0.10
     eslint: ^7.31.0
     eslint-config-prettier: ^8.3.0
     eslint-plugin-import: ^2.23.4
