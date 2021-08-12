@@ -3,11 +3,10 @@ import type { UnitBoxes } from '../types';
 import { useStateValue } from '../state/state';
 import { ARDataPriceEstimator } from '../utils';
 import convertBytes, { ByteTypes } from '../utils/convertBytes';
+import { arPerWinston } from '../constants';
 
 /** ARDataPriceEstimator instance, will fire off initial fetch calls when constructed */
 const arDataPriceEstimator = new ARDataPriceEstimator();
-
-const arPerWinston = 0.000_000_000_001;
 
 interface UnitBoxValues {
 	bytes: number;
@@ -40,6 +39,12 @@ export default function useCalculation(): void {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [unitBoxes]);
 
+	/**
+	 * Calculates new unit box values based on updated state
+	 *
+	 * @remarks Calls `determineWinstonAndBytes` to gather byteCount and winstonPrice
+	 * and `dispatchCalculatedUnitBoxes` to dispatch the calculated boxes
+	 */
 	async function calculateUnitBoxes(): Promise<void> {
 		if (sendingCalculation) {
 			// Don't calculate if calculation is already dispatching, or cooling down
@@ -53,19 +58,20 @@ export default function useCalculation(): void {
 			/** @TODO Add ArDrive Community fee to determined winstonPrice before closing PE-67 */
 			const [byteCount, winstonPrice] = await determineWinstonAndBytes();
 
-			const arPrice = winstonPrice * arPerWinston;
+			const newArPrice = winstonPrice * arPerWinston;
+
+			const newByteValue = Number(convertBytes(byteCount, unitBoxes.bytes.currUnit as ByteTypes).toFixed(6));
+			const newFiatValue = Number((newArPrice * fiatPerAR).toFixed(6));
+			const newArValue = Number(newArPrice.toFixed(12));
 
 			const newUnitBoxes: UnitBoxes = {
-				bytes: {
-					...unitBoxes.bytes,
-					value: Number(convertBytes(byteCount, unitBoxes.bytes.currUnit as ByteTypes).toFixed(6))
-				},
-				fiat: { ...unitBoxes.fiat, value: Number((arPrice * fiatPerAR).toFixed(6)) },
-				ar: { ...unitBoxes.ar, value: Number(arPrice.toFixed(12)) }
+				bytes: { ...unitBoxes.bytes, value: newByteValue },
+				fiat: { ...unitBoxes.fiat, value: newFiatValue },
+				ar: { ...unitBoxes.ar, value: newArValue }
 			};
 
 			// Save previous values to determine state changes
-			setPrevUnitVals({ bytes: newUnitBoxes.ar.value, fiat: newUnitBoxes.fiat.value, ar: newUnitBoxes.ar.value });
+			setPrevUnitVals({ bytes: newByteValue, fiat: newFiatValue, ar: newArValue });
 
 			dispatchCalculatedUnitBoxes(newUnitBoxes);
 		} catch (err) {
@@ -74,23 +80,24 @@ export default function useCalculation(): void {
 		}
 	}
 
+	/**
+	 * Uses previous unit box values from state to determine which value has been changed, then
+	 * determines byteCount and winstonPrice to return by calling the ARDataPriceEstimator
+	 */
 	async function determineWinstonAndBytes(): Promise<[byteCount: number, winstonPrice: number]> {
-		if (unitBoxes.ar.value !== prevUnitVals.ar) {
-			// AR value has changed, return winston price from byteCount -> Winston conversion
-			const winstonPrice = Math.round(unitBoxes.ar.value / arPerWinston);
-			const byteCount = await arDataPriceEstimator.getByteCountForWinston(winstonPrice);
-			return [byteCount, winstonPrice];
-		}
-
 		let byteCount: number;
 		let winstonPrice: number;
 
-		if (unitBoxes.fiat.value !== prevUnitVals.fiat) {
-			// Fiat value has been changed, use new fiat value to determine Winston price
+		if (unitBoxes.ar.value !== prevUnitVals.ar) {
+			// AR value has been changed, use new ar value to determine winstonPrice
+			winstonPrice = Math.round(unitBoxes.ar.value / arPerWinston);
+			byteCount = await arDataPriceEstimator.getByteCountForWinston(winstonPrice);
+		} else if (unitBoxes.fiat.value !== prevUnitVals.fiat) {
+			// Fiat value has been changed, use new fiat value to determine winstonPrice
 			winstonPrice = Math.round(unitBoxes.fiat.value / fiatPerAR / arPerWinston);
 			byteCount = await arDataPriceEstimator.getByteCountForWinston(winstonPrice);
 		} else {
-			// AR/Fiat values have not been changed, use current byte value to determine byteCount
+			// AR and Fiat values have not been changed, use current byte value to determine byteCount
 			byteCount = Math.round(convertBytes(unitBoxes.bytes.value, unitBoxes.bytes.currUnit as ByteTypes, true));
 			winstonPrice = await arDataPriceEstimator.getWinstonPriceForByteCount(byteCount);
 		}
@@ -98,6 +105,10 @@ export default function useCalculation(): void {
 		return [byteCount, winstonPrice];
 	}
 
+	/**
+	 * Dispatches new unit boxes to global state if those boxes have been changed.
+	 * Also starts a short dispatch cool down to prevent ui jitter
+	 */
 	function dispatchCalculatedUnitBoxes(newUnitBoxes: UnitBoxes) {
 		if (unitBoxes === newUnitBoxes) {
 			// Don't dispatch to state if all boxes remain the same after calculation
