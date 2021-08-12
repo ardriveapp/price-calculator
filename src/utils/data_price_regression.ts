@@ -16,7 +16,7 @@ export class ARDataPriceRegression {
 	 */
 	constructor(pricingData: ARDataPrice[]) {
 		if (!pricingData.length) {
-			throw new Error('Regession can not be run with an empty ARDataPrice list!');
+			throw new Error('Regression can not be run with an empty ARDataPrice list!');
 		}
 
 		const dataPoints: DataPoint[] = pricingData.map(
@@ -41,10 +41,18 @@ export class ARDataPriceRegression {
 		return new ARDataPrice(regressionResult[0], Math.ceil(regressionResult[1]));
 	}
 
+	/**
+	 * Returns the current base AR price in Winston for submitting an Arweave transaction,
+	 * which has been calculated by the regression model
+	 */
 	baseWinstonPrice(): number {
 		return this.regression.equation[1];
 	}
 
+	/**
+	 * Returns the current marginal AR price in Winston (winston price per byte),
+	 * which has been calculated by the regression model
+	 */
 	marginalWinstonPrice(): number {
 		return this.regression.equation[0];
 	}
