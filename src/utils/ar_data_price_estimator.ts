@@ -75,12 +75,14 @@ export class ARDataPriceEstimator {
 		const predictedPrice = this.predictor.predictedPriceForByteCount(byteCount);
 		return predictedPrice.winstonPrice;
 	}
+
 	/**
-	 * Generates a byteCount estimate, in bytes, from valid Winston value
+	 * Estimates the number of bytes that can be stored for a given amount of Winston
 	 *
 	 * @throws On invalid winston values and on any issues generating pricing models
 	 *
 	 * @remarks Will fetch pricing data for regression modeling if a regression has not yet been run.
+	 * @remarks The ArDrive community fee is not considered in this estimation
 	 */
 	public async getByteCountForWinston(winston: number): Promise<number> {
 		if (winston < 0 || !Number.isInteger(winston)) {
