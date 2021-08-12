@@ -33,7 +33,7 @@ const initialState: State = {
 
 	/** Unit boxes display only 1 GiB by default, other values to be filled in on first calculation */
 	unitBoxes: {
-		bytes: { value: 1_073_742_000, currUnit: 'GB', units: byteUnitTypes },
+		bytes: { value: 1, currUnit: 'GB', units: byteUnitTypes },
 		fiat: { value: 0, currUnit: 'USD', units: fiatUnitTypes },
 		ar: { value: 0, currUnit: 'AR' }
 	}
