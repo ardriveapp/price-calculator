@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { UnitBoxes } from '../types';
 import { useStateValue } from '../state/state';
 import { ARDataPriceEstimator } from '../utils';
-import convertBytes, { ByteTypes } from '../utils/convertBytes';
+import convertUnit, { ByteTypes } from '../utils/convert_unit';
 import { arPerWinston } from '../constants';
 
 /** ARDataPriceEstimator instance, will fire off initial fetch calls when constructed */
@@ -60,7 +60,7 @@ export default function useCalculation(): void {
 
 			const newArPrice = winstonPrice * arPerWinston;
 
-			const newByteValue = Number(convertBytes(byteCount, unitBoxes.bytes.currUnit as ByteTypes).toFixed(6));
+			const newByteValue = Number(convertUnit(byteCount, unitBoxes.bytes.currUnit as ByteTypes).toFixed(6));
 			const newFiatValue = Number((newArPrice * fiatPerAR).toFixed(6));
 			const newArValue = Number(newArPrice.toFixed(12));
 
@@ -98,7 +98,7 @@ export default function useCalculation(): void {
 			byteCount = await arDataPriceEstimator.getByteCountForWinston(winstonPrice);
 		} else {
 			// AR and Fiat values have not been changed, use current byte value to determine byteCount
-			byteCount = Math.round(convertBytes(unitBoxes.bytes.value, unitBoxes.bytes.currUnit as ByteTypes, true));
+			byteCount = Math.round(convertUnit(unitBoxes.bytes.value, unitBoxes.bytes.currUnit as ByteTypes, true));
 			winstonPrice = await arDataPriceEstimator.getWinstonPriceForByteCount(byteCount);
 		}
 

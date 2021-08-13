@@ -9,7 +9,7 @@ const conversionRates = {
 
 /**
  *
- * Converts byte count from a byte unit type into any other byte unit type
+ * Converts byte count from a byte unit type into another byte unit type
  * Works with bytes, kilobytes, megabytes, and gigabytes. Measured in binary
  *
  * @param count number of bytes in the specified input byte unit type
