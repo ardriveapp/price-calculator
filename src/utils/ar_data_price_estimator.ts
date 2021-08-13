@@ -9,9 +9,9 @@ import { ARDataPrice } from './ar_data_price';
  */
 export class ARDataPriceEstimator {
 	private static readonly sampleByteVolumes = [
-		(2 ^ 10) * 100, // 100 KiB
-		(2 ^ 20) * 100, // 100 MiB
-		(2 ^ 30) * 10 // 10 GiB
+		Math.pow(2, 10) * 100, // 100 KiB
+		Math.pow(2, 20) * 100, // 100 MiB
+		Math.pow(2, 30) * 10 // 10 GiB
 	];
 	private predictor?: ARDataPriceRegression;
 	private setupPromise?: Promise<ARDataPriceRegression>;
