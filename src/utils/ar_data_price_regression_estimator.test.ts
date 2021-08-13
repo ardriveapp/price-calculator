@@ -50,6 +50,10 @@ describe('ARDataPriceEstimator class', () => {
 			await expectAsyncErrorThrow(() => calculator.getByteCountForWinston(-1));
 		});
 
+		it('throws an error when provided winston value is represented as a decimal', async () => {
+			await expectAsyncErrorThrow(() => calculator.getByteCountForWinston(0.1));
+		});
+
 		it('makes three oracle calls after the first price estimation request', async () => {
 			await calculator.getByteCountForWinston(0);
 			expect(spyedOracle.getWinstonPriceForByteCount.calledThrice).to.be.true;
