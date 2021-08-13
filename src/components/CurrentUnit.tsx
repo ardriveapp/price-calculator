@@ -10,6 +10,7 @@ import {
 import useOnOutsideClick from '../hooks/useOnOutsideClick';
 import UpArrowIcon from './icons/UpArrowIcon';
 import { useStateValue } from '../state/state';
+import type { ByteUnitType } from 'src/types';
 
 interface CurrentUnitProps {
 	units?: string[];
@@ -52,7 +53,6 @@ interface UnitDropDownProps {
 	closeDropDown: () => void;
 }
 
-/** @TODO Pass down and use `setCurrentUnit` prop */
 function UnitDropDown({ units, closeDropDown }: UnitDropDownProps): JSX.Element {
 	const [{ unitBoxes }, dispatch] = useStateValue();
 
@@ -67,7 +67,7 @@ function UnitDropDown({ units, closeDropDown }: UnitDropDownProps): JSX.Element 
 		} else {
 			dispatch({
 				type: 'setUnitBoxes',
-				payload: { ...unitBoxes, bytes: { ...unitBoxes.bytes, currUnit: unit } }
+				payload: { ...unitBoxes, bytes: { ...unitBoxes.bytes, currUnit: unit as ByteUnitType } }
 			});
 		}
 		closeDropDown();
