@@ -1,8 +1,8 @@
 import type { UnitBoxValues } from '../hooks/useCalculation';
 import type { ByteUnitType, UnitBoxes } from '../types';
-import { ARDataPriceEstimator } from './ar_data_price_estimator';
+import { ARDataPriceRegressionEstimator } from './ar_data_price_regression_estimator';
 import convertUnit from './convert_unit';
-import type { PriceEstimator } from './price_estimator';
+import type { ARDataPriceEstimator } from './ar_data_price_estimator';
 
 /**
  * A utility class responsible for calculating the new unit boxes to
@@ -12,7 +12,7 @@ import type { PriceEstimator } from './price_estimator';
  * creation, which fires off 3 network calls for AR<>Data models
  */
 export class UnitBoxCalculator {
-	constructor(private readonly arDataPriceEstimator: PriceEstimator = new ARDataPriceEstimator()) {}
+	constructor(private readonly arDataPriceEstimator: ARDataPriceEstimator = new ARDataPriceRegressionEstimator()) {}
 
 	/**
 	 * Calculates new unit box values dependent on the specified parameters

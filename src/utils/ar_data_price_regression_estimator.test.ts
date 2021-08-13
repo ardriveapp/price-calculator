@@ -2,31 +2,31 @@ import { GatewayOracle } from './gateway_oracle';
 import type { ArweaveOracle } from './arweave_oracle';
 import { expect } from 'chai';
 import { SinonStubbedInstance, stub } from 'sinon';
-import { ARDataPriceEstimator } from './ar_data_price_estimator';
+import { ARDataPriceRegressionEstimator } from './ar_data_price_regression_estimator';
 import { expectAsyncErrorThrow } from './test_helpers';
 
 describe('ARDataPriceEstimator class', () => {
 	let spyedOracle: SinonStubbedInstance<ArweaveOracle>;
-	let calculator: ARDataPriceEstimator;
+	let calculator: ARDataPriceRegressionEstimator;
 
 	beforeEach(() => {
 		// Set pricing algo up as x = y (bytes = Winston)
 		spyedOracle = stub(new GatewayOracle());
 		spyedOracle.getWinstonPriceForByteCount.callsFake((input) => Promise.resolve(input));
-		calculator = new ARDataPriceEstimator(true, spyedOracle);
+		calculator = new ARDataPriceRegressionEstimator(true, spyedOracle);
 	});
 
 	it('can be instantiated without making oracle calls', async () => {
 		const gatewayOracleStub = stub(new GatewayOracle());
 		gatewayOracleStub.getWinstonPriceForByteCount.callsFake(() => Promise.resolve(123));
-		new ARDataPriceEstimator(true, gatewayOracleStub);
+		new ARDataPriceRegressionEstimator(true, gatewayOracleStub);
 		expect(gatewayOracleStub.getWinstonPriceForByteCount.notCalled).to.be.true;
 	});
 
 	it('makes 3 oracle calls during routine instantiation', async () => {
 		const gatewayOracleStub = stub(new GatewayOracle());
 		gatewayOracleStub.getWinstonPriceForByteCount.callsFake(() => Promise.resolve(123));
-		new ARDataPriceEstimator(false, gatewayOracleStub);
+		new ARDataPriceRegressionEstimator(false, gatewayOracleStub);
 		expect(gatewayOracleStub.getWinstonPriceForByteCount.calledThrice).to.be.true;
 	});
 

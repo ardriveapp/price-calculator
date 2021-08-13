@@ -1,19 +1,19 @@
 import { expect } from 'chai';
 import { SinonStubbedInstance, stub } from 'sinon';
 import type { UnitBoxValues } from 'src/hooks/useCalculation';
-import { ARDataPriceEstimator } from './ar_data_price_estimator';
+import { ARDataPriceRegressionEstimator } from './ar_data_price_regression_estimator';
 import { UnitBoxCalculator } from './calculate_unit_boxes';
-import type { PriceEstimator } from './price_estimator';
+import type { ARDataPriceEstimator } from './ar_data_price_estimator';
 
 describe('UnitBoxCalculator class', () => {
 	let unitBoxCalculator: UnitBoxCalculator;
-	let stubbedPriceEstimator: SinonStubbedInstance<PriceEstimator>;
+	let stubbedPriceEstimator: SinonStubbedInstance<ARDataPriceEstimator>;
 
 	const fiatPerAr = 10;
 	const expectedResult: UnitBoxValues = { bytes: 1, fiat: 10, ar: 1 };
 
 	before(() => {
-		stubbedPriceEstimator = stub(new ARDataPriceEstimator(true));
+		stubbedPriceEstimator = stub(new ARDataPriceRegressionEstimator(true));
 		stubbedPriceEstimator.getByteCountForAR.callsFake(() => Promise.resolve(Math.pow(2, 10)));
 		stubbedPriceEstimator.getARPriceForByteCount.callsFake(() => Promise.resolve(1));
 		unitBoxCalculator = new UnitBoxCalculator(stubbedPriceEstimator);
