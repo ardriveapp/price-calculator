@@ -2,6 +2,7 @@ import { GatewayOracle } from './gateway_oracle';
 import type { ArweaveOracle } from './arweave_oracle';
 import { ARDataPriceRegression } from './data_price_regression';
 import { ARDataPrice } from './ar_data_price';
+import type { PriceEstimator } from './price_estimator';
 
 export const arPerWinston = 0.000_000_000_001;
 
@@ -9,7 +10,7 @@ export const arPerWinston = 0.000_000_000_001;
  * A utility class for Arweave data pricing estimation.
  * Fetches Arweave data prices to build a linear regression model to use for estimations.
  */
-export class ARDataPriceEstimator {
+export class ARDataPriceEstimator implements PriceEstimator {
 	private static readonly sampleByteVolumes = [
 		Math.pow(2, 10) * 100, // 100 KiB
 		Math.pow(2, 20) * 100, // 100 MiB
