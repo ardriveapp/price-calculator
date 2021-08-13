@@ -1,5 +1,12 @@
 import React, { createContext, Dispatch, useContext, useReducer } from 'react';
-import { ArDriveCommunityTip, ArToData, byteUnitTypes, FiatToAr, fiatUnitTypes, UnitBoxes } from '../types';
+import {
+	ArDriveCommunityTip,
+	ArToData,
+	displayedByteUnitTypes,
+	FiatToAr,
+	displayedFiatUnitTypes,
+	UnitBoxes
+} from '../types';
 import type { Action } from './reducer';
 
 export type State = {
@@ -31,10 +38,10 @@ const initialState: State = {
 		minWinstonTip: 10_000_000
 	},
 
-	/** Unit boxes display only 1 GB by default, other values to be filled in on first calculation */
+	/** Unit boxes display only 1 GiB by default, other values to be filled in on first calculation */
 	unitBoxes: {
-		bytes: { value: 1, currUnit: 'GB', units: byteUnitTypes },
-		fiat: { value: 0, currUnit: 'USD', units: fiatUnitTypes },
+		bytes: { value: 1, currUnit: 'GB', units: displayedByteUnitTypes },
+		fiat: { value: 0, currUnit: 'USD', units: displayedFiatUnitTypes },
 		ar: { value: 0, currUnit: 'AR' }
 	}
 };

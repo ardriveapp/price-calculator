@@ -36,16 +36,16 @@ export interface ArUnitBox extends UnitBox {
 	currUnit: 'AR';
 }
 
-export const byteUnitTypes = ['KB', 'MB', 'GB'];
-export type ByteUnitType = typeof byteUnitTypes[number];
+export type ByteUnitType = 'B' | 'KB' | 'MB' | 'GB';
+export const displayedByteUnitTypes: ByteUnitType[] = ['KB', 'MB', 'GB'];
 
 // prettier-ignore
-export const fiatUnitTypes = ['USD', 'EUR', 'JPY', 'CNY', 'GBP', 'IDR', 'TWD',
-    'KRW', 'RUB', 'AED', 'ARS', 'AUD', 'BDT', 'BHD', 'BMD', 'BRL', 'CAD', 'CHF',
-    'CLP', 'CZK', 'DKK', 'HKD', 'HUF', 'ILS', 'INR', 'KWD', 'LKR', 'MMK', 'MXN',
-    'MYR', 'NGN', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'SAR', 'SEK', 'SGD', 'THB',
-    'TRY', 'UAH', 'VEF', 'VND', 'ZAR', 'XDR', 'XAG','XAU'] ;
-export type FiatUnitType = typeof fiatUnitTypes[number];
+export const displayedFiatUnitTypes = ['USD', 'EUR', 'JPY', 'CNY', 'GBP', 'IDR',
+    'TWD', 'KRW', 'RUB', 'AED', 'ARS', 'AUD', 'BDT', 'BHD', 'BMD', 'BRL', 'CAD',
+		'CHF', 'CLP', 'CZK', 'DKK', 'HKD', 'HUF', 'ILS', 'INR', 'KWD', 'LKR', 'MMK',
+		'MXN', 'MYR', 'NGN', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'SAR', 'SEK', 'SGD',
+		'THB', 'TRY', 'UAH', 'VEF', 'VND', 'ZAR', 'XDR', 'XAG', 'XAU'];
+export type FiatUnitType = typeof displayedFiatUnitTypes[number];
 
 export interface UnitBoxes {
 	bytes: BytesUnitBox;

@@ -1,1 +1,1 @@
-export { ARDataPriceEstimator } from './ar_data_price_estimator';
+export { ARDataPriceRegressionEstimator } from './ar_data_price_regression_estimator';
