@@ -45,4 +45,8 @@ describe('The convertBytes function', () => {
 	it('returns correctly with a byte count set to the maximum safe integer', () => {
 		expect(convertBytes(Number.MAX_SAFE_INTEGER, 'B', 'GB')).to.equal(8_388_607.999_999_999);
 	});
+
+	it('throws an error when input unit is "B" and the byte count is a decimal ', () => {
+		expect(() => convertBytes(1.1, 'B', 'GB')).to.throw(Error);
+	});
 });
