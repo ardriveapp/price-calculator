@@ -20,7 +20,7 @@ export interface CoinGeckoResponse {
 export interface CoinGeckoPriceRequestParams extends Record<string, string> {
 	// CSV of the coin IDs
 	ids: string;
-	// CSV of the fiat currencies to be quited in
+	// CSV of the fiat currencies to be quoted in
 	vs_currencies: string;
 }
 
