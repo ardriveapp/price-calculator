@@ -33,12 +33,14 @@ export class UnitBoxCalculator {
 		byteUnit: ByteUnitType
 	): Promise<UnitBoxValues> {
 		let newARValue: number;
+		let userDefinedByteValue: number | undefined = undefined;
 
 		switch (unit) {
 			case 'bytes':
 				newARValue = await this.arDataPriceEstimator.getARPriceForByteCount(
 					Math.round(convertUnit(value, byteUnit, 'B'))
 				);
+				userDefinedByteValue = value;
 				break;
 
 			case 'fiat':
@@ -50,9 +52,12 @@ export class UnitBoxCalculator {
 				break;
 		}
 
-		const byteCount = await this.arDataPriceEstimator.getByteCountForAR(newARValue);
+		// Use user defined byte value to ensure user's intended value remains unchanged
+		const byteCount =
+			userDefinedByteValue ??
+			convertUnit(await this.arDataPriceEstimator.getByteCountForAR(newARValue), 'B', byteUnit);
 
-		const newByteValue = Number(convertUnit(byteCount, 'B', byteUnit).toFixed(6));
+		const newByteValue = Number(byteCount.toFixed(6));
 		const newFiatValue = Number((newARValue * fiatPerAR).toFixed(6));
 		const newArValue = Number(Number(newARValue).toFixed(12));
 
