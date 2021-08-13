@@ -3,6 +3,8 @@ import type { ArweaveOracle } from './arweave_oracle';
 import { ARDataPriceRegression } from './data_price_regression';
 import { ARDataPrice } from './ar_data_price';
 
+export const arPerWinston = 0.000_000_000_001;
+
 /**
  * A utility class for Arweave data pricing estimation.
  * Fetches Arweave data prices to build a linear regression model to use for estimations.
@@ -77,6 +79,18 @@ export class ARDataPriceEstimator {
 	}
 
 	/**
+	 * Estimates the price in AR for a given byte count
+	 *
+	 * @remarks Will fetch pricing data for regression modeling if a regression has not yet been run.
+	 * @remarks The ArDrive community fee is not considered in this estimation
+	 */
+	public async getARPriceForByteCount(byteCount: number): Promise<number> {
+		const winstonPrice = await this.getWinstonPriceForByteCount(byteCount);
+
+		return winstonPrice * arPerWinston;
+	}
+
+	/**
 	 * Estimates the number of bytes that can be stored for a given amount of Winston
 	 *
 	 * @throws On invalid winston values and on any issues generating pricing models
@@ -98,5 +112,16 @@ export class ARDataPriceEstimator {
 		}
 
 		return Math.max(0, winston - this.predictor.baseWinstonPrice()) / this.predictor.marginalWinstonPrice();
+	}
+
+	/**
+	 * Estimates the number of bytes that can be stored for a given amount of AR
+	 *
+	 * @remarks Will fetch pricing data for regression modeling if a regression has not yet been run.
+	 * @remarks The ArDrive community fee is not considered in this estimation
+	 */
+	public async getByteCountForAR(arPrice: number): Promise<number> {
+		const winstonPrice = Math.round(arPrice / arPerWinston);
+		return this.getByteCountForWinston(winstonPrice);
 	}
 }

@@ -39,8 +39,18 @@ describe('ARDataPriceEstimator class', () => {
 		expect(actualWinstonPriceEstimation).to.equal(100);
 	});
 
-	it('byteCountForWinston returns the expected value', async () => {
+	it('getByteCountForWinston returns the expected value', async () => {
 		const actualByteCountEstimation = await calculator.getByteCountForWinston(100);
 		expect(actualByteCountEstimation).to.equal(100);
+	});
+
+	it('getByteCountForAR returns the expected value', async () => {
+		const actualByteCountEstimation = await calculator.getByteCountForAR(0.000_000_000_100);
+		expect(actualByteCountEstimation).to.equal(100);
+	});
+
+	it('getARPriceForByteCount returns the expected value', async () => {
+		const actualByteCountEstimation = await calculator.getARPriceForByteCount(100);
+		expect(actualByteCountEstimation).to.equal(0.000_000_000_100);
 	});
 });
