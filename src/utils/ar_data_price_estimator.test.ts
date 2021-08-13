@@ -3,6 +3,7 @@ import type { ArweaveOracle } from './arweave_oracle';
 import { expect } from 'chai';
 import { SinonStubbedInstance, stub } from 'sinon';
 import { ARDataPriceEstimator } from './ar_data_price_estimator';
+import { expectAsyncErrorThrow } from './test_helpers';
 
 describe('ARDataPriceEstimator class', () => {
 	let spyedOracle: SinonStubbedInstance<ArweaveOracle>;
@@ -34,22 +35,33 @@ describe('ARDataPriceEstimator class', () => {
 		expect(spyedOracle.getWinstonPriceForByteCount.calledThrice).to.be.true;
 	});
 
-	it('getWinstonPriceForByteCount returns the expected value', async () => {
+	it('getWinstonPriceForByteCount function returns the expected value', async () => {
 		const actualWinstonPriceEstimation = await calculator.getWinstonPriceForByteCount(100);
 		expect(actualWinstonPriceEstimation).to.equal(100);
 	});
 
-	it('getByteCountForWinston returns the expected value', async () => {
-		const actualByteCountEstimation = await calculator.getByteCountForWinston(100);
-		expect(actualByteCountEstimation).to.equal(100);
+	describe('getByteCountForWinston function', () => {
+		it('returns the expected value', async () => {
+			const actualByteCountEstimation = await calculator.getByteCountForWinston(100);
+			expect(actualByteCountEstimation).to.equal(100);
+		});
+
+		it('throws an error when provided winston value is a negative integer', async () => {
+			await expectAsyncErrorThrow(() => calculator.getByteCountForWinston(-1));
+		});
+
+		it('makes three oracle calls after the first price estimation request', async () => {
+			await calculator.getByteCountForWinston(0);
+			expect(spyedOracle.getWinstonPriceForByteCount.calledThrice).to.be.true;
+		});
 	});
 
-	it('getByteCountForAR returns the expected value', async () => {
+	it('getByteCountForAR function returns the expected value', async () => {
 		const actualByteCountEstimation = await calculator.getByteCountForAR(0.000_000_000_100);
 		expect(actualByteCountEstimation).to.equal(100);
 	});
 
-	it('getARPriceForByteCount returns the expected value', async () => {
+	it('getARPriceForByteCount function returns the expected value', async () => {
 		const actualByteCountEstimation = await calculator.getARPriceForByteCount(100);
 		expect(actualByteCountEstimation).to.equal(0.000_000_000_100);
 	});
