@@ -24,7 +24,7 @@ export interface CoinGeckoPriceRequestParams extends Record<string, string> {
 	vs_currencies: string;
 }
 
-export interface CoinGeckoPriceResponseData {
+export interface CoinGeckoARPriceResponseData {
 	arweave: {
 		usd: number;
 	};

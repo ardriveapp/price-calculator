@@ -1,6 +1,6 @@
 import type { FiatOracle } from './fiat_oracle';
 // import CoinGecko from 'coingecko-api';
-import type { CoinGeckoPriceRequestParams, CoinGeckoPriceResponseData, CoinGeckoResponse } from './coingecko_types';
+import type { CoinGeckoPriceRequestParams, CoinGeckoARPriceResponseData, CoinGeckoResponse } from './coingecko_types';
 
 const AR_COIN_ID = 'arweave';
 const USD_COIN_ID = 'usd';
@@ -57,7 +57,7 @@ export class AR_USDOracle implements FiatOracle {
 		const response: CoinGeckoResponse = await fetchResponse.json();
 		// ENDS fetch request
 
-		const responseData: CoinGeckoPriceResponseData = JSON.parse(response.data);
+		const responseData: CoinGeckoARPriceResponseData = JSON.parse(response.data);
 		const usdPrice = responseData.arweave.usd;
 		this.cachedPrice = usdPrice;
 		delete this.syncPromise;
