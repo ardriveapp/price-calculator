@@ -1,31 +1,26 @@
-const bytesPerKB = 1024;
+export type ByteTypes = 'B' | 'KB' | 'MB' | 'GB';
 
 const conversionRates = {
+	B: 0,
 	KB: 1,
 	MB: 2,
 	GB: 3
 };
 
-export type ByteTypes = 'KB' | 'MB' | 'GB';
-
 /**
- * Converts bytes to AND from KB, MB, and GB.
- * By default, it will convert byteCount into the specified unit.
  *
- * @param toBytes set to true to convert from KB/MB/GB into bytes
+ * Converts byte count from a byte unit type into any other byte unit type
+ * Works with bytes, kilobytes, megabytes, and gigabytes. Measured in binary
+ *
+ * @param count number of bytes in the specified input byte unit type
+ * @param inputUnit byte unit type for input count parameter
+ * @param outputUnit byte unit type to be converted into
+ * @returns byte count converted into the specified output unit
+ *
  * @remarks Decimal count is not considered in this function
  */
-export default function convertBytes(byteCount: number, unit: ByteTypes, toBytes = false): number {
-	let timesToRun = conversionRates[unit];
-
-	while (timesToRun) {
-		if (toBytes) {
-			byteCount *= bytesPerKB;
-		} else {
-			byteCount /= bytesPerKB;
-		}
-		timesToRun--;
-	}
-
-	return byteCount;
+export default function convertUnit(count: number, inputUnit: ByteTypes, outputUnit: ByteTypes): number {
+	const inputPower = conversionRates[inputUnit] * 10;
+	const outputPower = conversionRates[outputUnit] * 10;
+	return count / Math.pow(2, outputPower - inputPower);
 }
