@@ -24,7 +24,7 @@ export class UnitBoxCalculator {
 	 *
 	 * @returns newly calculated unit box values
 	 *
-	 * @remarks ArDrive Community Fee is not yet considered in the calculations
+	 * @TODO Add ArDrive Community fee to determined unit box values in PE-128 before closing PE-67
 	 */
 	async calculateUnitBoxValues(
 		value: number,
@@ -54,7 +54,7 @@ export class UnitBoxCalculator {
 
 		const newByteValue = Number(convertUnit(byteCount, 'B', byteUnit).toFixed(6));
 		const newFiatValue = Number((newARValue * fiatPerAR).toFixed(6));
-		const newArValue = Number(newARValue.toFixed(12));
+		const newArValue = Number(Number(newARValue).toFixed(12));
 
 		return { bytes: newByteValue, fiat: newFiatValue, ar: newArValue };
 	}
