@@ -55,9 +55,9 @@ export class UnitBoxCalculator {
 		// Use user defined byte value to ensure user's intended value remains unchanged
 		const byteCount =
 			userDefinedByteValue ??
-			convertUnit(await this.arDataPriceEstimator.getByteCountForAR(newARValue), 'B', byteUnit);
+			convertUnit(Math.round(await this.arDataPriceEstimator.getByteCountForAR(newARValue)), 'B', byteUnit);
 
-		const newByteValue = Number(byteCount.toFixed(6));
+		const newByteValue = Number(Number(byteCount).toFixed(6));
 		const newFiatValue = Number((newARValue * fiatPerAR).toFixed(6));
 		const newArValue = Number(Number(newARValue).toFixed(12));
 
