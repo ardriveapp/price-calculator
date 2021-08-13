@@ -9,7 +9,7 @@ describe('ARDataPriceEstimator class', () => {
 	let spyedOracle: SinonStubbedInstance<ArweaveOracle>;
 	let calculator: ARDataPriceEstimator;
 
-	before(() => {
+	beforeEach(() => {
 		// Set pricing algo up as x = y (bytes = Winston)
 		spyedOracle = stub(new GatewayOracle());
 		spyedOracle.getWinstonPriceForByteCount.callsFake((input) => Promise.resolve(input));
@@ -64,5 +64,15 @@ describe('ARDataPriceEstimator class', () => {
 	it('getARPriceForByteCount function returns the expected value', async () => {
 		const actualByteCountEstimation = await calculator.getARPriceForByteCount(100);
 		expect(actualByteCountEstimation).to.equal(0.000_000_000_100);
+	});
+
+	describe('refreshPriceData function', () => {
+		it('avoids duplicate oracle calls', async () => {
+			const expected = await calculator.refreshPriceData();
+			const actual = await calculator.refreshPriceData();
+
+			expect(actual).to.equal(expected);
+			expect(spyedOracle.getWinstonPriceForByteCount.calledThrice).to.be.true;
+		});
 	});
 });
