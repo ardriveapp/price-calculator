@@ -39,9 +39,13 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [debouncedValue]);
 
+	/** Initially hides fiat and AR inputs until data arrives and first calculation has settled */
+	const hideInput: React.CSSProperties = { visibility: unitBoxes[field].value !== -1 ? 'visible' : 'hidden' };
+
 	return (
 		<TextBoxContainer>
 			<TextBoxInput
+				style={hideInput}
 				type="number"
 				name="textbox"
 				value={localInputValue}

@@ -41,8 +41,9 @@ const initialState: State = {
 	/** Unit boxes display only 1 GiB by default, other values to be filled in on first calculation */
 	unitBoxes: {
 		bytes: { value: 1, currUnit: 'GB', units: displayedByteUnitTypes },
-		fiat: { value: 0, currUnit: 'USD', units: displayedFiatUnitTypes },
-		ar: { value: 0, currUnit: 'AR' }
+		// Default -1 values here are to conditionally render input fields when data arrives
+		fiat: { value: -1, currUnit: 'USD', units: displayedFiatUnitTypes },
+		ar: { value: -1, currUnit: 'AR' }
 	}
 };
 
