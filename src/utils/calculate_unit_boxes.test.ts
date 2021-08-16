@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import { SinonStubbedInstance, stub } from 'sinon';
-import type { UnitBoxValues } from 'src/hooks/useCalculation';
+import type { UnitBoxValues } from '../hooks/useCalculation';
 import { ARDataPriceRegressionEstimator } from './ar_data_price_regression_estimator';
 import { UnitBoxCalculator } from './calculate_unit_boxes';
 import type { ARDataPriceEstimator } from './ar_data_price_estimator';
-import type { ArDriveCommunityTip } from 'src/types';
+import type { ArDriveCommunityTip } from '../types';
 
 describe('UnitBoxCalculator class', () => {
 	let unitBoxCalculator: UnitBoxCalculator;

@@ -3,7 +3,7 @@ import type { ArweaveOracle } from './arweave_oracle';
 import { ARDataPriceRegression } from './data_price_regression';
 import { ARDataPrice } from './ar_data_price';
 import type { ARDataPriceEstimator } from './ar_data_price_estimator';
-import type { ArDriveCommunityTip } from 'src/types';
+import type { ArDriveCommunityTip } from '../types';
 
 export const arPerWinston = 0.000_000_000_001;
 

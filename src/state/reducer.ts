@@ -1,4 +1,4 @@
-import type { ArDriveCommunityTip, FiatToAr, UnitBoxes } from 'src/types';
+import type { ArDriveCommunityTip, FiatToAr, UnitBoxes } from '../types';
 import type { State } from './state';
 
 export type Action =

@@ -10,7 +10,7 @@ import {
 import useOnOutsideClick from '../hooks/useOnOutsideClick';
 import UpArrowIcon from './icons/UpArrowIcon';
 import { useStateValue } from '../state/state';
-import type { ByteUnitType } from 'src/types';
+import type { ByteUnitType } from '../types';
 
 interface CurrentUnitProps {
 	units?: string[];
