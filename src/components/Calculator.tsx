@@ -24,10 +24,10 @@ export default function Calculator(): JSX.Element {
 	const { value, currUnit } = unitBoxes.bytes;
 	const currentBytes = convertUnit(value, currUnit, 'B');
 
-	const pngCount = Math.round((currentBytes / Math.pow(2, 20)) * 2.5); // 2.5 MB per picture
-	const movCount = Math.round((currentBytes / Math.pow(2, 20)) * 100); // 100 MB per minute
-	const mp3Count = Math.round((currentBytes / Math.pow(2, 20)) * 1); //     1 MB per minute
-	const docCount = Math.round((currentBytes / Math.pow(2, 10)) * 300); //   3 KB per doc
+	const pngCount = Math.round(currentBytes / (Math.pow(2, 20) * 2.5)); // 2.5 MB per picture
+	const movCount = Math.round(currentBytes / (Math.pow(2, 20) * 100)); // 100 MB per minute
+	const mp3Count = Math.round(currentBytes / (Math.pow(2, 20) * 1)); //     1 MB per minute
+	const docCount = Math.round(currentBytes / (Math.pow(2, 10) * 300)); // 300 KB per doc
 
 	const fileComparisons: [JSX.Element, string][] = [
 		[PngIcon(), `That's like ~${numberWithCommas(pngCount)} pictures`],
