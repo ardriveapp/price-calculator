@@ -1,3 +1,6 @@
+import type { TokenToFiatPrice } from './token_fiat_price';
+import type { FiatID, TokenID } from './fiat_oracle_types';
+
 export interface FiatOracle {
-	getUSDPriceForARAmount(ARAmount: number): Promise<number>;
+	getPriceForFiatTokenPair(fiat: FiatID, token: TokenID): Promise<TokenToFiatPrice>;
 }
