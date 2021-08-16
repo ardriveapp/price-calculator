@@ -31,7 +31,7 @@ function cachePairFilterFactory(fiat: FiatID, token: TokenID) {
  *    const response = await this.client.simple.price(params) // for getting the price of a currency
  */
 
-export class ARToFiatOracle implements FiatOracle {
+export class TokenToFiatOracle implements FiatOracle {
 	private cachedPrices: TokenToFiatPrice[] = [];
 	private cacheTimestamp = 0;
 	private syncPromise?: Promise<void>;
@@ -40,7 +40,7 @@ export class ARToFiatOracle implements FiatOracle {
 	 * @param {FiatID[]} fiats The currency IDs to quote arweave in
 	 * @param {TokenID[]} tokens The token ID of the requested coin
 	 * @param {number} cacheLifespan Milliseconds that has to pass until the cache is invalid
-	 * @return {ARToFiatOracle} A class representing the oracle for the selected currencies
+	 * @return {TokenToFiatOracle} A class representing the oracle for the selected currencies
 	 */
 	constructor(
 		private readonly fiats: FiatID[] = ['usd'],
