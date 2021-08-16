@@ -11,10 +11,10 @@ describe('UnitBoxCalculator class', () => {
 	let stubbedPriceEstimator: SinonStubbedInstance<ARDataPriceEstimator>;
 
 	/** Expected result when fiat or ar fields change */
-	const expectedResult: UnitBoxValues = { bytes: 0.849609, fiat: 10, ar: 1 };
+	const expectedResult: UnitBoxValues = { bytes: 1, fiat: 10, ar: 1 };
 
 	const fiatPerAr = 10;
-	const arDriveCommunityTip: ArDriveCommunityTip = { minARCommunityTip: 0.000_010_000_000, tipPercentage: 0.15 };
+	const arDriveCommunityTip: ArDriveCommunityTip = { minWinstonFee: 10, tipPercentage: 0.15 };
 
 	before(() => {
 		stubbedPriceEstimator = stub(new ARDataPriceRegressionEstimator(true));
@@ -25,12 +25,7 @@ describe('UnitBoxCalculator class', () => {
 
 	it('calculateUnitBoxValues function returns the correct unitBoxes when using the bytes unit to calculate', async () => {
 		const actual = await unitBoxCalculator.calculateUnitBoxValues(1, 'bytes', fiatPerAr, arDriveCommunityTip, 'KB');
-
-		/**
-		 * Expected result when bytes field changes
-		 * Community tip is applied to the fiat/ar fields
-		 */
-		expect(actual).to.deep.equal({ bytes: 1, fiat: 8.5, ar: 0.85 });
+		expect(actual).to.deep.equal(expectedResult);
 	});
 
 	it('calculateUnitBoxValues function returns the correct unitBoxes when using the fiat unit to calculate', async () => {

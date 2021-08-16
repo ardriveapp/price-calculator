@@ -29,7 +29,7 @@ export class UnitBoxCalculator {
 		value: number,
 		unit: keyof UnitBoxes,
 		fiatPerAR: number,
-		{ tipPercentage, minARCommunityTip }: ArDriveCommunityTip,
+		arDriveCommunityTip: ArDriveCommunityTip,
 		byteUnit: ByteUnitType
 	): Promise<UnitBoxValues> {
 		let newARValue: number;
@@ -38,7 +38,8 @@ export class UnitBoxCalculator {
 		switch (unit) {
 			case 'bytes':
 				newARValue = await this.arDataPriceEstimator.getARPriceForByteCount(
-					Math.round(convertUnit(value, byteUnit, 'B'))
+					Math.round(convertUnit(value, byteUnit, 'B')),
+					arDriveCommunityTip
 				);
 				userDefinedByteValue = value;
 				break;
@@ -52,24 +53,14 @@ export class UnitBoxCalculator {
 				break;
 		}
 
-		const communityARFee = Math.max(newARValue * tipPercentage, minARCommunityTip);
-
 		let byteCount: number;
 
 		if (userDefinedByteValue) {
 			// Use user defined byte value to ensure user's intended value remains unchanged
 			byteCount = userDefinedByteValue;
-			// Remove community fee from new AR value when user defines bytes
-			// Fee will be applied to AR and Fiat fields in this case
-			newARValue -= communityARFee;
 		} else {
-			// Remove community fee from calculated bytes value when user defines a new fiat or AR field
-			// Fee will be applied to the bytes field in this case
-			byteCount = convertUnit(
-				Math.round(await this.arDataPriceEstimator.getByteCountForAR(newARValue - communityARFee)),
-				'B',
-				byteUnit
-			);
+			const rawByteCount = await this.arDataPriceEstimator.getByteCountForAR(newARValue, arDriveCommunityTip);
+			byteCount = convertUnit(Math.round(rawByteCount), 'B', byteUnit);
 		}
 
 		const newByteValue = Number(Number(byteCount).toFixed(6));
