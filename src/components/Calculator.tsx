@@ -7,6 +7,9 @@ import MovIcon from './icons/MovIcon';
 import Mp3Icon from './icons/Mp3Icon';
 import DocIcon from './icons/DocIcon';
 import useCalculation from '../hooks/useCalculation';
+import { useStateValue } from '../state/state';
+import convertUnit from '../utils/convert_unit';
+import numberWithCommas from '../utils/number_with_commas';
 
 export interface FileComparison {
 	fileIcon: JSX.Element;
@@ -14,22 +17,23 @@ export interface FileComparison {
 }
 
 export default function Calculator(): JSX.Element {
-	/** @TODO Read current `bytes.value` from state management */
-	const currentBytes = 500000;
+	const [{ unitBoxes }] = useStateValue();
 
 	useCalculation();
 
-	/** @TODO Get real file sizes fir .mov | .png | .mp3 | .doc */
-	const pngCount = Math.round(currentBytes / 50000);
-	const movCount = Math.round(currentBytes / 100000);
-	const mp3Count = Math.round(currentBytes / 80000);
-	const docCount = Math.round(currentBytes / 20000);
+	const { value, currUnit } = unitBoxes.bytes;
+	const currentBytes = convertUnit(value, currUnit, 'B');
+
+	const pngCount = Math.round((currentBytes / Math.pow(2, 20)) * 2.5); // 2.5 MB per picture
+	const movCount = Math.round((currentBytes / Math.pow(2, 20)) * 100); // 100 MB per minute
+	const mp3Count = Math.round((currentBytes / Math.pow(2, 20)) * 1); //     1 MB per minute
+	const docCount = Math.round((currentBytes / Math.pow(2, 10)) * 300); //   3 KB per doc
 
 	const fileComparisons: [JSX.Element, string][] = [
-		[PngIcon(), `That's like ~${pngCount} pictures`],
-		[MovIcon(), `plus ~${movCount} videos`],
-		[Mp3Icon(), `and ~${mp3Count} songs`],
-		[DocIcon(), `or even ~${docCount} Word docs`]
+		[PngIcon(), `That's like ~${numberWithCommas(pngCount)} pictures`],
+		[MovIcon(), `plus ~${numberWithCommas(movCount)} minutes of video`],
+		[Mp3Icon(), `and ~${numberWithCommas(mp3Count)} minutes of music`],
+		[DocIcon(), `or even ~${numberWithCommas(docCount)} Word docs`]
 	];
 
 	return (
