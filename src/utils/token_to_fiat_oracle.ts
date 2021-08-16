@@ -61,14 +61,6 @@ export class TokenToFiatOracle implements FiatOracle {
 	}
 
 	/**
-	 * @returns {boolean} true if the third-party service is online
-	 */
-	public async ping(): Promise<boolean> {
-		const response = await fetch('https://api.coingecko.com/api/v3/ping');
-		return response.ok;
-	}
-
-	/**
 	 * @throws {@link Error} - If no such pair cached
 	 * @returns {Promise<TokenToFiatPrice>} The cached price value
 	 */
@@ -108,6 +100,7 @@ export class TokenToFiatOracle implements FiatOracle {
 	}
 
 	private updateCachePair(fiat: FiatID = 'usd', token: TokenID = 'arweave', amount: number): void {
+		/* It is safe to pop then push the element as javascript is single-threaded */
 		try {
 			this.popSingleCachePair(fiat, token);
 		} finally {
