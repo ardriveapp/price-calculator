@@ -34,8 +34,8 @@ const initialState: State = {
 	arDriveCommunityTip: {
 		/** Default ArDrive Community Tip percentage */
 		tipPercentage: 0.15,
-		/** Default ArDrive Minimum Community Tip in winston */
-		minWinstonTip: 10_000_000
+		/** Default ArDrive Minimum Community Tip in AR */
+		minARCommunityTip: 0.000_010_000_000
 	},
 
 	/** Unit boxes display only 1 GiB by default, other values to be filled in on first calculation */

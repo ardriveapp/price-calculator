@@ -1,6 +1,6 @@
 export interface ArDriveCommunityTip {
 	tipPercentage: number;
-	minWinstonTip: number;
+	minARCommunityTip: number;
 }
 
 export interface ArToData {
