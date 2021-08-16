@@ -17,7 +17,7 @@ export interface UnitBoxValues {
  * with the newly calculated boxes with one dispatch call
  */
 export default function useCalculation(): void {
-	const [{ unitBoxes }, dispatch] = useStateValue();
+	const [{ unitBoxes, arDriveCommunityTip }, dispatch] = useStateValue();
 	const [sendingCalculation, setSendingCalculation] = useState(false);
 
 	// Save previous unit box values for determining if a value has changed
@@ -70,6 +70,7 @@ export default function useCalculation(): void {
 				valueToCalculate,
 				unitBoxType,
 				fiatPerAR,
+				arDriveCommunityTip,
 				unitBoxes.bytes.currUnit
 			);
 
