@@ -10,7 +10,6 @@ describe('UnitBoxCalculator class', () => {
 	let unitBoxCalculator: UnitBoxCalculator;
 	let stubbedPriceEstimator: SinonStubbedInstance<ARDataPriceEstimator>;
 
-	/** Expected result when fiat or ar fields change */
 	const expectedResult: UnitBoxValues = { bytes: 1, fiat: 10, ar: 1 };
 
 	const fiatPerAr = 10;
