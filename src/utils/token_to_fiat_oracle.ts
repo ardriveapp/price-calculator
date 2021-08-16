@@ -1,5 +1,5 @@
 import type { FiatOracle } from './fiat_oracle';
-import type { CoinGeckoPriceRequestParams, CoinGeckoPriceResponseData, CoinGeckoResponse } from './coingecko_types';
+import type { CoinGeckoPriceRequestParams, CoinGeckoPriceResponseData } from './coingecko_types';
 import { TokenFiatPair } from './token_fiat_price';
 import type { FiatID, TokenID } from './fiat_oracle_types';
 
@@ -89,8 +89,7 @@ export class TokenToFiatOracle implements FiatOracle {
 	private async fetchPrices(): Promise<void> {
 		const queryUrl = this.getQueryRequestUrl();
 		const fetchResponse = await fetch(queryUrl);
-		const response: CoinGeckoResponse = await fetchResponse.json();
-		const responseData: CoinGeckoPriceResponseData = JSON.parse(response.data);
+		const responseData: CoinGeckoPriceResponseData = await fetchResponse.json();
 		this.fiats.forEach((fiat) => {
 			this.tokens.forEach((token) => {
 				const priceValue = responseData[token][fiat];
