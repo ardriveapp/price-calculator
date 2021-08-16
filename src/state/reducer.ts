@@ -28,12 +28,8 @@ export const reducer = (state: State, action: Action): State => {
 			};
 
 		/**
-		 * @TODO The unit boxes will be calculated together based off of any change
-		 * to their values or current unit fields
-		 *
-		 * We'll add a calculation hook `useCalculate` that will be fired immediately
-		 * upon unit change, and initially debounced when a value is changed
-		 *
+		 * The unit boxes are calculated together based off of any change
+		 * to their `value` or `currUnit` fields with the `useCalculate` hook.
 		 */
 		case 'setUnitBoxes':
 			return {

@@ -65,7 +65,6 @@ export default function useCalculation(): void {
 				unitBoxType = 'bytes';
 			}
 
-			/** @TODO ArDrive Community fee is not yet considered here, handle in PE-128 */
 			const newUnitBoxValues = await unitBoxCalculator.calculateUnitBoxValues(
 				valueToCalculate,
 				unitBoxType,
