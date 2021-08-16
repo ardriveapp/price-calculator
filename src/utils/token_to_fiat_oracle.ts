@@ -1,12 +1,12 @@
 import type { FiatOracle } from './fiat_oracle';
 import type { CoinGeckoPriceRequestParams, CoinGeckoPriceResponseData, CoinGeckoResponse } from './coingecko_types';
-import { TokenToFiatPrice } from './token_fiat_price';
+import { TokenFiatPair } from './token_fiat_price';
 import type { FiatID, TokenID } from './fiat_oracle_types';
 
-const pollingIntervalMilliseconds = 1000 * 60 * 15;
+const pollingIntervalMilliseconds = 1000 * 60 * 15; // 15 min
 
 function cachePairFilterFactory(fiat: FiatID, token: TokenID) {
-	return (p: TokenToFiatPrice) => p.fiat === fiat && p.token === token;
+	return (p: TokenFiatPair) => p.fiat === fiat && p.token === token;
 }
 
 /*
@@ -32,7 +32,7 @@ function cachePairFilterFactory(fiat: FiatID, token: TokenID) {
  */
 
 export class TokenToFiatOracle implements FiatOracle {
-	private cachedPrices: TokenToFiatPrice[] = [];
+	private cachedPrices: TokenFiatPair[] = [];
 	private cacheTimestamp = 0;
 	private syncPromise?: Promise<void>;
 
@@ -64,7 +64,7 @@ export class TokenToFiatOracle implements FiatOracle {
 	 * @throws {@link Error} - If no such pair cached
 	 * @returns {Promise<TokenToFiatPrice>} The cached price value
 	 */
-	public async getPriceForFiatTokenPair(fiat: FiatID = 'usd', token: TokenID = 'arweave'): Promise<TokenToFiatPrice> {
+	public async getPriceForFiatTokenPair(fiat: FiatID = 'usd', token: TokenID = 'arweave'): Promise<TokenFiatPair> {
 		await this.checkCache();
 		const pricePair = this.cachedPrices.find(cachePairFilterFactory(fiat, token));
 		if (!pricePair) {
@@ -78,8 +78,8 @@ export class TokenToFiatOracle implements FiatOracle {
 			return this.syncPromise;
 		}
 		const currentTimestamp = Date.now();
-		const deltaTimestapm = currentTimestamp - this.cacheTimestamp;
-		if (deltaTimestapm >= this.cacheLifespan) {
+		const deltaTimestamp = currentTimestamp - this.cacheTimestamp;
+		if (deltaTimestamp >= this.cacheLifespan) {
 			this.syncPromise = this.fetchPrices();
 			await this.syncPromise;
 			delete this.syncPromise;
@@ -99,17 +99,17 @@ export class TokenToFiatOracle implements FiatOracle {
 		});
 	}
 
-	private updateCachePair(fiat: FiatID = 'usd', token: TokenID = 'arweave', amount: number): void {
-		/* It is safe to pop then push the element as javascript is single-threaded */
+	private updateCachePair(fiat: FiatID = 'usd', token: TokenID = 'arweave', rate: number): void {
+		/* It is safe to pop, then push the element as javascript is single-threaded */
 		try {
 			this.popSingleCachePair(fiat, token);
 		} finally {
-			const updatedPrice = new TokenToFiatPrice(fiat, token, amount);
+			const updatedPrice = new TokenFiatPair(fiat, token, rate);
 			this.cachedPrices.push(updatedPrice);
 		}
 	}
 
-	private popSingleCachePair(fiat: FiatID = 'usd', token: TokenID = 'arweave'): TokenToFiatPrice {
+	private popSingleCachePair(fiat: FiatID = 'usd', token: TokenID = 'arweave'): TokenFiatPair {
 		const cachePairIndex = this.cachedPrices.findIndex(cachePairFilterFactory(fiat, token));
 		if (cachePairIndex === -1) {
 			throw new Error(`Pair not found`);
