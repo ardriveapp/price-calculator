@@ -110,9 +110,10 @@ export class TokenToFiatOracle implements FiatOracle {
 	private updateCachePair(fiat: FiatID = 'usd', token: TokenID = 'arweave', amount: number): void {
 		try {
 			this.popSingleCachePair(fiat, token);
-		} catch {}
-		const updatedPrice = new TokenToFiatPrice(fiat, token, amount);
-		this.cachedPrices.push(updatedPrice);
+		} finally {
+			const updatedPrice = new TokenToFiatPrice(fiat, token, amount);
+			this.cachedPrices.push(updatedPrice);
+		}
 	}
 
 	private popSingleCachePair(fiat: FiatID = 'usd', token: TokenID = 'arweave'): TokenToFiatPrice {
