@@ -3,11 +3,6 @@ export interface ArDriveCommunityTip {
 	minWinstonFee: number;
 }
 
-export interface ArToData {
-	winstonPerByte: number;
-	baseFee: number;
-}
-
 export type FiatToAr = {
 	// [FiatUnits in FiatUnitTypes]: number;
 	[key: string]: number;
