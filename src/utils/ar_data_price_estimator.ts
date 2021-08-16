@@ -1,4 +1,6 @@
+import type { ArDriveCommunityTip } from '../types';
+
 export interface ARDataPriceEstimator {
-	getARPriceForByteCount: (byteCount: number) => Promise<number>;
-	getByteCountForAR: (arPrice: number) => Promise<number>;
+	getARPriceForByteCount: (byteCount: number, arDriveCommunityTip: ArDriveCommunityTip) => Promise<number>;
+	getByteCountForAR: (arPrice: number, arDriveCommunityTip: ArDriveCommunityTip) => Promise<number>;
 }

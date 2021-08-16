@@ -3,6 +3,7 @@ import type { ArweaveOracle } from './arweave_oracle';
 import { ARDataPriceRegression } from './data_price_regression';
 import { ARDataPrice } from './ar_data_price';
 import type { ARDataPriceEstimator } from './ar_data_price_estimator';
+import type { ArDriveCommunityTip } from 'src/types';
 
 export const arPerWinston = 0.000_000_000_001;
 
@@ -83,12 +84,15 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 	 * Estimates the price in AR for a given byte count
 	 *
 	 * @remarks Will fetch pricing data for regression modeling if a regression has not yet been run.
-	 * @remarks The ArDrive community fee is not considered in this estimation
 	 */
-	public async getARPriceForByteCount(byteCount: number): Promise<number> {
+	public async getARPriceForByteCount(
+		byteCount: number,
+		{ minWinstonFee, tipPercentage }: ArDriveCommunityTip
+	): Promise<number> {
 		const winstonPrice = await this.getWinstonPriceForByteCount(byteCount);
+		const communityWinstonFee = Math.max(winstonPrice * tipPercentage, minWinstonFee);
 
-		return winstonPrice * arPerWinston;
+		return (winstonPrice + communityWinstonFee) * arPerWinston;
 	}
 
 	/**
@@ -119,10 +123,22 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 	 * Estimates the number of bytes that can be stored for a given amount of AR
 	 *
 	 * @remarks Will fetch pricing data for regression modeling if a regression has not yet been run.
-	 * @remarks The ArDrive community fee is not considered in this estimation
+	 * @remarks Returns 0 bytes when the price does not cover minimum ArDrive community fee
 	 */
-	public async getByteCountForAR(arPrice: number): Promise<number> {
+	public async getByteCountForAR(
+		arPrice: number,
+		{ minWinstonFee, tipPercentage }: ArDriveCommunityTip
+	): Promise<number> {
 		const winstonPrice = Math.round(arPrice / arPerWinston);
-		return this.getByteCountForWinston(winstonPrice);
+		const communityWinstonFee = Math.max(winstonPrice * tipPercentage, minWinstonFee);
+
+		const winstonPriceWithoutFee = winstonPrice - communityWinstonFee;
+
+		if (winstonPriceWithoutFee > 0) {
+			return this.getByteCountForWinston(winstonPriceWithoutFee);
+		}
+
+		// Specified `arPrice` does not cover provided `minimumWinstonFee`
+		return 0;
 	}
 }
