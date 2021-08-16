@@ -6,6 +6,7 @@ import PngIcon from './icons/PngIcon';
 import MovIcon from './icons/MovIcon';
 import Mp3Icon from './icons/Mp3Icon';
 import DocIcon from './icons/DocIcon';
+import useCalculation from '../hooks/useCalculation';
 
 export interface FileComparison {
 	fileIcon: JSX.Element;
@@ -15,6 +16,8 @@ export interface FileComparison {
 export default function Calculator(): JSX.Element {
 	/** @TODO Read current `bytes.value` from state management */
 	const currentBytes = 500000;
+
+	useCalculation();
 
 	/** @TODO Get real file sizes fir .mov | .png | .mp3 | .doc */
 	const pngCount = Math.round(currentBytes / 50000);
