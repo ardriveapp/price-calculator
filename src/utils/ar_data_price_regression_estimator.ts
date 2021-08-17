@@ -132,7 +132,7 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 		const winstonPrice = Math.round(arPrice / arPerWinston);
 		const communityWinstonFee = Math.max(winstonPrice * tipPercentage, minWinstonFee);
 
-		const winstonPriceWithoutFee = winstonPrice - communityWinstonFee;
+		const winstonPriceWithoutFee = Math.round(winstonPrice - communityWinstonFee);
 
 		if (winstonPriceWithoutFee > 0) {
 			return this.getByteCountForWinston(winstonPriceWithoutFee);
