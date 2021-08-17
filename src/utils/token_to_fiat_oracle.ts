@@ -37,7 +37,7 @@ export class TokenToFiatOracle implements FiatOracle {
 	private syncPromise?: Promise<void>;
 
 	/**
-	 * @param {FiatID[]} fiats The currency IDs to quote arweave in
+	 * @param {FiatID[]} fiats The currency IDs to quote tokens in
 	 * @param {TokenID[]} tokens The token ID of the requested coin
 	 * @param {number} cacheLifespan Milliseconds that has to pass until the cache is invalid
 	 * @param {@link fetch} _fetch The standard fetch method. Defined here for testing propuses
