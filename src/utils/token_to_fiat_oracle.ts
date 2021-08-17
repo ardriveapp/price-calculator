@@ -1,12 +1,12 @@
 import type { FiatOracle } from './fiat_oracle';
 import type { CoinGeckoPriceRequestParams, CoinGeckoPriceResponseData } from './coingecko_types';
-import { TokenFiatPair } from './token_fiat_price';
+import { TokenFiatPair, TokenFiatRate } from './token_fiat_price';
 import type { FiatID, TokenID } from './fiat_oracle_types';
 
 const pollingIntervalMilliseconds = 1000 * 60 * 15; // 15 min
 
-function cachePairFilterFactory(fiat: FiatID, token: TokenID) {
-	return (p: TokenFiatPair) => p.fiat === fiat && p.token === token;
+function cachePairFilterFactory(pair: TokenFiatPair) {
+	return (rate: TokenFiatRate) => rate.fiat === pair.fiat && rate.token === pair.token;
 }
 
 /*
@@ -32,7 +32,7 @@ function cachePairFilterFactory(fiat: FiatID, token: TokenID) {
  */
 
 export class TokenToFiatOracle implements FiatOracle {
-	private cachedPrices: TokenFiatPair[] = [];
+	private cachedPrices: TokenFiatRate[] = [];
 	private cacheTimestamp = 0;
 	private syncPromise?: Promise<void>;
 
@@ -74,11 +74,11 @@ export class TokenToFiatOracle implements FiatOracle {
 	 * @throws {@link Error} If no such pair cached
 	 * @returns {Promise<TokenToFiatPrice>} The cached price value
 	 */
-	public async getPriceForFiatTokenPair(fiat: FiatID = 'usd', token: TokenID = 'arweave'): Promise<TokenFiatPair> {
+	public async getPriceForFiatTokenPair(pair: TokenFiatPair): Promise<TokenFiatRate> {
 		await this.checkCache();
-		const pricePair = this.cachedPrices.find(cachePairFilterFactory(fiat, token));
+		const pricePair = this.cachedPrices.find(cachePairFilterFactory(pair));
 		if (!pricePair) {
-			throw new Error(`No such pair (${fiat}, ${token})`);
+			throw new Error(`No such pair (${pair.fiat}, ${pair.token})`);
 		}
 		return pricePair;
 	}
@@ -101,23 +101,23 @@ export class TokenToFiatOracle implements FiatOracle {
 		this.fiats.forEach((fiat) => {
 			this.tokens.forEach((token) => {
 				const priceValue = responseData[token][fiat];
-				this.updateCachePair(fiat, token, priceValue);
+				this.updateCachePair(new TokenFiatPair(fiat, token), priceValue);
 			});
 		});
 	}
 
-	private updateCachePair(fiat: FiatID = 'usd', token: TokenID = 'arweave', rate: number): void {
+	private updateCachePair(pair: TokenFiatPair, rate: number): void {
 		/* It is safe to pop, then push the element as javascript is single-threaded */
 		try {
-			this.popSingleCachePair(fiat, token);
+			this.popSingleCachePair(pair);
 		} finally {
-			const updatedPrice = new TokenFiatPair(fiat, token, rate);
+			const updatedPrice = new TokenFiatRate(pair.fiat, pair.token, rate);
 			this.cachedPrices.push(updatedPrice);
 		}
 	}
 
-	private popSingleCachePair(fiat: FiatID = 'usd', token: TokenID = 'arweave'): TokenFiatPair {
-		const cachePairIndex = this.cachedPrices.findIndex(cachePairFilterFactory(fiat, token));
+	private popSingleCachePair(pair: TokenFiatPair): TokenFiatRate {
+		const cachePairIndex = this.cachedPrices.findIndex(cachePairFilterFactory(pair));
 		if (cachePairIndex === -1) {
 			throw new Error(`Pair not found`);
 		}
