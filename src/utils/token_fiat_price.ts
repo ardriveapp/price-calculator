@@ -13,8 +13,8 @@ export class TokenFiatPair {
 	 * @throws {@link Error} if negative or non-integer values are provided for the fiat value
 	 */
 	constructor(readonly fiat: FiatID = 'usd', readonly token: TokenID = 'arweave', readonly rate: number) {
-		if (rate < 0 || !Number.isInteger(rate)) {
-			throw new Error(`rate (${rate}) should be a non-negative integer value.`);
+		if (rate < 0) {
+			throw new Error(`rate (${rate}) must be a non-negative number value.`);
 		}
 	}
 }
