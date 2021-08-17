@@ -15,7 +15,7 @@ type CoinGeckoCoinValue = {
 	[currency in FiatID]: number;
 };
 
-/* The below values were retrived from the CoinGecko API on August 13 of 2021.
+/* The below values were retrieved from the CoinGecko API on August 13 of 2021.
  * $ curl -X 'GET' \
  *   'https://api.coingecko.com/api/v3/simple/supported_vs_currencies' \
  *   -H 'accept: application/json'
