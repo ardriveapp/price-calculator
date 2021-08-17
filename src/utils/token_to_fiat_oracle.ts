@@ -62,6 +62,12 @@ export class TokenToFiatOracle implements FiatOracle {
 		return this.fiats.join(',');
 	}
 
+	private get shouldRefreshCacheData(): boolean {
+		const currentTimestamp = Date.now();
+		const deltaTimestamp = currentTimestamp - this.cacheTimestamp;
+		return deltaTimestamp >= this.cacheLifespan;
+	}
+
 	/**
 	 * @param {FiatID} fiat The fiat currency ID
 	 * @param {TokenID} token The token ID
@@ -81,9 +87,7 @@ export class TokenToFiatOracle implements FiatOracle {
 		if (this.currentlyFetchingPrice) {
 			return this.syncPromise;
 		}
-		const currentTimestamp = Date.now();
-		const deltaTimestamp = currentTimestamp - this.cacheTimestamp;
-		if (deltaTimestamp >= this.cacheLifespan) {
+		if (this.shouldRefreshCacheData) {
 			this.syncPromise = this.fetchPrices();
 			await this.syncPromise;
 			delete this.syncPromise;
