@@ -9,7 +9,7 @@ export class TokenFiatPair {
 	 * @param token a valid identifier for the crypto coin
 	 * @returns {TokenFiatPair} an instance with the given pair
 	 */
-	constructor(readonly fiat: FiatID = 'usd', readonly token: TokenID = 'arweave') {}
+	constructor(readonly fiat: FiatID = 'USD', readonly token: TokenID = 'ARWEAVE') {}
 }
 
 /**

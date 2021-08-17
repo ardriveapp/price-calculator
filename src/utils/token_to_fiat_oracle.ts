@@ -1,7 +1,7 @@
 import type { FiatOracle } from './fiat_oracle';
 import type { CoinGeckoPriceRequestParams, CoinGeckoPriceResponseData } from './coingecko_types';
 import { TokenFiatPair, TokenFiatRate } from './token_fiat_price';
-import type { FiatID, TokenID } from './fiat_oracle_types';
+import { FiatID, fiatIdToThirdParty, TokenID, tokenIdToThirdParty } from './fiat_oracle_types';
 
 const pollingIntervalMilliseconds = 1000 * 60 * 15; // 15 min
 
@@ -44,8 +44,8 @@ export class TokenToFiatOracle implements FiatOracle {
 	 * @return {TokenToFiatOracle} A class representing the oracle for the selected currencies
 	 */
 	constructor(
-		private readonly fiats: FiatID[] = ['usd'],
-		private readonly tokens: TokenID[] = ['arweave'],
+		private readonly fiats: FiatID[] = ['USD'],
+		private readonly tokens: TokenID[] = ['ARWEAVE'],
 		private readonly cacheLifespan = pollingIntervalMilliseconds,
 		private readonly _fetch = fetch
 	) {}
@@ -55,11 +55,11 @@ export class TokenToFiatOracle implements FiatOracle {
 	}
 
 	private get tokensCSV(): string {
-		return this.tokens.join(',');
+		return this.tokens.map(tokenIdToThirdParty).join(',');
 	}
 
 	private get fiatCSV(): string {
-		return this.fiats.join(',');
+		return this.fiats.map(fiatIdToThirdParty).join(',');
 	}
 
 	private get shouldRefreshCacheData(): boolean {
