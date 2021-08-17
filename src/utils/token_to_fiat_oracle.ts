@@ -63,7 +63,9 @@ export class TokenToFiatOracle implements FiatOracle {
 	}
 
 	/**
-	 * @throws {@link Error} - If no such pair cached
+	 * @param {FiatID} fiat The fiat currency ID
+	 * @param {TokenID} token The token ID
+	 * @throws {@link Error} If no such pair cached
 	 * @returns {Promise<TokenToFiatPrice>} The cached price value
 	 */
 	public async getPriceForFiatTokenPair(fiat: FiatID = 'usd', token: TokenID = 'arweave'): Promise<TokenFiatPair> {
