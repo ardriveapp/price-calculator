@@ -40,12 +40,14 @@ export class TokenToFiatOracle implements FiatOracle {
 	 * @param {FiatID[]} fiats The currency IDs to quote arweave in
 	 * @param {TokenID[]} tokens The token ID of the requested coin
 	 * @param {number} cacheLifespan Milliseconds that has to pass until the cache is invalid
+	 * @param {@link fetch} _fetch The standard fetch method. Defined here for testing propuses
 	 * @return {TokenToFiatOracle} A class representing the oracle for the selected currencies
 	 */
 	constructor(
 		private readonly fiats: FiatID[] = ['usd'],
 		private readonly tokens: TokenID[] = ['arweave'],
-		private readonly cacheLifespan = pollingIntervalMilliseconds
+		private readonly cacheLifespan = pollingIntervalMilliseconds,
+		private readonly _fetch = fetch
 	) {}
 
 	private get currentlyFetchingPrice(): boolean {
@@ -88,7 +90,7 @@ export class TokenToFiatOracle implements FiatOracle {
 
 	private async fetchPrices(): Promise<void> {
 		const queryUrl = this.getQueryRequestUrl();
-		const fetchResponse = await fetch(queryUrl);
+		const fetchResponse = await this._fetch(queryUrl);
 		const responseData: CoinGeckoPriceResponseData = await fetchResponse.json();
 		this.fiats.forEach((fiat) => {
 			this.tokens.forEach((token) => {
