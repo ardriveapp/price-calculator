@@ -50,8 +50,14 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 				name="textbox"
 				value={localInputValue}
 				onChange={(event) => {
-					setIsDebouncing(true);
-					setLocalInputValue(Math.abs(Number(event.target.value)));
+					const { value } = event.target;
+
+					// Only change local value if the user defined input converts to a number
+					if (!Number.isNaN(Number(value))) {
+						setIsDebouncing(true);
+						// Enforce positive integer with Math.abs()
+						setLocalInputValue(Math.abs(Number(value)));
+					}
 				}}
 			/>
 			<CurrentUnit units={unitBoxes[field].units} currentUnit={unitBoxes[field].currUnit}></CurrentUnit>
