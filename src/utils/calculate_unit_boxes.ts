@@ -37,10 +37,17 @@ export class UnitBoxCalculator {
 
 		switch (unit) {
 			case 'bytes':
-				newARValue = await this.arDataPriceEstimator.getARPriceForByteCount(
-					Math.round(convertUnit(value, byteUnit, 'B')),
-					arDriveCommunityTip
-				);
+				if (value === 0) {
+					// If user defines 0 bytes, the new AR value becomes 0
+					// rather than displaying the minimum fee
+					newARValue = 0;
+				} else {
+					newARValue = await this.arDataPriceEstimator.getARPriceForByteCount(
+						Math.round(convertUnit(value, byteUnit, 'B')),
+						arDriveCommunityTip
+					);
+				}
+
 				userDefinedByteValue = value;
 				break;
 
