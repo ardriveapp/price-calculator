@@ -22,7 +22,7 @@ describe('The numberWithCommas function', () => {
 		expect(numberWithCommas(-10_000_000)).to.equal('-10,000,000');
 	});
 
-	it('throws an error when used with a decimal value', () => {
-		expect(() => numberWithCommas(10_000_000.555_555_555)).to.throw(Error);
+	it('rounds to thousandths on non-integer decimal values ', () => {
+		expect(numberWithCommas(10_000_000.555_555_555)).to.equal('10,000,000.556');
 	});
 });
