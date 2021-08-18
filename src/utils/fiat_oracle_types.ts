@@ -14,10 +14,14 @@ const standardToThirdPartyFiatMapping = {
 export type TokenID = keyof typeof standardToThirdPartyTokenMapping;
 export type FiatID = keyof typeof standardToThirdPartyFiatMapping;
 
-export function tokenIdToThirdParty(token: TokenID): string {
+export function tokenIdToThirdParty<T extends TokenID>(token: T): TokenIDToThirdParty<T> {
 	return standardToThirdPartyTokenMapping[token];
 }
 
-export function fiatIdToThirdParty(fiat: FiatID): string {
+export function fiatIdToThirdParty<F extends FiatID>(fiat: F): FiatIDToThirdParty<F> {
 	return standardToThirdPartyFiatMapping[fiat];
 }
+
+export type TokenIDToThirdParty<T extends TokenID> = typeof standardToThirdPartyTokenMapping[T];
+
+export type FiatIDToThirdParty<F extends FiatID> = typeof standardToThirdPartyFiatMapping[F];

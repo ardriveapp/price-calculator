@@ -1,5 +1,3 @@
-import type { FiatID, TokenID } from './fiat_oracle_types';
-
 export interface CoinGeckoPriceRequestParams extends Record<string, string> {
 	// CSV of the coin IDs
 	ids: string;
@@ -7,12 +5,17 @@ export interface CoinGeckoPriceRequestParams extends Record<string, string> {
 	vs_currencies: string;
 }
 
-export type CoinGeckoPriceResponseData = {
-	[token in TokenID]: CoinGeckoCoinValue;
+export type CustomPriceDataResponse<
+	T extends CoinGeckoTokenId,
+	F extends CoinGeckoVSCurrency
+> = CoinGeckoPriceResponseData<F, T>;
+
+export type CoinGeckoPriceResponseData<F extends CoinGeckoVSCurrency, T extends CoinGeckoTokenId> = {
+	[token in T]: CoinGeckoRates<F>;
 };
 
-type CoinGeckoCoinValue = {
-	[currency in FiatID]: number;
+type CoinGeckoRates<F extends CoinGeckoVSCurrency> = {
+	[currency in F]: number;
 };
 
 /* The below values were retrieved from the CoinGecko API on August 13 of 2021.
