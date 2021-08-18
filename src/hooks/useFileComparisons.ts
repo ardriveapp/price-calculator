@@ -10,8 +10,8 @@ import type { BytesUnitBox } from '../types';
 // 2.5 MB per picture
 const bytesPerPicture = Math.pow(2, 20) * 2.5;
 
-// 100 MB per minute of video, 30 minute HD video for example value
-const bytesPerVideo = Math.pow(2, 20) * 100 * 30;
+// 100 MB per minute of video; 1 minute HD video for example value
+const bytesPerVideo = Math.pow(2, 20) * 100;
 
 // 1 MB per minute of music, 3 minute song for example value
 const bytesPerSong = Math.pow(2, 20) * 1 * 3;
