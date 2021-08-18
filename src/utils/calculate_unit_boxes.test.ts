@@ -22,6 +22,11 @@ describe('UnitBoxCalculator class', () => {
 		unitBoxCalculator = new UnitBoxCalculator(stubbedPriceEstimator);
 	});
 
+	it('calculateUnitBoxValues function returns the correct UnitBoxValues for 0 bytes', async () => {
+		const actual = await unitBoxCalculator.calculateUnitBoxValues(0, 'bytes', fiatPerAr, arDriveCommunityTip, 'KB');
+		expect(actual).to.deep.equal({ bytes: 0, fiat: 0, ar: 0 });
+	});
+
 	it('calculateUnitBoxValues function returns the correct unitBoxes when using the bytes unit to calculate', async () => {
 		const actual = await unitBoxCalculator.calculateUnitBoxValues(1, 'bytes', fiatPerAr, arDriveCommunityTip, 'KB');
 		expect(actual).to.deep.equal(expectedResult);
