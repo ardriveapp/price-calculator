@@ -7,6 +7,18 @@ import convertUnit from '../utils/convert_unit';
 import numberWithCommas from '../utils/number_with_commas';
 import type { BytesUnitBox } from '../types';
 
+// 2.5 MB per picture
+const bytesPerPicture = Math.pow(2, 20) * 2.5;
+
+// 100 MB per minute of video, 30 minute HD video for example value
+const bytesPerVideo = Math.pow(2, 20) * 100 * 30;
+
+// 1 MB per minute of music, 3 minute song for example value
+const bytesPerSong = Math.pow(2, 20) * 1 * 3;
+
+// 300 KB per doc
+const bytesPerDoc = Math.pow(2, 10) * 300;
+
 export default function useFileComparisons(currentByteUnitBox: BytesUnitBox): [JSX.Element, string][] {
 	const { value, currUnit } = currentByteUnitBox;
 	const [bytesToCalc, setBytesToCalc] = useState(convertUnit(value, currUnit, 'B'));
@@ -18,16 +30,16 @@ export default function useFileComparisons(currentByteUnitBox: BytesUnitBox): [J
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
 
-	const pngCount = Math.round(bytesToCalc / (Math.pow(2, 20) * 2.5)); // 2.5 MB per picture
-	const movCount = Math.round(bytesToCalc / (Math.pow(2, 20) * 100)); // 100 MB per minute of video
-	const mp3Count = Math.round(bytesToCalc / (Math.pow(2, 20) * 1)); //     1 MB per minute of music
-	const docCount = Math.round(bytesToCalc / (Math.pow(2, 10) * 300)); // 300 KB per doc
+	const pngCount = Math.round(bytesToCalc / bytesPerPicture);
+	const movCount = Math.round(bytesToCalc / bytesPerVideo);
+	const mp3Count = Math.round(bytesToCalc / bytesPerSong);
+	const docCount = Math.round(bytesToCalc / bytesPerDoc);
 
 	const fileComparisons: [JSX.Element, string][] = [
 		[PngIcon(), `That's like ~${numberWithCommas(pngCount)} pictures`],
-		[MovIcon(), `plus ~${numberWithCommas(movCount)} minutes of video`],
-		[Mp3Icon(), `and ~${numberWithCommas(mp3Count)} minutes of music`],
-		[DocIcon(), `or even ~${numberWithCommas(docCount)} Word docs`]
+		[MovIcon(), `Or ~${numberWithCommas(movCount)} HD videos`],
+		[Mp3Icon(), `Or ~${numberWithCommas(mp3Count)} songs`],
+		[DocIcon(), `Or even ~${numberWithCommas(docCount)} office docs`]
 	];
 
 	return fileComparisons;
