@@ -1,23 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-function useDebounce<T>(value: T, runDebounce = true, delay?: number): T {
-	const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
+function useDebounce(
+	value: number,
+	runDebounce = true,
+	dispatchValueToState: (value: number) => void,
+	delay = 1000
+): void {
 	useEffect(() => {
 		if (!runDebounce) {
 			// Escape debounce, don't update value
 			return;
 		}
 
-		const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
+		const timer = setTimeout(() => {
+			dispatchValueToState(value);
+		}, delay);
 
 		return () => {
 			clearTimeout(timer);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value, delay]);
-
-	return debouncedValue;
 }
 
 export default useDebounce;
