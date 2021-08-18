@@ -1,13 +1,16 @@
 import type { FiatOracle } from './fiat_oracle';
 import type { CoinGeckoPriceRequestParams, CoinGeckoPriceResponseData } from './coingecko_types';
 import { TokenFiatPair, TokenFiatRate } from './token_fiat_price';
-import { FiatID, fiatIdToThirdParty, TokenID, tokenIdToThirdParty } from './fiat_oracle_types';
+import {
+	FiatID,
+	FiatIDToThirdParty,
+	fiatIdToThirdParty,
+	TokenID,
+	TokenIDToThirdParty,
+	tokenIdToThirdParty
+} from './fiat_oracle_types';
 
 const pollingIntervalMilliseconds = 1000 * 60 * 15; // 15 min
-
-function cachePairFilterFactory(pair: TokenFiatPair) {
-	return (rate: TokenFiatRate) => rate.fiat === pair.fiat && rate.token === pair.token;
-}
 
 /*
  * The CoinGecko wrapper does not support browser.
@@ -31,35 +34,67 @@ function cachePairFilterFactory(pair: TokenFiatPair) {
  *    const response = await this.client.simple.price(params) // for getting the price of a currency
  */
 
-export class TokenToFiatOracle implements FiatOracle {
-	private cachedPrices: TokenFiatRate[] = [];
+export class TokenToFiatOracle<F extends FiatID, T extends TokenID> implements FiatOracle {
+	private readonly pair: TokenFiatPair<F, T>;
+
+	constructor(private readonly fiat: F, private readonly token: T) {
+		this.pair = new TokenFiatPair<F, T>(fiat, token);
+	}
+
+	public async getPriceForFiatTokenPair(): Promise<TokenFiatRate<F, T>> {
+		const pricesData = await this.fetchPairRate();
+		const thirdPartyTokenId = tokenIdToThirdParty(this.token);
+		const thirdPartyFiatId = fiatIdToThirdParty(this.fiat);
+		const allRates = pricesData[thirdPartyTokenId];
+		const price = allRates[thirdPartyFiatId];
+		const rateInstance = new TokenFiatRate(this.fiat, this.token, price);
+		return rateInstance;
+	}
+
+	private async fetchPairRate(): Promise<CoinGeckoPriceResponseData<FiatIDToThirdParty<F>, TokenIDToThirdParty<T>>> {
+		console.log('Fetching prices');
+		const queryUrl = this.getQueryRequestUrl();
+		const fetchResponse = await fetch(queryUrl);
+		console.log('Done fetching');
+		const responseData: CoinGeckoPriceResponseData<
+			FiatIDToThirdParty<F>,
+			TokenIDToThirdParty<T>
+		> = await fetchResponse.json();
+		return responseData;
+	}
+
+	private getQueryRequestUrl(): string {
+		const params: CoinGeckoPriceRequestParams = {
+			ids: tokenIdToThirdParty(this.token),
+			vs_currencies: fiatIdToThirdParty(this.fiat)
+		};
+		const parsedParams = new URLSearchParams(params).toString();
+		const queryUrl = `https://api.coingecko.com/api/v3/simple/price?${parsedParams}`;
+		return queryUrl;
+	}
+}
+
+export class CachingTokenToFiatOracle<F extends FiatID, T extends TokenID> implements FiatOracle {
+	private cachedRate?: TokenFiatRate<F, T>;
 	private cacheTimestamp = 0;
 	private syncPromise?: Promise<void>;
 
 	/**
-	 * @param {FiatID[]} fiats The currency IDs to quote tokens in
-	 * @param {TokenID[]} tokens The token ID of the requested coin
+	 * @param {FiatID[]} fiat The currency IDs to quote tokens in
+	 * @param {TokenID[]} token The token ID of the requested coin
 	 * @param {number} cacheLifespan Milliseconds that has to pass until the cache is invalid
-	 * @param {@link fetch} _fetch The standard fetch method. Defined here for testing propuses
-	 * @return {TokenToFiatOracle} A class representing the oracle for the selected currencies
+	 * @param {TokenToFiatOracle} fiatOracle
+	 * @return {CachingTokenToFiatOracle} A class representing the oracle for the selected currencies
 	 */
 	constructor(
-		private readonly fiats: FiatID[] = ['USD'],
-		private readonly tokens: TokenID[] = ['ARWEAVE'],
+		private readonly fiat: F,
+		private readonly token: T,
 		private readonly cacheLifespan = pollingIntervalMilliseconds,
-		private readonly _fetch = fetch
+		private readonly fiatOracle: FiatOracle = new TokenToFiatOracle(fiat, token)
 	) {}
 
 	private get currentlyFetchingPrice(): boolean {
 		return !!this.syncPromise;
-	}
-
-	private get tokensCSV(): string {
-		return this.tokens.map(tokenIdToThirdParty).join(',');
-	}
-
-	private get fiatCSV(): string {
-		return this.fiats.map(fiatIdToThirdParty).join(',');
 	}
 
 	private get shouldRefreshCacheData(): boolean {
@@ -74,11 +109,11 @@ export class TokenToFiatOracle implements FiatOracle {
 	 * @throws {@link Error} If no such pair cached
 	 * @returns {Promise<TokenToFiatPrice>} The cached price value
 	 */
-	public async getPriceForFiatTokenPair(pair: TokenFiatPair): Promise<TokenFiatRate> {
+	public async getPriceForFiatTokenPair(): Promise<TokenFiatRate<F, T>> {
 		await this.checkCache();
-		const pricePair = this.cachedPrices.find(cachePairFilterFactory(pair));
+		const pricePair = this.cachedRate;
 		if (!pricePair) {
-			throw new Error(`No such pair (${pair.fiat}, ${pair.token})`);
+			throw new Error(`No such pair (${this.fiat}, ${this.token})`);
 		}
 		return pricePair;
 	}
@@ -95,43 +130,12 @@ export class TokenToFiatOracle implements FiatOracle {
 	}
 
 	private async fetchPrices(): Promise<void> {
-		const queryUrl = this.getQueryRequestUrl();
-		const fetchResponse = await this._fetch(queryUrl);
-		const responseData: CoinGeckoPriceResponseData = await fetchResponse.json();
-		this.fiats.forEach((fiat) => {
-			this.tokens.forEach((token) => {
-				const priceValue = responseData[token][fiat];
-				this.updateCachePair(new TokenFiatPair(fiat, token), priceValue);
-			});
-		});
+		const rate = await this.fiatOracle.getPriceForFiatTokenPair();
+		this.updateCachePair(rate.rate);
 	}
 
-	private updateCachePair(pair: TokenFiatPair, rate: number): void {
-		/* It is safe to pop, then push the element as javascript is single-threaded */
-		try {
-			this.popSingleCachePair(pair);
-		} finally {
-			const updatedPrice = new TokenFiatRate(pair.fiat, pair.token, rate);
-			this.cachedPrices.push(updatedPrice);
-		}
-	}
-
-	private popSingleCachePair(pair: TokenFiatPair): TokenFiatRate {
-		const cachePairIndex = this.cachedPrices.findIndex(cachePairFilterFactory(pair));
-		if (cachePairIndex === -1) {
-			throw new Error(`Pair not found`);
-		}
-		const cachePairPrice = this.cachedPrices.splice(cachePairIndex, 1)[0];
-		return cachePairPrice;
-	}
-
-	private getQueryRequestUrl(): string {
-		const params: CoinGeckoPriceRequestParams = {
-			ids: this.tokensCSV,
-			vs_currencies: this.fiatCSV
-		};
-		const parsedParams = new URLSearchParams(params).toString();
-		const queryUrl = `https://api.coingecko.com/api/v3/simple/price?${parsedParams}`;
-		return queryUrl;
+	private updateCachePair(rate: number): void {
+		const updatedPrice = new TokenFiatRate<F, T>(this.fiat, this.token, rate);
+		this.cachedRate = updatedPrice;
 	}
 }
