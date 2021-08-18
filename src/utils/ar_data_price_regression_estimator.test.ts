@@ -63,7 +63,7 @@ describe('ARDataPriceEstimator class', () => {
 		});
 	});
 
-	describe('getByteCountForAR function r', () => {
+	describe('getByteCountForAR function', () => {
 		it('returns the expected value', async () => {
 			const actualByteCountEstimation = await calculator.getByteCountForAR(
 				0.000_000_000_100,
