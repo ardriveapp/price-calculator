@@ -48,7 +48,7 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 				style={hideInput}
 				type="number"
 				name="textbox"
-				value={localInputValue}
+				value={localInputValue.toString()} // `toString` is to remove any leading 0s
 				onChange={(event) => {
 					const { value } = event.target;
 
