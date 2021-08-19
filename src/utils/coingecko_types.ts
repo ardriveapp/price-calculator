@@ -8,9 +8,9 @@ export interface CoinGeckoPriceRequestParams extends Record<string, string> {
 export type CustomPriceDataResponse<
 	T extends CoinGeckoTokenId,
 	F extends CoinGeckoVSCurrency
-> = CoinGeckoPriceResponseData<F, T>;
+> = CoinGeckoPriceResponseData<T, F>;
 
-export type CoinGeckoPriceResponseData<F extends CoinGeckoVSCurrency, T extends CoinGeckoTokenId> = {
+export type CoinGeckoPriceResponseData<T extends CoinGeckoTokenId, F extends CoinGeckoVSCurrency> = {
 	[token in T]: CoinGeckoRates<F>;
 };
 

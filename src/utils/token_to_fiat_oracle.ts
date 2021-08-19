@@ -74,23 +74,24 @@ export class TokenToFiatOracle<F extends FiatID, T extends TokenID> implements F
 	}
 }
 
-export class CachingTokenToFiatOracle<F extends FiatID, T extends TokenID> implements FiatOracle {
-	private cachedRate?: TokenFiatRate<F, T>;
+export class CachingTokenToFiatOracle<T extends TokenID, F extends FiatID> implements FiatOracle<T, F> {
+	private cachedRates: TokenFiatRate<T, F>[] = [];
 	private cacheTimestamp = 0;
 	private syncPromise?: Promise<void>;
 
 	/**
-	 * @param {FiatID[]} fiat The currency IDs to quote tokens in
-	 * @param {TokenID[]} token The token ID of the requested coin
+	 * @param {FiatID[]} fiats The currency IDs to quote tokens in
+	 * @param {TokenID[]} tokens The token ID of the requested coin
 	 * @param {number} cacheLifespan Milliseconds that has to pass until the cache is invalid
 	 * @param {TokenToFiatOracle} fiatOracle
 	 * @return {CachingTokenToFiatOracle} A class representing the oracle for the selected currencies
 	 */
 	constructor(
-		private readonly fiat: F,
-		private readonly token: T,
+		private readonly tokens: T[],
+		private readonly fiats: F[],
 		private readonly cacheLifespan = pollingIntervalMilliseconds,
-		private readonly fiatOracle: FiatOracle = new TokenToFiatOracle(fiat, token)
+		maxRetryCount = 0,
+		private readonly fiatOracle: FiatOracle<T, F> = new TokenToFiatOracle(tokens, fiats, maxRetryCount)
 	) {}
 
 	private get currentlyFetchingPrice(): boolean {
@@ -104,16 +105,17 @@ export class CachingTokenToFiatOracle<F extends FiatID, T extends TokenID> imple
 	}
 
 	/**
-	 * @param {FiatID} fiat The fiat currency ID
-	 * @param {TokenID} token The token ID
+	 * @param {FiatID} pair
 	 * @throws {@link Error} If no such pair cached
 	 * @returns {Promise<TokenToFiatPrice>} The cached price value
 	 */
-	public async getPriceForFiatTokenPair(): Promise<TokenFiatRate<F, T>> {
+	public async getPriceForFiatTokenPair<Token extends T, Fiat extends F>(
+		pair: TokenFiatPair<Token, Fiat>
+	): Promise<TokenFiatRate<Token, Fiat>> {
 		await this.checkCache();
-		const pricePair = this.cachedRate;
+		const pricePair = this.cachedRates.find(pairFilterFactory(pair)) as TokenFiatRate<Token, Fiat> | undefined;
 		if (!pricePair) {
-			throw new Error(`No such pair (${this.fiat}, ${this.token})`);
+			throw new Error(`No such pair (${pair.fiat}, ${pair.token})`);
 		}
 		return pricePair;
 	}
