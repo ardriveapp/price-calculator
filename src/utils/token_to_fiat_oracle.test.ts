@@ -9,7 +9,7 @@ type UsdID = 'USD';
 const token: ArweaveID = 'ARWEAVE';
 const fiat: UsdID = 'USD';
 const myTestingPair = new TokenFiatPair(token, fiat);
-const testingCacheLifespan = 1000 * 0; // 2 sec
+const testingCacheLifespan = 1000 * 0; // 0 sec
 const examplePriceValue = 15.05;
 
 describe('The CachingTokenToFiatOracle class', () => {
@@ -33,7 +33,6 @@ describe('The CachingTokenToFiatOracle class', () => {
 	});
 
 	it('Performs a second fetch when getPriceForFiatTokenPair() is called after the timeout expires', async () => {
-		await oracle.getPriceForFiatTokenPair(myTestingPair);
 		await oracle.getPriceForFiatTokenPair(myTestingPair);
 		expect(stubbedOracle.getPriceForFiatTokenPair.callCount).to.equal(2);
 	});
