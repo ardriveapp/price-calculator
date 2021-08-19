@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { stub } from 'sinon';
-import { TokenFiatRate } from './token_fiat_price';
+import { TokenFiatPair, TokenFiatRate } from './token_fiat_price';
 import { CachingTokenToFiatOracle, TokenToFiatOracle } from './token_to_fiat_oracle';
 
 type ArweaveID = 'ARWEAVE';
@@ -8,17 +8,18 @@ type UsdID = 'USD';
 
 const token: ArweaveID = 'ARWEAVE';
 const fiat: UsdID = 'USD';
-const testingCacheLifespan = 1000 * 2; // 2 sec
-
+const myTestingPair = new TokenFiatPair(token, fiat);
+const testingCacheLifespan = 1000 * 0; // 2 sec
 const examplePriceValue = 15.05;
-describe('The TokenToFiatOracle class', () => {
-	const stubbedOracle = stub(new TokenToFiatOracle(fiat, token));
-	let oracle: CachingTokenToFiatOracle<UsdID, ArweaveID>;
+
+describe('The CachingTokenToFiatOracle class', () => {
+	const stubbedOracle = stub(new TokenToFiatOracle<ArweaveID, UsdID>([token], [fiat]));
+	let oracle: CachingTokenToFiatOracle<ArweaveID, UsdID>;
 
 	before(() => {
-		oracle = new CachingTokenToFiatOracle(fiat, token, testingCacheLifespan, stubbedOracle);
+		oracle = new CachingTokenToFiatOracle([token], [fiat], testingCacheLifespan, 0, stubbedOracle);
 		stubbedOracle.getPriceForFiatTokenPair.callsFake(
-			async () => new TokenFiatRate<UsdID, ArweaveID>(fiat, token, examplePriceValue)
+			async () => new TokenFiatRate<ArweaveID, UsdID>(token, fiat, examplePriceValue)
 		);
 	});
 
@@ -27,17 +28,13 @@ describe('The TokenToFiatOracle class', () => {
 	});
 
 	it('Performs a fetch when getPriceForFiatTokenPair() is first called', async () => {
-		await oracle.getPriceForFiatTokenPair();
+		await oracle.getPriceForFiatTokenPair(myTestingPair);
 		expect(stubbedOracle.getPriceForFiatTokenPair.callCount).to.equal(1);
 	});
 
-	it('Performs a second fetch when getPriceForFiatTokenPair() is called after the timeout expires', function (done) {
-		this.timeout(testingCacheLifespan + 100);
-		setTimeout(() => {
-			oracle.getPriceForFiatTokenPair().then(() => {
-				expect(stubbedOracle.getPriceForFiatTokenPair.callCount).to.equal(2);
-				done();
-			});
-		}, testingCacheLifespan);
+	it('Performs a second fetch when getPriceForFiatTokenPair() is called after the timeout expires', async () => {
+		await oracle.getPriceForFiatTokenPair(myTestingPair);
+		await oracle.getPriceForFiatTokenPair(myTestingPair);
+		expect(stubbedOracle.getPriceForFiatTokenPair.callCount).to.equal(2);
 	});
 });

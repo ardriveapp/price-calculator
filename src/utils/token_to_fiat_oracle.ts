@@ -74,9 +74,7 @@ export class TokenToFiatOracle<T extends TokenID, F extends FiatID> implements F
 	 * @throws {@link Error} If all the retry fails
 	 * @returns {Promise<TokenToFiatPrice>} The cached price value
 	 */
-	public async getPriceForFiatTokenPair<Token extends T, Fiat extends F>(
-		pair: TokenFiatPair<Token, Fiat>
-	): Promise<TokenFiatRate<Token, Fiat>> {
+	public async getPriceForFiatTokenPair(pair: TokenFiatPair<T, F>): Promise<TokenFiatRate<T, F>> {
 		if (!isValidData<CoinGeckoPriceResponseData<TokenIDToThirdParty<T>, FiatIDToThirdParty<F>>>(this.data)) {
 			await this.fetchPairRatesRetry();
 		}
@@ -181,11 +179,9 @@ export class CachingTokenToFiatOracle<T extends TokenID, F extends FiatID> imple
 	 * @throws {@link Error} If no such pair cached
 	 * @returns {Promise<TokenToFiatPrice>} The cached price value
 	 */
-	public async getPriceForFiatTokenPair<Token extends T, Fiat extends F>(
-		pair: TokenFiatPair<Token, Fiat>
-	): Promise<TokenFiatRate<Token, Fiat>> {
+	public async getPriceForFiatTokenPair(pair: TokenFiatPair<T, F>): Promise<TokenFiatRate<T, F>> {
 		await this.checkCache();
-		const pricePair = this.cachedRates.find(pairFilterFactory(pair)) as TokenFiatRate<Token, Fiat> | undefined;
+		const pricePair = this.cachedRates.find(pairFilterFactory(pair)) as TokenFiatRate<T, F> | undefined;
 		if (!pricePair) {
 			throw new Error(`No such pair (${pair.fiat}, ${pair.token})`);
 		}
@@ -201,8 +197,6 @@ export class CachingTokenToFiatOracle<T extends TokenID, F extends FiatID> imple
 			return this.syncPromise;
 		}
 		if (this.shouldRefreshCacheData) {
-			// await this.syncPromise;
-			// delete this.syncPromise;
 			this.fiatOracle.reset();
 			this.syncPromise = this.refreshPrices();
 		}
@@ -223,7 +217,7 @@ export class CachingTokenToFiatOracle<T extends TokenID, F extends FiatID> imple
 		await Promise.all(allRatePromises);
 	}
 
-	private updateCachePair<Token extends T, Fiat extends F>(updatedRate: TokenFiatRate<T, F>): void {
+	private updateCachePair<Token extends T, Fiat extends F>(updatedRate: TokenFiatRate<Token, Fiat>): void {
 		const rateIndex = this.cachedRates.findIndex(pairFilterFactory(updatedRate));
 		this.cachedRates.splice(rateIndex, 1, updatedRate);
 	}
