@@ -10,7 +10,17 @@ import {
 	tokenIdToThirdParty
 } from './fiat_oracle_types';
 
+const COMMA_SEPARATOR = ',';
 const pollingIntervalMilliseconds = 1000 * 60 * 15; // 15 min
+
+function isValidData<T>(d: unknown): d is T {
+	// FIXME: please actually assert the structure of d to be a CoinGeckoPriceResponseData
+	return !!d;
+}
+
+function pairFilterFactory<T extends TokenID, F extends FiatID>(pair: TokenFiatPair<T, F>) {
+	return (p: TokenFiatPair<any, any>) => p.token === pair.token && p.fiat === pair.fiat;
+}
 
 /*
  * The CoinGecko wrapper does not support browser.
@@ -34,39 +44,101 @@ const pollingIntervalMilliseconds = 1000 * 60 * 15; // 15 min
  *    const response = await this.client.simple.price(params) // for getting the price of a currency
  */
 
-export class TokenToFiatOracle<F extends FiatID, T extends TokenID> implements FiatOracle {
-	private readonly pair: TokenFiatPair<F, T>;
+export class TokenToFiatOracle<T extends TokenID, F extends FiatID> implements FiatOracle<T, F> {
+	// private readonly pair: TokenFiatPair<F, T>;
+	private data?: CoinGeckoPriceResponseData<TokenIDToThirdParty<T>, FiatIDToThirdParty<F>>;
+	private fetchPromise?: Promise<void>;
 
-	constructor(private readonly fiat: F, private readonly token: T) {
-		this.pair = new TokenFiatPair<F, T>(fiat, token);
+	constructor(
+		private readonly tokens: T[],
+		private readonly fiats: F[],
+		private readonly maxRetyCount = 0,
+		skipFetch = false
+	) {
+		// this.pair = new TokenFiatPair<F, T>(fiats, tokens);
+		if (!skipFetch) {
+			this.fetchPairRatesRetry();
+		}
 	}
 
-	public async getPriceForFiatTokenPair(): Promise<TokenFiatRate<F, T>> {
-		const pricesData = await this.fetchPairRate();
-		const thirdPartyTokenId = tokenIdToThirdParty(this.token);
-		const thirdPartyFiatId = fiatIdToThirdParty(this.fiat);
-		const allRates = pricesData[thirdPartyTokenId];
-		const price = allRates[thirdPartyFiatId];
-		const rateInstance = new TokenFiatRate(this.fiat, this.token, price);
-		return rateInstance;
+	private get tokensCSV(): string {
+		return this.tokens.map(tokenIdToThirdParty).join(COMMA_SEPARATOR);
 	}
 
-	private async fetchPairRate(): Promise<CoinGeckoPriceResponseData<FiatIDToThirdParty<F>, TokenIDToThirdParty<T>>> {
-		console.log('Fetching prices');
+	private get fiatsCSV(): string {
+		return this.fiats.map(fiatIdToThirdParty).join(COMMA_SEPARATOR);
+	}
+
+	/**
+	 * @param {TokenFiatPair} pair
+	 * @throws {@link Error} If all the retry fails
+	 * @returns {Promise<TokenToFiatPrice>} The cached price value
+	 */
+	public async getPriceForFiatTokenPair<Token extends T, Fiat extends F>(
+		pair: TokenFiatPair<Token, Fiat>
+	): Promise<TokenFiatRate<Token, Fiat>> {
+		if (!isValidData<CoinGeckoPriceResponseData<TokenIDToThirdParty<T>, FiatIDToThirdParty<F>>>(this.data)) {
+			await this.fetchPairRatesRetry();
+		}
+		if (isValidData<CoinGeckoPriceResponseData<TokenIDToThirdParty<T>, FiatIDToThirdParty<F>>>(this.data)) {
+			const thirdPartyTokenId = tokenIdToThirdParty(pair.token);
+			const thirdPartyFiatId = fiatIdToThirdParty(pair.fiat);
+			const allRates = this.data[thirdPartyTokenId];
+			const price = allRates[thirdPartyFiatId];
+			const rateInstance = new TokenFiatRate(pair.token, pair.fiat, price);
+			return rateInstance;
+		} else {
+			throw new Error(`Could not get price`);
+		}
+	}
+
+	public reset(): void {
+		this.data = undefined;
+	}
+
+	private async fetchPairRatesRetry(): Promise<void> {
+		const fetchPromise = new Promise<void>((resolve, reject) => {
+			let count = 0;
+			let thePromiseString = this.fetchPairRates();
+			do {
+				thePromiseString = thePromiseString.catch(() => {
+					if (
+						count < this.maxRetyCount &&
+						!isValidData<CoinGeckoPriceResponseData<TokenIDToThirdParty<T>, FiatIDToThirdParty<F>>>(
+							this.data
+						)
+					) {
+						return this.fetchPairRates();
+					} else {
+						reject();
+					}
+				});
+				count++;
+			} while (count <= this.maxRetyCount);
+			thePromiseString = thePromiseString.then(() => {
+				resolve();
+			});
+		});
+		await fetchPromise;
+	}
+
+	private async fetchPairRates(): Promise<void> {
+		if (isValidData<CoinGeckoPriceResponseData<TokenIDToThirdParty<T>, FiatIDToThirdParty<F>>>(this.data)) {
+			return this.fetchPromise;
+		}
 		const queryUrl = this.getQueryRequestUrl();
 		const fetchResponse = await fetch(queryUrl);
-		console.log('Done fetching');
 		const responseData: CoinGeckoPriceResponseData<
-			FiatIDToThirdParty<F>,
-			TokenIDToThirdParty<T>
+			TokenIDToThirdParty<T>,
+			FiatIDToThirdParty<F>
 		> = await fetchResponse.json();
-		return responseData;
+		this.data = responseData;
 	}
 
 	private getQueryRequestUrl(): string {
 		const params: CoinGeckoPriceRequestParams = {
-			ids: tokenIdToThirdParty(this.token),
-			vs_currencies: fiatIdToThirdParty(this.fiat)
+			ids: this.tokensCSV,
+			vs_currencies: this.fiatsCSV
 		};
 		const parsedParams = new URLSearchParams(params).toString();
 		const queryUrl = `https://api.coingecko.com/api/v3/simple/price?${parsedParams}`;
@@ -120,24 +192,39 @@ export class CachingTokenToFiatOracle<T extends TokenID, F extends FiatID> imple
 		return pricePair;
 	}
 
+	public reset(): void {
+		this.fiatOracle.reset();
+	}
+
 	private async checkCache(): Promise<void> {
 		if (this.currentlyFetchingPrice) {
 			return this.syncPromise;
 		}
 		if (this.shouldRefreshCacheData) {
-			this.syncPromise = this.fetchPrices();
-			await this.syncPromise;
-			delete this.syncPromise;
+			// await this.syncPromise;
+			// delete this.syncPromise;
+			this.fiatOracle.reset();
+			this.syncPromise = this.refreshPrices();
 		}
 	}
 
-	private async fetchPrices(): Promise<void> {
-		const rate = await this.fiatOracle.getPriceForFiatTokenPair();
-		this.updateCachePair(rate.rate);
+	private async refreshPrices(): Promise<void> {
+		const allRatePromises: Promise<void>[] = [];
+		this.tokens.forEach((token) => {
+			this.fiats.forEach((fiat) => {
+				const pair = new TokenFiatPair(token, fiat);
+				allRatePromises.push(
+					this.fiatOracle.getPriceForFiatTokenPair(pair).then((rate) => {
+						this.updateCachePair(rate);
+					})
+				);
+			});
+		});
+		await Promise.all(allRatePromises);
 	}
 
-	private updateCachePair(rate: number): void {
-		const updatedPrice = new TokenFiatRate<F, T>(this.fiat, this.token, rate);
-		this.cachedRate = updatedPrice;
+	private updateCachePair<Token extends T, Fiat extends F>(updatedRate: TokenFiatRate<T, F>): void {
+		const rateIndex = this.cachedRates.findIndex(pairFilterFactory(updatedRate));
+		this.cachedRates.splice(rateIndex, 1, updatedRate);
 	}
 }

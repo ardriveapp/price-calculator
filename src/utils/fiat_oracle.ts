@@ -5,4 +5,6 @@ export interface FiatOracle<T extends TokenID, F extends FiatID> {
 	getPriceForFiatTokenPair<Token extends T, Fiat extends F>(
 		pair: TokenFiatPair<Token, Fiat>
 	): Promise<TokenFiatRate<Token, Fiat>>;
+
+	reset(): void;
 }
