@@ -14,12 +14,12 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 	const [{ unitBoxes }, dispatch] = useStateValue();
 	const globalInputValue = unitBoxes[field].value;
 
-	const [localInputValue, setLocalInputValue] = useState(globalInputValue);
+	const [localInputValue, setLocalInputValue] = useState(globalInputValue.toString());
 	const [isDebouncing, setIsDebouncing] = useState(false);
 
-	if (localInputValue !== globalInputValue && !isDebouncing) {
+	if (Number(localInputValue) !== globalInputValue && !isDebouncing) {
 		// Calculation has been changed in the global state, set to new local value if NOT debouncing
-		setLocalInputValue(globalInputValue);
+		setLocalInputValue(globalInputValue.toString());
 	}
 
 	/**
@@ -44,21 +44,25 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 	 * Will skip the debounce if `!isDebouncing`. This allows the localInputValue
 	 * to freely be changed by global state calculation without triggering debounces
 	 */
-	useDebounce(localInputValue, isDebouncing, dispatchValueToState, 1000);
+	useDebounce(Number(localInputValue), isDebouncing, dispatchValueToState, 1000);
 
 	/** Initially hides fiat and AR inputs until data arrives and first calculation has settled */
 	const hideInput: React.CSSProperties = { visibility: globalInputValue !== -1 ? 'visible' : 'hidden' };
 
 	function onTextBoxInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
-		const userInputValue = Number(event.target.value);
+		let userInputValue = event.target.value;
 
 		// Only trigger debounced from local value change if the
 		// user defined input converts to a number
 		if (!Number.isNaN(userInputValue)) {
 			setIsDebouncing(true);
 
-			// Enforce positive integer with Math.abs()
-			setLocalInputValue(Math.abs(userInputValue));
+			if (Number(userInputValue) < 0) {
+				// Enforce positive integers with Math.abs()
+				userInputValue = Math.abs(Number(userInputValue)).toString();
+			}
+
+			setLocalInputValue(userInputValue);
 		}
 	}
 
@@ -68,7 +72,7 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 				style={hideInput}
 				type="number"
 				name="textbox"
-				value={localInputValue.toString()} // `toString` is to remove any leading 0s
+				value={localInputValue}
 				onChange={onTextBoxInputChange}
 			/>
 			<CurrentUnit units={unitBoxes[field].units} currentUnit={unitBoxes[field].currUnit}></CurrentUnit>
