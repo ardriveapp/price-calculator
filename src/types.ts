@@ -1,11 +1,6 @@
 export interface ArDriveCommunityTip {
 	tipPercentage: number;
-	minWinstonTip: number;
-}
-
-export interface ArToData {
-	winstonPerByte: number;
-	baseFee: number;
+	minWinstonFee: number;
 }
 
 export type FiatToAr = {

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { ExpandableTrailingIcon } from './Expandable.style';
 
 import {
@@ -10,7 +10,7 @@ import {
 import useOnOutsideClick from '../hooks/useOnOutsideClick';
 import UpArrowIcon from './icons/UpArrowIcon';
 import { useStateValue } from '../state/state';
-import type { ByteUnitType } from 'src/types';
+import type { ByteUnitType } from '../types';
 
 interface CurrentUnitProps {
 	units?: string[];
@@ -23,7 +23,7 @@ export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): J
 	const dropDownRef = useRef(null);
 	useOnOutsideClick(dropDownRef, () => setDropdownOpen(false));
 
-	if (units && units?.length > 1) {
+	if (units && units.length > 1) {
 		return (
 			<div ref={dropdownOpen ? dropDownRef : null}>
 				<CurrentUnitButtonContainer
