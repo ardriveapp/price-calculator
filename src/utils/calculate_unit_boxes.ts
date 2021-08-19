@@ -4,6 +4,10 @@ import { ARDataPriceRegressionEstimator } from './ar_data_price_regression_estim
 import convertUnit from './convert_unit';
 import type { ARDataPriceEstimator } from './ar_data_price_estimator';
 
+export const fiatFieldDecimalLimit = 6;
+export const bytesFieldDecimalLimit = 8;
+export const arFieldDecimalLimit = 12;
+
 /**
  * A utility class responsible for calculating the new unit boxes to
  * display to the user based on the changes to the global state
@@ -70,9 +74,9 @@ export class UnitBoxCalculator {
 			byteCount = convertUnit(Math.round(rawByteCount), 'B', byteUnit);
 		}
 
-		const newByteValue = Number(Number(byteCount).toFixed(6));
-		const newFiatValue = Number((newARValue * fiatPerAR).toFixed(6));
-		const newArValue = Number(Number(newARValue).toFixed(12));
+		const newFiatValue = Number((newARValue * fiatPerAR).toFixed(fiatFieldDecimalLimit));
+		const newByteValue = Number(Number(byteCount).toFixed(bytesFieldDecimalLimit));
+		const newArValue = Number(Number(newARValue).toFixed(arFieldDecimalLimit));
 
 		return { bytes: newByteValue, fiat: newFiatValue, ar: newArValue };
 	}
