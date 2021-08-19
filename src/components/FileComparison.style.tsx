@@ -19,6 +19,7 @@ export const FileComparisonContainer = styled.div`
 
 	p {
 		font-family: 'Wavehaus-Book';
+		word-break: break-all;
 	}
 
 	span {
