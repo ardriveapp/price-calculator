@@ -55,7 +55,6 @@ export class TokenToFiatOracle<T extends TokenID, F extends FiatID> implements F
 		private readonly maxRetyCount = 0,
 		skipFetch = false
 	) {
-		// this.pair = new TokenFiatPair<F, T>(fiats, tokens);
 		if (!skipFetch) {
 			this.fetchPairRatesRetry();
 		}
@@ -95,11 +94,14 @@ export class TokenToFiatOracle<T extends TokenID, F extends FiatID> implements F
 	}
 
 	private async fetchPairRatesRetry(): Promise<void> {
+		if (this.fetchPromise) {
+			return this.fetchPromise;
+		}
 		const fetchPromise = new Promise<void>((resolve, reject) => {
 			let count = 0;
-			let thePromiseString = this.fetchPairRates();
+			let thePromiseChain = this.fetchPairRates();
 			do {
-				thePromiseString = thePromiseString.catch(() => {
+				thePromiseChain = thePromiseChain.catch(() => {
 					if (
 						count < this.maxRetyCount &&
 						!isValidData<CoinGeckoPriceResponseData<TokenIDToThirdParty<T>, FiatIDToThirdParty<F>>>(
@@ -113,7 +115,7 @@ export class TokenToFiatOracle<T extends TokenID, F extends FiatID> implements F
 				});
 				count++;
 			} while (count <= this.maxRetyCount);
-			thePromiseString = thePromiseString.then(() => {
+			thePromiseChain = thePromiseChain.then(() => {
 				resolve();
 			});
 		});
@@ -122,7 +124,7 @@ export class TokenToFiatOracle<T extends TokenID, F extends FiatID> implements F
 
 	private async fetchPairRates(): Promise<void> {
 		if (isValidData<CoinGeckoPriceResponseData<TokenIDToThirdParty<T>, FiatIDToThirdParty<F>>>(this.data)) {
-			return this.fetchPromise;
+			return;
 		}
 		const queryUrl = this.getQueryRequestUrl();
 		const fetchResponse = await fetch(queryUrl);
@@ -199,10 +201,13 @@ export class CachingTokenToFiatOracle<T extends TokenID, F extends FiatID> imple
 		if (this.shouldRefreshCacheData) {
 			this.fiatOracle.reset();
 			this.syncPromise = this.refreshPrices();
+			await this.syncPromise;
+			delete this.syncPromise;
 		}
 	}
 
 	private async refreshPrices(): Promise<void> {
+		console.log('Refreshing prices');
 		const allRatePromises: Promise<void>[] = [];
 		this.tokens.forEach((token) => {
 			this.fiats.forEach((fiat) => {
@@ -215,6 +220,7 @@ export class CachingTokenToFiatOracle<T extends TokenID, F extends FiatID> imple
 			});
 		});
 		await Promise.all(allRatePromises);
+		this.cacheTimestamp = Date.now();
 	}
 
 	private updateCachePair<Token extends T, Fiat extends F>(updatedRate: TokenFiatRate<Token, Fiat>): void {
