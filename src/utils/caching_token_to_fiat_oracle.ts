@@ -58,19 +58,14 @@ export class CachingTokenToFiatOracle implements FiatOracle {
 			return this.syncPromise;
 		}
 		if (this.shouldRefreshCacheData) {
-			console.log('Fetching prices');
 			this.syncPromise = this.refreshPrices();
 			await this.syncPromise;
-			console.log('Finished refreshing cache', this.cachedRates);
 			delete this.syncPromise;
 		}
 	}
 
 	private async refreshPrices(): Promise<void> {
-		console.log('About to call the oracle');
-		console.log('The oracle: ', this.fiatOracle);
 		this.cachedRates = await this.fiatOracle.getFiatRatesForToken(this.token, this.fiats);
-		console.log('Done fetching the data');
 		this.cacheTimestamp = Date.now();
 	}
 }
