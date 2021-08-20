@@ -20,6 +20,8 @@ describe('The CachingTokenToFiatOracle class', () => {
 	let fiatOracleStub: SinonStubbedInstance<FiatOracle>;
 	let cachingOracle: CachingTokenToFiatOracle;
 	let noncachingOracle: CachingTokenToFiatOracle;
+	let longFetchingOracleStub: SinonStubbedInstance<FiatOracle>;
+	let longRequestOracle: CachingTokenToFiatOracle;
 
 	beforeEach(() => {
 		// TODO: Get ts-sinon working with snowpack so we don't have to use a concrete type here
@@ -27,6 +29,15 @@ describe('The CachingTokenToFiatOracle class', () => {
 		fiatOracleStub.getFiatRatesForToken.callsFake(async () => expectedTokenFiatRates);
 		cachingOracle = new CachingTokenToFiatOracle(token, [fiat], oneSecondCacheLifespan, fiatOracleStub);
 		noncachingOracle = new CachingTokenToFiatOracle(token, [fiat], noCachingLifespan, fiatOracleStub);
+
+		longFetchingOracleStub = stub(new CoinGeckoTokenToFiatOracle());
+		longFetchingOracleStub.getFiatRatesForToken.callsFake(
+			() =>
+				new Promise((res) => {
+					setTimeout(() => res(expectedTokenFiatRates), 50);
+				})
+		);
+		longRequestOracle = new CachingTokenToFiatOracle(token, [fiat], oneSecondCacheLifespan, longFetchingOracleStub);
 	});
 
 	describe('getFiatRatesForToken function', () => {
@@ -45,6 +56,12 @@ describe('The CachingTokenToFiatOracle class', () => {
 			expect(await noncachingOracle.getFiatRatesForToken(token, [fiat])).to.deep.equal(expectedTokenFiatRates);
 			expect(await noncachingOracle.getFiatRatesForToken(token, [fiat])).to.deep.equal(expectedTokenFiatRates);
 			expect(fiatOracleStub.getFiatRatesForToken.callCount).to.equal(2);
+		});
+
+		it('does not double re-fetch while fetches are in flight', async () => {
+			longRequestOracle.getFiatRatesForToken(token, [fiat]);
+			longRequestOracle.getFiatRatesForToken(token, [fiat]);
+			expect(longFetchingOracleStub.getFiatRatesForToken.callCount).to.equal(1);
 		});
 	});
 
@@ -74,6 +91,12 @@ describe('The CachingTokenToFiatOracle class', () => {
 				expectedTokenFiatRates[0]
 			);
 			expect(fiatOracleStub.getFiatRatesForToken.callCount).to.equal(2);
+		});
+
+		it('does not double re-fetch while fetches are in flight', async () => {
+			longRequestOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat));
+			longRequestOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat));
+			expect(longFetchingOracleStub.getFiatRatesForToken.callCount).to.equal(1);
 		});
 	});
 });
