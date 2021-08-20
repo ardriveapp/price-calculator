@@ -14,45 +14,45 @@ const testingCacheLifespan = 1000 * 0; // 0 sec
 const examplePriceValue = 15.05;
 
 const coingeckoResponseSample = `{
-	"${token}": [
+	"${token}": {
 		"${fiat}": ${examplePriceValue}
-	]
+	}
 }`;
 
-const myCustomResponse: SinonStubbedInstance<Response> = stub({
+const myCustomResponse: Response = {
 	async json(): Promise<string> {
-		return coingeckoResponseSample;
+		return JSON.parse(coingeckoResponseSample);
 	}
-} as Response);
+} as Response;
 
 describe('The CachingTokenToFiatOracle class', () => {
 	const stubbedFetcher: SinonStubbedInstance<Fetcher> = stub(new JSFetcher());
 	const stubbedFetch = stubbedFetcher.fetch
-		.withArgs('https://api.coingecko.com/api/v3/simple/price?ids=arweave&vs_currencies=usd')
-		.returns(new Promise((res) => res(myCustomResponse)));
-	const stubbedOracle = stub(new CoinGeckoTokenToFiatOracle(stubbedFetcher));
-	let oracle: CachingTokenToFiatOracle;
+		// .withArgs('https://api.coingecko.com/api/v3/simple/price?ids=arweave&vs_currencies=usd')
+		.callsFake(async () => myCustomResponse);
+	const coingeckoOracle = new CoinGeckoTokenToFiatOracle(stubbedFetcher);
+	let cachingOracle: CachingTokenToFiatOracle;
 
 	describe('Fetch calls count', () => {
 		before(() => {
-			oracle = new CachingTokenToFiatOracle(token, [fiat], testingCacheLifespan, stubbedOracle);
-			stubbedOracle.getPriceForFiatTokenPair.callsFake(
-				async () => new TokenFiatRate(token, fiat, examplePriceValue)
-			);
+			cachingOracle = new CachingTokenToFiatOracle(token, [fiat], testingCacheLifespan, coingeckoOracle);
+			// stubbedOracle.getFiatRatesForToken.callsFake(async () => [
+			// 	new TokenFiatRate(token, fiat, examplePriceValue)
+			// ]);
 		});
 
 		it('Does not fetch data when just initialized', () => {
-			expect(stubbedFetcher.fetch.callCount).to.equal(0);
+			expect(stubbedFetch.callCount).to.equal(0);
 		});
 
 		it('Performs a fetch when getPriceForFiatTokenPair() is first called', async () => {
-			await oracle.getPriceForFiatTokenPair(myTestingPair);
-			expect(stubbedFetcher.fetch.callCount).to.equal(1);
+			await cachingOracle.getPriceForFiatTokenPair(myTestingPair);
+			expect(stubbedFetch.callCount).to.equal(1);
 		});
 
 		it('Performs a second fetch when getPriceForFiatTokenPair() is called after the timeout expires', async () => {
-			await oracle.getPriceForFiatTokenPair(myTestingPair);
-			expect(stubbedFetcher.fetch.callCount).to.equal(2);
+			await cachingOracle.getPriceForFiatTokenPair(myTestingPair);
+			expect(stubbedFetch.callCount).to.equal(2);
 		});
 	});
 });
