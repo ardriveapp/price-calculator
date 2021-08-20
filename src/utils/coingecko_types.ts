@@ -23,7 +23,10 @@ type CoinGeckoRates<F extends CoinGeckoVSCurrency> = {
  *   'https://api.coingecko.com/api/v3/simple/supported_vs_currencies' \
  *   -H 'accept: application/json'
  */
-const coinGeckoSupportedVSCurrencies = [
+export const coinGeckoSupportedVSCurrencies = [
+	'usd',
+	'jpy',
+	'eur',
 	'btc',
 	'eth',
 	'ltc',
@@ -35,7 +38,6 @@ const coinGeckoSupportedVSCurrencies = [
 	'link',
 	'dot',
 	'yfi',
-	'usd',
 	'aed',
 	'ars',
 	'aud',
@@ -49,14 +51,12 @@ const coinGeckoSupportedVSCurrencies = [
 	'cny',
 	'czk',
 	'dkk',
-	'eur',
 	'gbp',
 	'hkd',
 	'huf',
 	'idr',
 	'ils',
 	'inr',
-	'jpy',
 	'krw',
 	'kwd',
 	'lkr',

@@ -3,6 +3,10 @@ import type { ArDriveCommunityTip, ByteUnitType, UnitBoxes } from '../types';
 import { ARDataPriceRegressionEstimator } from './ar_data_price_regression_estimator';
 import convertUnit from './convert_unit';
 import type { ARDataPriceEstimator } from './ar_data_price_estimator';
+import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
+import { coinGeckoSupportedVSCurrencies } from './coingecko_types';
+import type { FiatID } from './fiat_oracle_types';
+import type { FiatOracle } from './fiat_oracle';
 
 export const fiatFieldDecimalLimit = 6;
 export const bytesFieldDecimalLimit = 8;
@@ -16,28 +20,46 @@ export const arFieldDecimalLimit = 12;
  * creation, which fires off 3 network calls for AR<>Data models
  */
 export class UnitBoxCalculator {
-	constructor(private readonly arDataPriceEstimator: ARDataPriceEstimator = new ARDataPriceRegressionEstimator()) {}
+	constructor(
+		private readonly arDataPriceEstimator: ARDataPriceEstimator = new ARDataPriceRegressionEstimator(),
+		private readonly fiatCachingOracle: FiatOracle = new CachingTokenToFiatOracle(
+			'arweave',
+			coinGeckoSupportedVSCurrencies
+		)
+	) {}
+
+	/** Expose fiat oracle to determine when prices get fetched */
+	public get fiatOracle(): FiatOracle {
+		return this.fiatCachingOracle;
+	}
 
 	/**
 	 * Calculates new unit box values dependent on the specified parameters
 	 *
 	 * @param value current value that has been set by the user
 	 * @param unit type of unit box that has been changed: 'bytes' | 'fiat' | 'ar'
-	 * @param fiatPerAR current fiat -> ar conversion rate from global state
-	 * @param arDriveCommunityTip current ArDrive community fee from global state
+	 * @param fiatUnit current fiat unit type from global state
 	 * @param byteUnit current byte unit type from global state
+	 * @param arDriveCommunityTip current ArDrive community fee from global state
 	 *
 	 * @returns newly calculated unit box values
 	 */
 	async calculateUnitBoxValues(
 		value: number,
 		unit: keyof UnitBoxes,
-		fiatPerAR: number,
-		arDriveCommunityTip: ArDriveCommunityTip,
-		byteUnit: ByteUnitType
+		fiatUnit: FiatID,
+		byteUnit: ByteUnitType,
+		arDriveCommunityTip: ArDriveCommunityTip
 	): Promise<UnitBoxValues> {
 		let newARValue: number;
 		let userDefinedByteValue: number | undefined = undefined;
+
+		let fiatPerAR: number | undefined = undefined;
+
+		if (!this.fiatCachingOracle.currentlyFetchingPrice) {
+			fiatPerAR = (await this.fiatCachingOracle.getPriceForFiatTokenPair({ token: 'arweave', fiat: fiatUnit }))
+				.fiatPerTokenRate;
+		}
 
 		switch (unit) {
 			case 'bytes':
@@ -56,7 +78,7 @@ export class UnitBoxCalculator {
 				break;
 
 			case 'fiat':
-				newARValue = value / fiatPerAR;
+				newARValue = fiatPerAR ? value / fiatPerAR : value;
 				break;
 
 			case 'ar':
@@ -74,7 +96,9 @@ export class UnitBoxCalculator {
 			byteCount = convertUnit(Math.round(rawByteCount), 'B', byteUnit);
 		}
 
-		const newFiatValue = Number((newARValue * fiatPerAR).toFixed(fiatFieldDecimalLimit));
+		// If `fiatPerAR` remains initially undefined (is fetching),
+		// set `newFiatValue` to -1 for conditionally hiding the Fiat unit box
+		const newFiatValue = fiatPerAR ? Number((newARValue * fiatPerAR).toFixed(fiatFieldDecimalLimit)) : -1;
 		const newByteValue = Number(Number(byteCount).toFixed(bytesFieldDecimalLimit));
 		const newArValue = Number(Number(newARValue).toFixed(arFieldDecimalLimit));
 

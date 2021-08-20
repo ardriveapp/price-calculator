@@ -19,12 +19,12 @@ export class CachingTokenToFiatOracle implements FiatOracle {
 	 */
 	constructor(
 		private readonly token: TokenID,
-		private readonly fiats: FiatID[],
+		private readonly fiats: readonly FiatID[],
 		private readonly cacheLifespan = pollingIntervalMilliseconds,
 		private readonly fiatOracle: FiatOracle = new CoinGeckoTokenToFiatOracle()
 	) {}
 
-	private get currentlyFetchingPrice(): boolean {
+	public get currentlyFetchingPrice(): boolean {
 		return !!this.syncPromise;
 	}
 

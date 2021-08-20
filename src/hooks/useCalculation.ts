@@ -3,6 +3,7 @@ import type { UnitBoxes } from '../types';
 import { useStateValue } from '../state/state';
 import { bytesFieldDecimalLimit, UnitBoxCalculator } from '../utils/calculate_unit_boxes';
 import convertUnit from '../utils/convert_unit';
+import type { FiatID } from '../utils/fiat_oracle_types';
 
 /** UnitBoxCalculator instance, will fire off initial fetch calls when constructed */
 const unitBoxCalculator = new UnitBoxCalculator();
@@ -32,17 +33,14 @@ export default function useCalculation(): void {
 	const [byteCurrUnit, setByteCurrUnit] = useState(unitBoxes.bytes.currUnit);
 
 	/**
-	 * @TODO Conversion will come from fiatToArData[unitBoxes.fiat.currUnit] in PE-68
+	 * Whenever unitBoxes change, this useEffect hook will start a new calculation
 	 *
-	 * Added temporary conditional on unit switch from USD for testing currUnit changes
+	 * It will also fire off new calculations when the fiat oracle returns with fresh data
 	 */
-	const fiatPerAR = unitBoxes.fiat.currUnit === 'USD' ? 15.0 : 10.0;
-
-	/** Whenever unitBoxes change, this useEffect hook will start a new calculation */
 	useEffect(() => {
 		dispatchNewUnitBoxes();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [unitBoxes]);
+	}, [unitBoxes, unitBoxCalculator.fiatOracle.currentlyFetchingPrice]);
 
 	/**
 	 * Calculates new unit box values based on updated state. Then, dispatches
@@ -93,9 +91,9 @@ export default function useCalculation(): void {
 				newUnitBoxValues = await unitBoxCalculator.calculateUnitBoxValues(
 					valueToCalculate,
 					unitBoxType,
-					fiatPerAR,
-					arDriveCommunityTip,
-					unitBoxes.bytes.currUnit
+					unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
+					unitBoxes.bytes.currUnit,
+					arDriveCommunityTip
 				);
 			} catch (err) {
 				console.error('Prices could not be calculated:', err);
