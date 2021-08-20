@@ -1,0 +1,58 @@
+import { expect } from 'chai';
+import { fake, SinonStubbedInstance, stub } from 'sinon';
+import { TokenFiatPair, TokenFiatRate } from './token_fiat_price';
+import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
+import { CoinGeckoTokenToFiatOracle, Fetcher, JSFetcher } from './coingecko_token_to_fiat_oracle';
+
+type ArweaveID = 'arweave';
+type UsdID = 'usd';
+
+const token: ArweaveID = 'arweave';
+const fiat: UsdID = 'usd';
+const myTestingPair = new TokenFiatPair(token, fiat);
+const testingCacheLifespan = 1000 * 0; // 0 sec
+const examplePriceValue = 15.05;
+
+const coingeckoResponseSample = `{
+	"${token}": [
+		"${fiat}": ${examplePriceValue}
+	]
+}`;
+
+const myCustomResponse: SinonStubbedInstance<Response> = stub({
+	async json(): Promise<string> {
+		return coingeckoResponseSample;
+	}
+} as Response);
+
+describe('The CachingTokenToFiatOracle class', () => {
+	const stubbedFetcher: SinonStubbedInstance<Fetcher> = stub(new JSFetcher());
+	const stubbedFetch = stubbedFetcher.fetch
+		.withArgs('https://api.coingecko.com/api/v3/simple/price?ids=arweave&vs_currencies=usd')
+		.returns(new Promise((res) => res(myCustomResponse)));
+	const stubbedOracle = stub(new CoinGeckoTokenToFiatOracle(stubbedFetcher));
+	let oracle: CachingTokenToFiatOracle;
+
+	describe('Fetch calls count', () => {
+		before(() => {
+			oracle = new CachingTokenToFiatOracle(token, [fiat], testingCacheLifespan, stubbedOracle);
+			stubbedOracle.getPriceForFiatTokenPair.callsFake(
+				async () => new TokenFiatRate(token, fiat, examplePriceValue)
+			);
+		});
+
+		it('Does not fetch data when just initialized', () => {
+			expect(stubbedFetcher.fetch.callCount).to.equal(0);
+		});
+
+		it('Performs a fetch when getPriceForFiatTokenPair() is first called', async () => {
+			await oracle.getPriceForFiatTokenPair(myTestingPair);
+			expect(stubbedFetcher.fetch.callCount).to.equal(1);
+		});
+
+		it('Performs a second fetch when getPriceForFiatTokenPair() is called after the timeout expires', async () => {
+			await oracle.getPriceForFiatTokenPair(myTestingPair);
+			expect(stubbedFetcher.fetch.callCount).to.equal(2);
+		});
+	});
+});
