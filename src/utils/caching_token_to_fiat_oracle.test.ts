@@ -11,24 +11,22 @@ chai.use(chaiAsPromised);
 
 const token: TokenID = 'arweave';
 const fiat: FiatID = 'usd';
-const testingCacheLifespan = 1000 * 0; // 0 sec
+const oneSecondCacheLifespan = 1000 * 1; // 1 sec
+const noCachingLifespan = 0; // 0 sec
 const examplePriceValue = 15.05;
 const expectedTokenFiatRates = [new TokenFiatRate(token, fiat, examplePriceValue)];
 
 describe('The CachingTokenToFiatOracle class', () => {
 	let fiatOracleStub: SinonStubbedInstance<FiatOracle>;
 	let cachingOracle: CachingTokenToFiatOracle;
+	let noncachingOracle: CachingTokenToFiatOracle;
 
 	beforeEach(() => {
 		// TODO: Get ts-sinon working with snowpack so we don't have to use a concrete type here
 		fiatOracleStub = stub(new CoinGeckoTokenToFiatOracle());
-		fiatOracleStub.getFiatRatesForToken.callsFake(async (token, fiats) => {
-			if (token && !fiats.length) {
-				throw new Error('Fiats must be provided!');
-			}
-			return expectedTokenFiatRates;
-		});
-		cachingOracle = new CachingTokenToFiatOracle(token, [fiat], testingCacheLifespan, fiatOracleStub);
+		fiatOracleStub.getFiatRatesForToken.callsFake(async () => expectedTokenFiatRates);
+		cachingOracle = new CachingTokenToFiatOracle(token, [fiat], oneSecondCacheLifespan, fiatOracleStub);
+		noncachingOracle = new CachingTokenToFiatOracle(token, [fiat], noCachingLifespan, fiatOracleStub);
 	});
 
 	describe('getFiatRatesForToken function', () => {
@@ -37,19 +35,45 @@ describe('The CachingTokenToFiatOracle class', () => {
 			expect(fiatOracleStub.getFiatRatesForToken.callCount).to.equal(1);
 		});
 
-		it('throws an error when no fiats are provided', async () => {
-			cachingOracle = new CachingTokenToFiatOracle(token, [], testingCacheLifespan, fiatOracleStub);
-			expect(cachingOracle.getFiatRatesForToken(token, [])).to.be.rejected;
+		it('returns result from cache after a double fetch', async () => {
+			expect(await cachingOracle.getFiatRatesForToken(token, [fiat])).to.deep.equal(expectedTokenFiatRates);
+			expect(await cachingOracle.getFiatRatesForToken(token, [fiat])).to.deep.equal(expectedTokenFiatRates);
 			expect(fiatOracleStub.getFiatRatesForToken.callCount).to.equal(1);
+		});
+
+		it('fetches correct data from network when cache is expired', async () => {
+			expect(await noncachingOracle.getFiatRatesForToken(token, [fiat])).to.deep.equal(expectedTokenFiatRates);
+			expect(await noncachingOracle.getFiatRatesForToken(token, [fiat])).to.deep.equal(expectedTokenFiatRates);
+			expect(fiatOracleStub.getFiatRatesForToken.callCount).to.equal(2);
 		});
 	});
 
 	describe('getPriceForFiatTokenPair function', () => {
 		it('returns the expected response after a single fetch', async () => {
 			expect(await cachingOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat))).to.deep.equal(
-				new TokenFiatRate(token, fiat, examplePriceValue)
+				expectedTokenFiatRates[0]
 			);
 			expect(fiatOracleStub.getFiatRatesForToken.callCount).to.equal(1);
+		});
+
+		it('returns result from cache after a double fetch', async () => {
+			expect(await cachingOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat))).to.deep.equal(
+				expectedTokenFiatRates[0]
+			);
+			expect(await cachingOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat))).to.deep.equal(
+				expectedTokenFiatRates[0]
+			);
+			expect(fiatOracleStub.getFiatRatesForToken.callCount).to.equal(1);
+		});
+
+		it('fetches correct data from network when cache is expired', async () => {
+			expect(await noncachingOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat))).to.deep.equal(
+				expectedTokenFiatRates[0]
+			);
+			expect(await noncachingOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat))).to.deep.equal(
+				expectedTokenFiatRates[0]
+			);
+			expect(fiatOracleStub.getFiatRatesForToken.callCount).to.equal(2);
 		});
 	});
 });
