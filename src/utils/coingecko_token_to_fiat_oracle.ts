@@ -40,19 +40,17 @@ export class CoinGeckoTokenToFiatOracle implements FiatOracle {
 	constructor(private readonly fetcher: Fetcher = new JSFetcher()) {}
 
 	public async getFiatRatesForToken(token: TokenID, fiats: FiatID[]): Promise<TokenFiatRate[]> {
-		console.log('Just before fetching');
 		const allRates: TokenFiatRate[] = [];
 		const queryUrl = this.getQueryRequestUrl(token, fiats);
 		const fetchResponse = await this.fetcher.fetch(queryUrl);
-		console.log('After fetching');
-		const responseData: Map<TokenID, Map<FiatID, number>> = await fetchResponse.json();
-		console.log('Here it is the response of the API', responseData);
-		responseData.forEach((fiats, token) => {
-			fiats.forEach((rate, fiat) => {
+		const responseData: { [t in TokenID]: { [f in FiatID]: number } } = await fetchResponse.json();
+		(Object.keys(responseData) as TokenID[]).forEach((token) => {
+			const fiats = responseData[token];
+			(Object.keys(fiats) as FiatID[]).forEach((fiat) => {
+				const rate = fiats[fiat];
 				allRates.push(new TokenFiatRate(token, fiat, rate));
 			});
 		});
-		console.log('All rates: ', allRates);
 		return allRates;
 	}
 
