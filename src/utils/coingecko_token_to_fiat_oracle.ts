@@ -67,6 +67,10 @@ export class CoinGeckoTokenToFiatOracle implements FiatOracle {
 	 * Exposed as public for testing propuses
 	 */
 	public getQueryRequestUrl(token: TokenID, fiats: FiatID[]): string {
+		if (!fiats.length) {
+			throw new Error('Fiats must be provided!');
+		}
+
 		const params = {
 			ids: token,
 			vs_currencies: fiats.join(COMMA_SEPARATOR)
