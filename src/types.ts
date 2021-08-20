@@ -5,11 +5,6 @@ export interface ArDriveCommunityTip {
 	minWinstonFee: number;
 }
 
-export type FiatToAr = {
-	// [FiatUnits in FiatUnitTypes]: number;
-	[key: string]: number;
-};
-
 export interface UnitBox {
 	/** Value displayed on left on unit box */
 	value: number;
@@ -36,8 +31,8 @@ export interface ArUnitBox extends UnitBox {
 export type ByteUnitType = 'B' | 'KB' | 'MB' | 'GB';
 export const displayedByteUnitTypes: ByteUnitType[] = ['KB', 'MB', 'GB'];
 
-// prettier-ignore
-export const displayedFiatUnitTypes = coinGeckoSupportedVSCurrencies.map(f => f.toUpperCase());
+/** Fiat unit types are translated from the coingecko supported currencies  */
+export const displayedFiatUnitTypes = coinGeckoSupportedVSCurrencies.map((f) => f.toUpperCase());
 
 export type FiatUnitType = typeof displayedFiatUnitTypes[number];
 
