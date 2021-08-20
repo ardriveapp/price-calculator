@@ -22,7 +22,12 @@ describe('The CachingTokenToFiatOracle class', () => {
 	beforeEach(() => {
 		// TODO: Get ts-sinon working with snowpack so we don't have to use a concrete type here
 		fiatOracleStub = stub(new CoinGeckoTokenToFiatOracle());
-		fiatOracleStub.getFiatRatesForToken.callsFake(async () => expectedTokenFiatRates);
+		fiatOracleStub.getFiatRatesForToken.callsFake(async (token, fiats) => {
+			if (token && !fiats.length) {
+				throw new Error('Fiats must be provided!');
+			}
+			return expectedTokenFiatRates;
+		});
 		cachingOracle = new CachingTokenToFiatOracle(token, [fiat], testingCacheLifespan, fiatOracleStub);
 	});
 
@@ -33,7 +38,8 @@ describe('The CachingTokenToFiatOracle class', () => {
 		});
 
 		it('throws an error when no fiats are provided', async () => {
-			expect(cachingOracle.getFiatRatesForToken(token, [])).to.be.rejectedWith(Error);
+			cachingOracle = new CachingTokenToFiatOracle(token, [], testingCacheLifespan, fiatOracleStub);
+			expect(cachingOracle.getFiatRatesForToken(token, [])).to.be.rejected;
 			expect(fiatOracleStub.getFiatRatesForToken.callCount).to.equal(1);
 		});
 	});

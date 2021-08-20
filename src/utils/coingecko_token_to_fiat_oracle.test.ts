@@ -1,5 +1,4 @@
-import chai from 'chai';
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { SinonStubbedInstance, stub } from 'sinon';
 import { TokenFiatPair, TokenFiatRate } from './token_fiat_price';
@@ -10,7 +9,6 @@ chai.use(chaiAsPromised);
 
 const token: TokenID = 'arweave';
 const fiat: FiatID = 'usd';
-const myTestingPair = new TokenFiatPair(token, fiat);
 const examplePriceValue = 15.05;
 
 const coingeckoResponseSample = `{
@@ -60,7 +58,7 @@ describe('The CoinGeckoTokenToFiatOracle class', () => {
 		});
 
 		it('throws an error when no fiats are provided', async () => {
-			expect(coingeckoOracle.getFiatRatesForToken(token, [])).to.be.rejectedWith(Error);
+			expect(coingeckoOracle.getFiatRatesForToken(token, [])).to.be.rejected;
 			expect(stubbedFetcher.fetch.callCount).to.equal(0);
 		});
 	});
