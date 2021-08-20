@@ -1,11 +1,12 @@
 import chai, { expect } from 'chai';
 import { SinonStubbedInstance, stub } from 'sinon';
-import { TokenFiatPair, TokenFiatRate } from './token_fiat_price';
+import { TokenFiatPair } from './token_fiat_pair';
 import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
 import type { FiatID, TokenID } from './fiat_oracle_types';
 import type { FiatOracle } from './fiat_oracle';
 import { CoinGeckoTokenToFiatOracle } from './coingecko_token_to_fiat_oracle';
 import chaiAsPromised from 'chai-as-promised';
+import { TokenFiatRate } from './token_fiat_rate';
 
 chai.use(chaiAsPromised);
 

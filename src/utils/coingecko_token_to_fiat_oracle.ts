@@ -22,7 +22,8 @@
 
 import type { FiatOracle } from './fiat_oracle';
 import type { FiatID, TokenID } from './fiat_oracle_types';
-import { TokenFiatPair, TokenFiatRate } from './token_fiat_price';
+import type { TokenFiatPair } from './token_fiat_pair';
+import { TokenFiatRate } from './token_fiat_rate';
 
 const COMMA_SEPARATOR = ',';
 

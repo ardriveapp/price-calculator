@@ -1,7 +1,8 @@
 import type { FiatOracle } from './fiat_oracle';
-import type { TokenFiatPair, TokenFiatRate } from './token_fiat_price';
+import type { TokenFiatPair } from './token_fiat_pair';
 import type { FiatID, TokenID } from './fiat_oracle_types';
 import { CoinGeckoTokenToFiatOracle } from './coingecko_token_to_fiat_oracle';
+import type { TokenFiatRate } from './token_fiat_rate';
 
 const pollingIntervalMilliseconds = 1000 * 60 * 15; // 15 min
 
