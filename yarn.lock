@@ -1774,7 +1774,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chai@npm:^4.2.17":
+"@types/chai-as-promised@npm:^7":
+  version: 7.1.4
+  resolution: "@types/chai-as-promised@npm:7.1.4"
+  dependencies:
+    "@types/chai": "*"
+  checksum: bb974e77e0357fcc9a01f4b46eb1d3d6a40621a479654fa17539890cd59635faf9b860b8c3851f638d1e239404b1dc8e7ab1305f26dec43e19cce6796e01fe48
+  languageName: node
+  linkType: hard
+
+"@types/chai@npm:*, @types/chai@npm:^4.2.17":
   version: 4.2.21
   resolution: "@types/chai@npm:4.2.21"
   checksum: dbd852dfea5065c2e86059bdc011c42a380c43bbcf80d427da228dc2a9e1efae27e7baf16570a3158571d92c206782e07fab3b703c28452a75a74380b33d1443
@@ -3598,6 +3607,17 @@ __metadata:
   version: 0.12.0
   resolution: "caseless@npm:0.12.0"
   checksum: b43bd4c440aa1e8ee6baefee8063b4850fd0d7b378f6aabc796c9ec8cb26d27fb30b46885350777d9bd079c5256c0e1329ad0dc7c2817e0bb466810ebb353751
+  languageName: node
+  linkType: hard
+
+"chai-as-promised@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "chai-as-promised@npm:7.1.1"
+  dependencies:
+    check-error: ^1.0.2
+  peerDependencies:
+    chai: ">= 2.1.2 < 5"
+  checksum: 7262868a5b51a12af4e432838ddf97a893109266a505808e1868ba63a12de7ee1166e9d43b5c501a190c377c1b11ecb9ff8e093c89f097ad96c397e8ec0f8d6a
   languageName: node
   linkType: hard
 
@@ -9022,6 +9042,7 @@ fsevents@~2.1.2:
     "@snowpack/web-test-runner-plugin": ^0.2.2
     "@testing-library/react": ^11.2.6
     "@types/chai": ^4.2.17
+    "@types/chai-as-promised": ^7
     "@types/eslint": ^7
     "@types/react": ^17.0.4
     "@types/react-dom": ^17.0.3
@@ -9036,6 +9057,7 @@ fsevents@~2.1.2:
     "@web/test-runner": ^0.13.3
     arweave: ^1.10.16
     chai: ^4.3.4
+    chai-as-promised: ^7.1.1
     eslint: ^7.31.0
     eslint-config-prettier: ^8.3.0
     eslint-plugin-import: ^2.23.4

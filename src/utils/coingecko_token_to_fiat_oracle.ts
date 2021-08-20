@@ -22,7 +22,8 @@
 
 import type { FiatOracle } from './fiat_oracle';
 import type { FiatID, TokenID } from './fiat_oracle_types';
-import { TokenFiatPair, TokenFiatRate } from './token_fiat_price';
+import type { TokenFiatPair } from './token_fiat_pair';
+import { TokenFiatRate } from './token_fiat_rate';
 
 const COMMA_SEPARATOR = ',';
 
@@ -67,6 +68,10 @@ export class CoinGeckoTokenToFiatOracle implements FiatOracle {
 	 * Exposed as public for testing propuses
 	 */
 	public getQueryRequestUrl(token: TokenID, fiats: FiatID[]): string {
+		if (!fiats.length) {
+			throw new Error('Fiats must be provided!');
+		}
+
 		const params = {
 			ids: token,
 			vs_currencies: fiats.join(COMMA_SEPARATOR)
