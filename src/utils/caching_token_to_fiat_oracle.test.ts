@@ -63,6 +63,10 @@ describe('The CachingTokenToFiatOracle class', () => {
 			longRequestOracle.getFiatRatesForToken(token, [fiat]);
 			expect(longFetchingOracleStub.getFiatRatesForToken.callCount).to.equal(1);
 		});
+
+		it('throws an error when a fiat type is requested for which we do not have data', async () => {
+			expect(cachingOracle.getFiatRatesForToken(token, ['gbp'])).to.be.rejected;
+		});
 	});
 
 	describe('getPriceForFiatTokenPair function', () => {
