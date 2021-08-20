@@ -34,7 +34,7 @@ module.exports = {
 		minify: true
 	},
 	packageOptions: {
-		/* ... */
+		polyfillNode: true
 	},
 	devOptions: {
 		/* ... */
