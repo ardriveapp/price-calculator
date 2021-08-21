@@ -1,6 +1,5 @@
 import chai, { expect } from 'chai';
 import { SinonStubbedInstance, stub } from 'sinon';
-import { TokenFiatPair } from './token_fiat_pair';
 import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
 import type { FiatID, TokenID } from './fiat_oracle_types';
 import type { FiatOracle } from './fiat_oracle';
@@ -72,35 +71,35 @@ describe('The CachingTokenToFiatOracle class', () => {
 
 	describe('getPriceForFiatTokenPair function', () => {
 		it('returns the expected response after a single fetch', async () => {
-			expect(await cachingOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat))).to.deep.equal(
+			expect(await cachingOracle.getPriceForFiatTokenPair({ token, fiat })).to.deep.equal(
 				expectedTokenFiatRates[0]
 			);
 			expect(fiatOracleStub.getFiatRatesForToken.callCount).to.equal(1);
 		});
 
 		it('returns result from cache after a double fetch', async () => {
-			expect(await cachingOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat))).to.deep.equal(
+			expect(await cachingOracle.getPriceForFiatTokenPair({ token, fiat })).to.deep.equal(
 				expectedTokenFiatRates[0]
 			);
-			expect(await cachingOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat))).to.deep.equal(
+			expect(await cachingOracle.getPriceForFiatTokenPair({ token, fiat })).to.deep.equal(
 				expectedTokenFiatRates[0]
 			);
 			expect(fiatOracleStub.getFiatRatesForToken.callCount).to.equal(1);
 		});
 
 		it('fetches correct data from network when cache is expired', async () => {
-			expect(await noncachingOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat))).to.deep.equal(
+			expect(await noncachingOracle.getPriceForFiatTokenPair({ token, fiat })).to.deep.equal(
 				expectedTokenFiatRates[0]
 			);
-			expect(await noncachingOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat))).to.deep.equal(
+			expect(await noncachingOracle.getPriceForFiatTokenPair({ token, fiat })).to.deep.equal(
 				expectedTokenFiatRates[0]
 			);
 			expect(fiatOracleStub.getFiatRatesForToken.callCount).to.equal(2);
 		});
 
 		it('does not double re-fetch while fetches are in flight', async () => {
-			longRequestOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat));
-			longRequestOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat));
+			longRequestOracle.getPriceForFiatTokenPair({ token, fiat });
+			longRequestOracle.getPriceForFiatTokenPair({ token, fiat });
 			expect(longFetchingOracleStub.getFiatRatesForToken.callCount).to.equal(1);
 		});
 	});

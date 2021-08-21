@@ -1,7 +1,6 @@
 import chai, { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { SinonStubbedInstance, stub } from 'sinon';
-import { TokenFiatPair } from './token_fiat_pair';
 import { CoinGeckoTokenToFiatOracle, Fetcher, JSFetcher } from './coingecko_token_to_fiat_oracle';
 import type { FiatID, TokenID } from './fiat_oracle_types';
 import { TokenFiatRate } from './token_fiat_rate';
@@ -66,7 +65,7 @@ describe('The CoinGeckoTokenToFiatOracle class', () => {
 
 	describe('getPriceForFiatTokenPair function', () => {
 		it('returns the expected response after a single fetch', async () => {
-			expect(await coingeckoOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat))).to.deep.equal(
+			expect(await coingeckoOracle.getPriceForFiatTokenPair({ token, fiat })).to.deep.equal(
 				new TokenFiatRate(token, fiat, examplePriceValue)
 			);
 			expect(stubbedFetcher.fetch.callCount).to.equal(1);
