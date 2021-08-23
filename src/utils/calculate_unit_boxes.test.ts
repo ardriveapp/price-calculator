@@ -7,8 +7,8 @@ import type { ARDataPriceEstimator } from './ar_data_price_estimator';
 import type { ArDriveCommunityTip } from '../types';
 import type { FiatOracle } from './fiat_oracle';
 import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
-import { coinGeckoSupportedVSCurrencies } from './coingecko_types';
 import { CoinGeckoTokenToFiatOracle } from './coingecko_token_to_fiat_oracle';
+import { currencyIDs } from './fiat_oracle_types';
 
 describe('UnitBoxCalculator class', () => {
 	let unitBoxCalculator: UnitBoxCalculator;
@@ -31,12 +31,7 @@ describe('UnitBoxCalculator class', () => {
 			Promise.resolve([{ token: 'arweave', fiat: 'usd', fiatPerTokenRate: 10 }])
 		);
 
-		cachingTokenToOracle = new CachingTokenToFiatOracle(
-			'arweave',
-			coinGeckoSupportedVSCurrencies,
-			2000,
-			stubbedCoinGeckoOracle
-		);
+		cachingTokenToOracle = new CachingTokenToFiatOracle('arweave', currencyIDs, 2000, stubbedCoinGeckoOracle);
 
 		unitBoxCalculator = new UnitBoxCalculator(stubbedPriceEstimator, cachingTokenToOracle);
 	});

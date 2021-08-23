@@ -4,8 +4,7 @@ import { ARDataPriceRegressionEstimator } from './ar_data_price_regression_estim
 import convertUnit from './convert_unit';
 import type { ARDataPriceEstimator } from './ar_data_price_estimator';
 import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
-import { coinGeckoSupportedVSCurrencies } from './coingecko_types';
-import type { FiatID } from './fiat_oracle_types';
+import { currencyIDs, FiatID } from './fiat_oracle_types';
 import type { FiatOracle } from './fiat_oracle';
 
 export const fiatFieldDecimalLimit = 6;
@@ -22,10 +21,7 @@ export const arFieldDecimalLimit = 12;
 export class UnitBoxCalculator {
 	constructor(
 		private readonly arDataPriceEstimator: ARDataPriceEstimator = new ARDataPriceRegressionEstimator(),
-		private readonly fiatCachingOracle: FiatOracle = new CachingTokenToFiatOracle(
-			'arweave',
-			coinGeckoSupportedVSCurrencies
-		)
+		private readonly fiatCachingOracle: FiatOracle = new CachingTokenToFiatOracle('arweave', currencyIDs)
 	) {}
 
 	/** Expose fiat oracle to determine when prices get fetched */

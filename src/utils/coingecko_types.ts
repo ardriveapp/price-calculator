@@ -23,7 +23,8 @@ type CoinGeckoRates<F extends CoinGeckoVSCurrency> = {
  *   'https://api.coingecko.com/api/v3/simple/supported_vs_currencies' \
  *   -H 'accept: application/json'
  */
-export const coinGeckoSupportedVSCurrencies = [
+
+const coinGeckoSupportedVSCurrencies = [
 	'usd',
 	'jpy',
 	'eur',
