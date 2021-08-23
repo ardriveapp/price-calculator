@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { UnitBoxes } from '../types';
 import { useStateValue } from '../state/state';
-import { bytesFieldDecimalLimit, UnitBoxCalculator } from '../utils/calculate_unit_boxes';
+import { UnitBoxCalculator } from '../utils/calculate_unit_boxes';
 import convertUnit from '../utils/convert_unit';
 import type { FiatID } from '../utils/fiat_oracle_types';
 
@@ -31,6 +31,7 @@ export default function useCalculation(): void {
 
 	// Save previous byte unit for determining byte unit changes
 	const [byteCurrUnit, setByteCurrUnit] = useState(unitBoxes.bytes.currUnit);
+	const [fiatCurrUnit, setFiatCurrUnit] = useState(unitBoxes.fiat.currUnit);
 
 	/**
 	 * Whenever unitBoxes change, this useEffect hook will start a new calculation
@@ -57,11 +58,7 @@ export default function useCalculation(): void {
 
 		if (unitBoxes.bytes.currUnit !== byteCurrUnit) {
 			// When byte unit has been changed by the user, only update the bytes value directly
-			const newBytesValue = Number(
-				convertUnit(unitBoxes.bytes.value, byteCurrUnit, unitBoxes.bytes.currUnit).toFixed(
-					bytesFieldDecimalLimit
-				)
-			);
+			const newBytesValue = convertUnit(unitBoxes.bytes.value, byteCurrUnit, unitBoxes.bytes.currUnit);
 
 			newUnitBoxValues = {
 				...prevUnitValues,
@@ -69,6 +66,32 @@ export default function useCalculation(): void {
 			};
 
 			setByteCurrUnit(unitBoxes.bytes.currUnit);
+		} else if (unitBoxes.fiat.currUnit !== fiatCurrUnit) {
+			// When fiat unit has been changed by the user, only update the fiat value directly
+			let newFiatPerAR: number;
+
+			try {
+				newFiatPerAR = (
+					await unitBoxCalculator.fiatOracle.getPriceForFiatTokenPair({
+						fiat: unitBoxes.fiat.currUnit.toLocaleLowerCase() as FiatID,
+						token: 'arweave'
+					})
+				).fiatPerTokenRate;
+			} catch (err) {
+				console.error('Fiat rate could not be determined:', err);
+				setSendingCalculation(false);
+				// Fiat oracle has thrown an error, return early
+				return;
+			}
+
+			const newFiatValue = unitBoxes.ar.value * newFiatPerAR;
+
+			newUnitBoxValues = {
+				...prevUnitValues,
+				fiat: newFiatValue
+			};
+
+			setFiatCurrUnit(unitBoxes.fiat.currUnit);
 		} else {
 			let valueToCalculate: number;
 			let unitBoxType: keyof UnitBoxes;

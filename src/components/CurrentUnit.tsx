@@ -58,12 +58,12 @@ function UnitDropDown({ units, closeDropDown }: UnitDropDownProps): JSX.Element 
 	const isFiatUnitBox = units === unitBoxes.fiat.units;
 
 	function onUnitClick(unit: string): void {
-		if (isFiatUnitBox) {
+		if (isFiatUnitBox && unit !== unitBoxes.fiat.currUnit) {
 			dispatch({
 				type: 'setUnitBoxes',
 				payload: { ...unitBoxes, fiat: { ...unitBoxes.fiat, currUnit: unit } }
 			});
-		} else {
+		} else if (!isFiatUnitBox && unit !== unitBoxes.bytes.currUnit) {
 			dispatch({
 				type: 'setUnitBoxes',
 				payload: { ...unitBoxes, bytes: { ...unitBoxes.bytes, currUnit: unit as ByteUnitType } }
