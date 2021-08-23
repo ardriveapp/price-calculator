@@ -1,4 +1,4 @@
-import { coinGeckoSupportedVSCurrencies } from './utils/coingecko_types';
+import { currencyIDs } from './utils/fiat_oracle_types';
 
 export interface ArDriveCommunityTip {
 	tipPercentage: number;
@@ -32,7 +32,7 @@ export type ByteUnitType = 'B' | 'KB' | 'MB' | 'GB';
 export const displayedByteUnitTypes: ByteUnitType[] = ['KB', 'MB', 'GB'];
 
 /** Fiat unit types are translated from the coingecko supported currencies  */
-export const displayedFiatUnitTypes = coinGeckoSupportedVSCurrencies.map((f) => f.toUpperCase());
+export const displayedFiatUnitTypes = currencyIDs.map((f) => f.toUpperCase());
 
 export type FiatUnitType = typeof displayedFiatUnitTypes[number];
 

@@ -1,4 +1,4 @@
-const currencyIDs = [
+export const currencyIDs = [
 	'btc',
 	'eth',
 	'ltc',
