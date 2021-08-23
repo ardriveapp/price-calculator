@@ -36,7 +36,7 @@ export interface ArUnitBox extends UnitBox {
 	currUnit: 'AR';
 }
 
-export const byteUnitTypes = ['KB', 'MB', 'GB'];
+export const byteUnitTypes = ['KiB', 'MiB', 'GiB'];
 export type ByteUnitType = typeof byteUnitTypes[number];
 
 // prettier-ignore

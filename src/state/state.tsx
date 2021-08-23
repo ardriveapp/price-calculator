@@ -31,9 +31,9 @@ const initialState: State = {
 		minWinstonTip: 10_000_000
 	},
 
-	/** Unit boxes display only 1 GB by default, other values to be filled in on first calculation */
+	/** Unit boxes display only 1 iGB by default, other values to be filled in on first calculation */
 	unitBoxes: {
-		bytes: { value: 1, currUnit: 'GB', units: byteUnitTypes },
+		bytes: { value: 1, currUnit: 'GiB', units: byteUnitTypes },
 		fiat: { value: 0, currUnit: 'USD', units: fiatUnitTypes },
 		ar: { value: 0, currUnit: 'AR' }
 	}
