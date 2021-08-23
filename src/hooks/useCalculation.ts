@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { UnitBoxes } from '../types';
 import { useStateValue } from '../state/state';
-import { bytesFieldDecimalLimit, UnitBoxCalculator } from '../utils/calculate_unit_boxes';
+import { UnitBoxCalculator } from '../utils/calculate_unit_boxes';
 import convertUnit from '../utils/convert_unit';
 
 /** UnitBoxCalculator instance, will fire off initial fetch calls when constructed */
@@ -59,11 +59,7 @@ export default function useCalculation(): void {
 
 		if (unitBoxes.bytes.currUnit !== byteCurrUnit) {
 			// When byte unit has been changed by the user, only update the bytes value directly
-			const newBytesValue = Number(
-				convertUnit(unitBoxes.bytes.value, byteCurrUnit, unitBoxes.bytes.currUnit).toFixed(
-					bytesFieldDecimalLimit
-				)
-			);
+			const newBytesValue = Number(convertUnit(unitBoxes.bytes.value, byteCurrUnit, unitBoxes.bytes.currUnit));
 
 			newUnitBoxValues = {
 				...prevUnitValues,
