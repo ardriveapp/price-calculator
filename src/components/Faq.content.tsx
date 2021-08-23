@@ -6,7 +6,7 @@ export const faqQuestionsAnswers = [
 			<p>
 				A little bit of money can go a long way in data storage. For $1 USD you can purchase storage for
 				approximately 1000 documents, 55 photos, or a 30 second video. Files of the same type (docs, jpegs, or
-				mp3) will vary in sizes, but some rules of thumb are: 1 document 0.31 MB (320kb); 1 HD Photo 2.5 MB; 3.5
+				mp3) will vary in sizes, but some rules of thumb are: 1 document 0.31 MB (320KB); 1 HD Photo 2.5 MB; 3.5
 				minute Song 3.5 MB; 1 minute HD video 100 MB.
 			</p>
 		)
