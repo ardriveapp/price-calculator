@@ -7,10 +7,6 @@ import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
 import { currencyIDs, FiatID } from './fiat_oracle_types';
 import type { FiatOracle } from './fiat_oracle';
 
-export const fiatFieldDecimalLimit = 6;
-export const bytesFieldDecimalLimit = 8;
-export const arFieldDecimalLimit = 12;
-
 /**
  * A utility class responsible for calculating the new unit boxes to
  * display to the user based on the changes to the global state
@@ -94,9 +90,9 @@ export class UnitBoxCalculator {
 
 		// If `fiatPerAR` remains initially undefined (is fetching),
 		// set `newFiatValue` to -1 for conditionally hiding the Fiat unit box
-		const newFiatValue = fiatPerAR ? Number((newARValue * fiatPerAR).toFixed(fiatFieldDecimalLimit)) : -1;
-		const newByteValue = Number(Number(byteCount).toFixed(bytesFieldDecimalLimit));
-		const newArValue = Number(Number(newARValue).toFixed(arFieldDecimalLimit));
+		const newFiatValue = fiatPerAR ? newARValue * fiatPerAR : -1;
+		const newByteValue = byteCount;
+		const newArValue = newARValue;
 
 		return { bytes: newByteValue, fiat: newFiatValue, ar: newArValue };
 	}

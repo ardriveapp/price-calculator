@@ -6,6 +6,8 @@ import { useStateValue } from '../state/state';
 import useDebounce from '../hooks/useDebounce';
 import { useState } from 'react';
 
+const decimalLimits = { fiat: 8, bytes: 6, ar: 12 };
+
 interface TextBoxProps {
 	field: keyof UnitBoxes;
 }
@@ -14,12 +16,17 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 	const [{ unitBoxes }, dispatch] = useStateValue();
 	const globalInputValue = unitBoxes[field].value;
 
+	const decimalLimit = decimalLimits[field];
+
 	const [localInputValue, setLocalInputValue] = useState(globalInputValue.toString());
 	const [isDebouncing, setIsDebouncing] = useState(false);
 
-	if (Number(localInputValue) !== globalInputValue && !isDebouncing) {
+	/** Rounds and removes any unnecessary 0s from calculated value only before displaying to user */
+	const roundedDisplayValue = Number(globalInputValue.toFixed(decimalLimit)).toString();
+
+	if (localInputValue !== roundedDisplayValue && !isDebouncing) {
 		// Calculation has been changed in the global state, set to new local value if NOT debouncing
-		setLocalInputValue(globalInputValue.toString());
+		setLocalInputValue(roundedDisplayValue);
 	}
 
 	/**
