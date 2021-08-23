@@ -73,7 +73,7 @@ export default function useCalculation(): void {
 			try {
 				newFiatPerAR = (
 					await unitBoxCalculator.fiatOracle.getPriceForFiatTokenPair({
-						fiat: unitBoxes.fiat.currUnit.toLocaleLowerCase() as FiatID,
+						fiat: unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
 						token: 'arweave'
 					})
 				).fiatPerTokenRate;
