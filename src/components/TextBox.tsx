@@ -18,8 +18,10 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 	const [localInputValue, setLocalInputValue] = useState(globalInputValue.toString());
 	const [isDebouncing, setIsDebouncing] = useState(false);
 
-	if (Number(localInputValue) !== globalInputValue && !isDebouncing) {
-		// Calculation has been changed in the global state, set to new local value if NOT debouncing
+	if (Number(localInputValue) !== globalInputValue && !isDebouncing && localInputValue !== '.') {
+		// Calculation has been changed in the global state, set to new local value
+		// only if NOT debouncing and if the localInputValue is not a single decimal
+		// The special case for the single dot allows the user to begin typing a decimal
 		setLocalInputValue(globalInputValue.toString());
 	}
 
@@ -53,14 +55,16 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 	function onTextBoxInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
 		let userInputValue = event.target.value;
 
-		// Only trigger debounce from local value change if the
-		// user defined input is a valid input
+		// Only set local input value if the user defined input is a valid input
 		if (isValidInput(userInputValue)) {
-			setIsDebouncing(true);
+			if (userInputValue !== '.') {
+				// Only trigger debounce if the input is not a solo decimal
+				setIsDebouncing(true);
 
-			if (Number(userInputValue) < 0) {
-				// Enforce positive integers with Math.abs()
-				userInputValue = Math.abs(Number(userInputValue)).toString();
+				if (Number(userInputValue) < 0) {
+					// Enforce any negative integers into positive integers with Math.abs()
+					userInputValue = Math.abs(Number(userInputValue)).toString();
+				}
 			}
 
 			setLocalInputValue(userInputValue);
