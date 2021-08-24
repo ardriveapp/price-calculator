@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import isValidInput from './valid_input_reg_exp';
 
-const unexpectedValues = [
+const invalidValues = [
 	'pants',
 	't9.02',
 	'0.2.5',
@@ -9,11 +9,11 @@ const unexpectedValues = [
 	'..90',
 	'99..',
 	'ultimate.number',
-	'0.00842.2',
+	'0.00842.2654.433',
 	'R2.D2'
 ];
 
-const expectedValues = [
+const validValues = [
 	'0',
 	'',
 	'0.',
@@ -27,14 +27,14 @@ const expectedValues = [
 ];
 
 describe('isValidInput function', () => {
-	it('returns false with unexpected values', () => {
-		for (const value of unexpectedValues) {
+	it('returns false when used with invalid values', () => {
+		for (const value of invalidValues) {
 			expect(isValidInput(value)).to.be.false;
 		}
 	});
 
-	it('returns false with expected values', () => {
-		for (const value of expectedValues) {
+	it('returns true when used with valid values', () => {
+		for (const value of validValues) {
 			expect(isValidInput(value)).to.be.true;
 		}
 	});
