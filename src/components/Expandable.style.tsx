@@ -9,8 +9,13 @@ export const ExpandableContainer = styled.div`
 		border-color: #121212;
 		border-bottom-style: solid;
 	}
+
 	p {
 		padding-top: 1rem;
+	}
+
+	strong {
+		font-family: 'Wavehaus-Bold';
 	}
 `;
 
