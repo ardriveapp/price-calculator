@@ -5,7 +5,7 @@ import type { UnitBoxes } from '../types';
 import { useStateValue } from '../state/state';
 import useDebounce from '../hooks/useDebounce';
 import { useState } from 'react';
-import isValidInput from '../utils/valid_input_reg_exp';
+import isValidInput, { validInputRegExp } from '../utils/valid_input_reg_exp';
 
 interface TextBoxProps {
 	field: keyof UnitBoxes;
@@ -78,7 +78,7 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 			<TextBoxInput
 				style={hideInput}
 				type="text"
-				pattern="^[0-9]*[.]?[0-9]*$"
+				pattern={validInputRegExp.source}
 				name="textbox"
 				value={localInputValue}
 				onChange={onTextBoxInputChange}
