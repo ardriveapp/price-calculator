@@ -5,6 +5,7 @@ import type { UnitBoxes } from '../types';
 import { useStateValue } from '../state/state';
 import useDebounce from '../hooks/useDebounce';
 import { useState } from 'react';
+import isValidInput from '../utils/valid_input_reg_exp';
 
 interface TextBoxProps {
 	field: keyof UnitBoxes;
@@ -52,9 +53,9 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 	function onTextBoxInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
 		let userInputValue = event.target.value;
 
-		// Only trigger debounced from local value change if the
-		// user defined input converts to a number
-		if (!Number.isNaN(userInputValue)) {
+		// Only trigger debounce from local value change if the
+		// user defined input is a valid input
+		if (isValidInput(userInputValue)) {
 			setIsDebouncing(true);
 
 			if (Number(userInputValue) < 0) {
@@ -70,7 +71,8 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 		<TextBoxContainer>
 			<TextBoxInput
 				style={hideInput}
-				type="number"
+				type="text"
+				pattern="^[0-9]*[.]?[0-9]*$"
 				name="textbox"
 				value={localInputValue}
 				onChange={onTextBoxInputChange}
