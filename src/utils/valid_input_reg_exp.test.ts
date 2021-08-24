@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import isValidInput from './valid_input_reg_exp';
+import isValidNumericUserInputString from './valid_input_reg_exp';
 
 const invalidValues = [
 	'pants',
@@ -26,16 +26,16 @@ const validValues = [
 	Number.MAX_SAFE_INTEGER.toString()
 ];
 
-describe('isValidInput function', () => {
+describe('isValidNumericUserInputString function', () => {
 	it('returns false when used with invalid values', () => {
 		for (const value of invalidValues) {
-			expect(isValidInput(value)).to.be.false;
+			expect(isValidNumericUserInputString(value)).to.be.false;
 		}
 	});
 
 	it('returns true when used with valid values', () => {
 		for (const value of validValues) {
-			expect(isValidInput(value)).to.be.true;
+			expect(isValidNumericUserInputString(value)).to.be.true;
 		}
 	});
 });
