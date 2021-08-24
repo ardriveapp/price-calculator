@@ -55,10 +55,13 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 	function onTextBoxInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
 		let userInputValue = event.target.value;
 
-		// Only set local input value if the user defined input is a valid input
 		if (isValidInput(userInputValue)) {
-			if (userInputValue !== '.') {
-				// Only trigger debounce if the input is not a solo decimal
+			// Only set local input value if the user defined input is a valid input
+			if (userInputValue === '.') {
+				// When input is changed to a single decimal, cancel debounce
+				setIsDebouncing(false);
+			} else {
+				// Otherwise, trigger new debounce
 				setIsDebouncing(true);
 
 				if (Number(userInputValue) < 0) {
@@ -66,7 +69,6 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 					userInputValue = Math.abs(Number(userInputValue)).toString();
 				}
 			}
-
 			setLocalInputValue(userInputValue);
 		}
 	}
