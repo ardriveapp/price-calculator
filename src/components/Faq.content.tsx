@@ -18,7 +18,8 @@ export const faqQuestionsAnswers = [
 				The file size is used to determine the base fee to upload data to the network. The price of the base fee
 				is set by the Arweave Network code itself. The Price Calculator includes this base fee and adds the
 				ArDrive Community Tip percentage on top. Learn more about{' '}
-				<a href="https://ardrive.atlassian.net/wiki/spaces/help/pages/86376465">ArDrive Fees</a>.
+				<a href="https://ardrive.atlassian.net/wiki/spaces/help/pages/86376465">ArDrive Fees</a>.<br></br>
+				Note: All file sizes are represented using binary units of measurement (i.e. 1 MB = 1024 KB).
 			</p>
 		)
 	},
@@ -40,8 +41,8 @@ export const faqQuestionsAnswers = [
 			<p>
 				Not exactly. The Arweave network protocol is always adjusting the data price to maintain sustainable,
 				perpetual storage. The data price is lowered as the network increases its overall capacity. This can
-				result in a fluctuating data price, with a 30 day average of $6 per GB. However, for most files these
-				fluctuations would only increase or decrease costs by fractions of a cent.
+				result in a fluctuating data price. However, for most files these fluctuations would only increase or
+				decrease costs by fractions of a cent.
 			</p>
 		)
 	},
