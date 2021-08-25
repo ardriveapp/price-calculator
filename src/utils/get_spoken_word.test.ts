@@ -14,10 +14,6 @@ describe('getSpokenWord function', () => {
 		expect(getSpokenWord('GB')).to.equal('gigabyte');
 	});
 
-	it('correctly converts AR into arweave token', () => {
-		expect(getSpokenWord('AR')).to.equal('arweave token');
-	});
-
 	it('correctly returns abbreviation if it does not exist on abbreviation record', () => {
 		expect(getSpokenWord('ROFL')).to.equal('ROFL');
 	});

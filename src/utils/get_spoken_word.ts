@@ -10,8 +10,7 @@ export function getSpokenWord(abbreviation: string): string {
 const abbreviationRecord = {
 	KB: 'kilobyte',
 	MB: 'megabyte',
-	GB: 'gigabyte',
-	AR: 'arweave token'
+	GB: 'gigabyte'
 };
 
 function isAbbreviation(key: string): key is keyof typeof abbreviationRecord {
