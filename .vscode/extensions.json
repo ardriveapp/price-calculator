@@ -3,6 +3,8 @@
 	  "arcanis.vscode-zipfs",
 	  "dbaeumer.vscode-eslint",
 	  "esbenp.prettier-vscode",
-	  "editorconfig.editorconfig"
+	  "editorconfig.editorconfig",
+	  "sonarsource.sonarlint-vscode",
+	  "deque-systems.vscode-axe-linter"
     ]
 }
