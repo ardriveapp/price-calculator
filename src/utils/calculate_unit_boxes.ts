@@ -5,7 +5,6 @@ import convertUnit from './convert_unit';
 import type { ARDataPriceEstimator } from './ar_data_price_estimator';
 import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
 import { currencyIDs, FiatID } from './fiat_oracle_types';
-import type { FiatOracle } from './fiat_oracle';
 
 /**
  * A utility class responsible for calculating the new unit boxes to
