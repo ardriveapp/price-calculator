@@ -85,13 +85,12 @@ describe('ARDataPriceEstimator class', () => {
 		});
 
 		it('returns 0 if provided winston value does not cover baseWinstonPrice', async () => {
-			/** Price estimator with byte volume array of 0 bytes and 1 bytes */
-			const priceEstimator = new ARDataPriceRegressionEstimator(true, spyedOracle, [0, 1]);
+			const stubRegressionByteVolumes = [0, 1];
 
-			// First call (0 bytes) resolves to 5, to fake a baseWinstonPrice of 5
+			const priceEstimator = new ARDataPriceRegressionEstimator(true, spyedOracle, stubRegressionByteVolumes);
+
+			// Stub out the returned prices for each byte value to arrive at base price 5 and marginal price 1
 			spyedOracle.getWinstonPriceForByteCount.onFirstCall().callsFake(() => Promise.resolve(5));
-
-			// Second call (1 byte) resolves to 6, to fake a marginalWinstonPrice of 1
 			spyedOracle.getWinstonPriceForByteCount.onSecondCall().callsFake(() => Promise.resolve(6));
 
 			// Expect 4 to be reduced to 0 because it does not cover baseWinstonPrice of 5
