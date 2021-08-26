@@ -28,7 +28,21 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 	 *
 	 * @returns an ARDataPriceEstimator
 	 */
-	constructor(skipSetup = false, private readonly oracle: ArweaveOracle = new GatewayOracle()) {
+	constructor(
+		skipSetup = false,
+		private readonly oracle: ArweaveOracle = new GatewayOracle(),
+		private readonly byteVolumes: number[] = ARDataPriceRegressionEstimator.sampleByteVolumes
+	) {
+		if (byteVolumes.length < 2) {
+			throw new Error('Byte volume array must contain at least 2 values to calculate regression');
+		}
+
+		for (const volume of byteVolumes) {
+			if (!Number.isInteger(volume) || volume < 0) {
+				throw new Error(`Byte volume (${volume}) on byte volume array should be a positive integer!`);
+			}
+		}
+
 		if (!skipSetup) {
 			this.refreshPriceData();
 		}
@@ -48,7 +62,7 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 		// Fetch the price for a handful of reference data volumes and feed them into a linear regression
 		this.setupPromise = Promise.all(
 			// TODO: What to do if one fails?
-			ARDataPriceRegressionEstimator.sampleByteVolumes.map(
+			this.byteVolumes.map(
 				async (sampleByteCount) =>
 					new ARDataPrice(sampleByteCount, await this.oracle.getWinstonPriceForByteCount(sampleByteCount))
 			)
