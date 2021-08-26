@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 
 export const AppContainer = styled.section`
+	display: flex;
+	flex-direction: column;
+`;
+
+export const AppContent = styled.section`
 	align-items: center;
 	justify-content: center;
 	padding: 1rem;
