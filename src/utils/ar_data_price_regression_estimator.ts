@@ -25,6 +25,10 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 	 *
 	 * @param skipSetup allows for instantiation without prefetching pricing data from the oracle
 	 * @param oracle a datasource for Arweave data pricing
+	 * @param byteVolumes an array of non-negative byte integers to fetch for pricing data
+	 *
+	 * @throws when byteVolumes array has less than 2 values
+	 * @throws when volumes on byteVolumes array are negative or non-integer decimal values
 	 *
 	 * @returns an ARDataPriceEstimator
 	 */
@@ -59,7 +63,7 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 			return this.setupPromise;
 		}
 
-		// Fetch the price for a handful of reference data volumes and feed them into a linear regression
+		// Fetch the price for all values in byteVolume array and feed them into a linear regression
 		this.setupPromise = Promise.all(
 			// TODO: What to do if one fails?
 			this.byteVolumes.map(
