@@ -39,6 +39,27 @@ describe('ARDataPriceEstimator class', () => {
 		expect(spyedOracle.getWinstonPriceForByteCount.calledThrice).to.be.true;
 	});
 
+	it('throws an error when constructed with a byte volume array that has only one number', () => {
+		expect(() => new ARDataPriceRegressionEstimator(true, spyedOracle, [1])).to.throw(Error);
+	});
+
+	it('throws an error when constructed with a byte volume array that has negative integers', () => {
+		expect(() => new ARDataPriceRegressionEstimator(true, spyedOracle, [-1, -2])).to.throw(Error);
+	});
+
+	it('throws an error when constructed with a byte volume array that has non-integer decimal values', () => {
+		expect(() => new ARDataPriceRegressionEstimator(true, spyedOracle, [0.1, 5.5])).to.throw(Error);
+	});
+
+	it('uses byte volumes from provided byte volume array', () => {
+		const byteVolumes = [1, 5, 10];
+		new ARDataPriceRegressionEstimator(false, spyedOracle, byteVolumes);
+
+		expect(spyedOracle.getWinstonPriceForByteCount.firstCall.args[0]).to.equal(byteVolumes[0]);
+		expect(spyedOracle.getWinstonPriceForByteCount.secondCall.args[0]).to.equal(byteVolumes[1]);
+		expect(spyedOracle.getWinstonPriceForByteCount.thirdCall.args[0]).to.equal(byteVolumes[2]);
+	});
+
 	it('getWinstonPriceForByteCount function returns the expected value', async () => {
 		const actualWinstonPriceEstimation = await calculator.getWinstonPriceForByteCount(100);
 		expect(actualWinstonPriceEstimation).to.equal(100);
