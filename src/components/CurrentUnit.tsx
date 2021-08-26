@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { ExpandableTrailingIcon } from './Expandable.style';
 
 import {
@@ -10,11 +10,11 @@ import {
 import useOnOutsideClick from '../hooks/useOnOutsideClick';
 import UpArrowIcon from './icons/UpArrowIcon';
 import { useStateValue } from '../state/state';
+import type { ByteUnitType } from '../types';
 
 interface CurrentUnitProps {
 	units?: string[];
 	currentUnit: string;
-	onChange: (input: string) => void;
 }
 
 export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): JSX.Element {
@@ -23,7 +23,7 @@ export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): J
 	const dropDownRef = useRef(null);
 	useOnOutsideClick(dropDownRef, () => setDropdownOpen(false));
 
-	if (units && units?.length > 1) {
+	if (units && units.length > 1) {
 		return (
 			<div ref={dropdownOpen ? dropDownRef : null}>
 				<CurrentUnitButtonContainer
@@ -52,7 +52,6 @@ interface UnitDropDownProps {
 	closeDropDown: () => void;
 }
 
-/** @TODO Pass down and use `setCurrentUnit` prop */
 function UnitDropDown({ units, closeDropDown }: UnitDropDownProps): JSX.Element {
 	const [{ unitBoxes }, dispatch] = useStateValue();
 
@@ -67,7 +66,7 @@ function UnitDropDown({ units, closeDropDown }: UnitDropDownProps): JSX.Element 
 		} else {
 			dispatch({
 				type: 'setUnitBoxes',
-				payload: { ...unitBoxes, bytes: { ...unitBoxes.bytes, currUnit: unit } }
+				payload: { ...unitBoxes, bytes: { ...unitBoxes.bytes, currUnit: unit as ByteUnitType } }
 			});
 		}
 		closeDropDown();
