@@ -12,7 +12,7 @@ import { currencyIDs } from './fiat_oracle_types';
 
 describe('UnitBoxCalculator class', () => {
 	let unitBoxCalculator: UnitBoxCalculator;
-	let cachingTokenToOracle: FiatOracle;
+	let cachingTokenToOracle: CachingTokenToFiatOracle;
 
 	let stubbedPriceEstimator: SinonStubbedInstance<ARDataPriceEstimator>;
 	let stubbedCoinGeckoOracle: SinonStubbedInstance<FiatOracle>;
