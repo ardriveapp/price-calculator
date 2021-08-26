@@ -92,7 +92,9 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 		const winstonPrice = await this.getWinstonPriceForByteCount(byteCount);
 		const communityWinstonFee = Math.max(winstonPrice * tipPercentage, minWinstonFee);
 
-		return (winstonPrice + communityWinstonFee) * arPerWinston;
+		const totalWinstonPrice = winstonPrice + communityWinstonFee;
+
+		return totalWinstonPrice * arPerWinston;
 	}
 
 	/**
@@ -116,7 +118,8 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 			}
 		}
 
-		return Math.max(0, winston - this.predictor.baseWinstonPrice()) / this.predictor.marginalWinstonPrice();
+		// Return 0 if winston price given does not cover the base winston price for a transaction
+		return Math.max(0, (winston - this.predictor.baseWinstonPrice()) / this.predictor.marginalWinstonPrice());
 	}
 
 	/**
@@ -129,8 +132,9 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 		arPrice: number,
 		{ minWinstonFee, tipPercentage }: ArDriveCommunityTip
 	): Promise<number> {
-		const winstonPrice = Math.round(arPrice / arPerWinston);
-		const communityWinstonFee = Math.max(winstonPrice * tipPercentage, minWinstonFee);
+		const winstonPrice = arPrice / arPerWinston;
+
+		const communityWinstonFee = Math.max(winstonPrice - winstonPrice / (1 + tipPercentage), minWinstonFee);
 
 		const winstonPriceWithoutFee = Math.round(winstonPrice - communityWinstonFee);
 

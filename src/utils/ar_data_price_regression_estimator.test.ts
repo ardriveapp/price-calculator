@@ -62,6 +62,16 @@ describe('ARDataPriceEstimator class', () => {
 			await calculator.getByteCountForWinston(0);
 			expect(spyedOracle.getWinstonPriceForByteCount.calledThrice).to.be.true;
 		});
+
+		it('returns 0 if determined byte count is less than 0', async () => {
+			// These fake oracle calls sets marginalWinstonPrice to 1 and baseWinstonPrice to 5
+			spyedOracle.getWinstonPriceForByteCount.onFirstCall().callsFake((i) => Promise.resolve(i));
+			spyedOracle.getWinstonPriceForByteCount.onSecondCall().callsFake((i) => Promise.resolve(i + 5));
+			spyedOracle.getWinstonPriceForByteCount.onThirdCall().callsFake((i) => Promise.resolve(i + 10));
+
+			// Expect 4 to be reduced to 0 because it does not cover baseWinstonPrice
+			expect(await calculator.getByteCountForWinston(4)).to.equal(0);
+		});
 	});
 
 	describe('getByteCountForAR function', () => {
@@ -70,7 +80,7 @@ describe('ARDataPriceEstimator class', () => {
 				0.000_000_000_100,
 				arDriveCommunityTip
 			);
-			expect(actualByteCountEstimation).to.equal(85);
+			expect(actualByteCountEstimation).to.equal(87);
 		});
 
 		it('returns 0 if estimation does not cover the minimum winston fee', async () => {
