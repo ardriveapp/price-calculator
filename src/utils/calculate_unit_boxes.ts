@@ -17,11 +17,14 @@ import type { FiatOracle } from './fiat_oracle';
 export class UnitBoxCalculator {
 	constructor(
 		private readonly arDataPriceEstimator: ARDataPriceEstimator = new ARDataPriceRegressionEstimator(),
-		private readonly fiatCachingOracle: FiatOracle = new CachingTokenToFiatOracle('arweave', currencyIDs)
+		private readonly fiatCachingOracle: CachingTokenToFiatOracle = new CachingTokenToFiatOracle(
+			'arweave',
+			currencyIDs
+		)
 	) {}
 
 	/** Expose fiat oracle to determine when prices get fetched */
-	public get fiatOracle(): FiatOracle {
+	public get fiatOracle(): CachingTokenToFiatOracle {
 		return this.fiatCachingOracle;
 	}
 
