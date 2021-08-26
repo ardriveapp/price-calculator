@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const TextBoxInput = styled.input`
-	width: 40%;
+	width: 65%;
 	height: 50%;
 	margin: 0 2rem;
 `;
