@@ -8,6 +8,6 @@
  * const value: string = numberWithCommas(10_000_000);
  * console.log(value); // Result is '10,000,000'
  */
-export default function numberWithCommas(x: number): string {
-	return x.toLocaleString();
+export default function numberWithCommas(x: number, locales?: string | string[]): string {
+	return x.toLocaleString(locales);
 }

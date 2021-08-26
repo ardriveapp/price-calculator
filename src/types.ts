@@ -1,12 +1,9 @@
+import { currencyIDs } from './utils/fiat_oracle_types';
+
 export interface ArDriveCommunityTip {
 	tipPercentage: number;
 	minWinstonFee: number;
 }
-
-export type FiatToAr = {
-	// [FiatUnits in FiatUnitTypes]: number;
-	[key: string]: number;
-};
 
 export interface UnitBox {
 	/** Value displayed on left on unit box */
@@ -34,12 +31,9 @@ export interface ArUnitBox extends UnitBox {
 export type ByteUnitType = 'B' | 'KB' | 'MB' | 'GB';
 export const displayedByteUnitTypes: ByteUnitType[] = ['KB', 'MB', 'GB'];
 
-// prettier-ignore
-export const displayedFiatUnitTypes = ['USD', 'EUR', 'JPY', 'CNY', 'GBP', 'IDR',
-    'TWD', 'KRW', 'RUB', 'AED', 'ARS', 'AUD', 'BDT', 'BHD', 'BMD', 'BRL', 'CAD',
-		'CHF', 'CLP', 'CZK', 'DKK', 'HKD', 'HUF', 'ILS', 'INR', 'KWD', 'LKR', 'MMK',
-		'MXN', 'MYR', 'NGN', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'SAR', 'SEK', 'SGD',
-		'THB', 'TRY', 'UAH', 'VEF', 'VND', 'ZAR', 'XDR', 'XAG', 'XAU'];
+/** Fiat unit types are translated from the coingecko supported currencies  */
+export const displayedFiatUnitTypes = currencyIDs.map((f) => f.toUpperCase());
+
 export type FiatUnitType = typeof displayedFiatUnitTypes[number];
 
 export interface UnitBoxes {
