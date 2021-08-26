@@ -84,14 +84,18 @@ describe('ARDataPriceEstimator class', () => {
 			expect(spyedOracle.getWinstonPriceForByteCount.calledThrice).to.be.true;
 		});
 
-		it('returns 0 if determined byte count is less than 0', async () => {
-			// These fake oracle calls sets marginalWinstonPrice to 1 and baseWinstonPrice to 5
-			spyedOracle.getWinstonPriceForByteCount.onFirstCall().callsFake((i) => Promise.resolve(i));
-			spyedOracle.getWinstonPriceForByteCount.onSecondCall().callsFake((i) => Promise.resolve(i + 5));
-			spyedOracle.getWinstonPriceForByteCount.onThirdCall().callsFake((i) => Promise.resolve(i + 10));
+		it('returns 0 if provided winston value does not cover baseWinstonPrice', async () => {
+			/** Price estimator with byte volume array of 0 bytes and 1 bytes */
+			const priceEstimator = new ARDataPriceRegressionEstimator(true, spyedOracle, [0, 1]);
 
-			// Expect 4 to be reduced to 0 because it does not cover baseWinstonPrice
-			expect(await calculator.getByteCountForWinston(4)).to.equal(0);
+			// First call (0 bytes) resolves to 5, to fake a baseWinstonPrice of 5
+			spyedOracle.getWinstonPriceForByteCount.onFirstCall().callsFake(() => Promise.resolve(5));
+
+			// Second call (1 byte) resolves to 6, to fake a marginalWinstonPrice of 1
+			spyedOracle.getWinstonPriceForByteCount.onSecondCall().callsFake(() => Promise.resolve(6));
+
+			// Expect 4 to be reduced to 0 because it does not cover baseWinstonPrice of 5
+			expect(await priceEstimator.getByteCountForWinston(4)).to.equal(0);
 		});
 	});
 
