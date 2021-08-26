@@ -5,6 +5,7 @@ import type { UnitBoxes } from '../types';
 import { useStateValue } from '../state/state';
 import useDebounce from '../hooks/useDebounce';
 import { useState } from 'react';
+import isValidInput, { validInputRegExp } from '../utils/valid_input_reg_exp';
 
 const decimalLimits = { fiat: 8, bytes: 6, ar: 12 };
 
@@ -22,11 +23,13 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 	const [isDebouncing, setIsDebouncing] = useState(false);
 
 	/** Rounds and removes any unnecessary 0s from calculated value only before displaying to user */
-	const roundedGlobalValue = Number(globalInputValue.toFixed(decimalLimit)).toString();
+	const roundedGlobalValue = Number(globalInputValue.toFixed(decimalLimit));
 
-	if (localInputValue !== roundedGlobalValue && !isDebouncing) {
-		// Calculation has been changed in the global state, set to new local value if NOT debouncing
-		setLocalInputValue(roundedGlobalValue);
+	if (Number(localInputValue) !== roundedGlobalValue && !isDebouncing && localInputValue !== '.') {
+		// Calculation has been changed in the global state, set to new local value
+		// only if NOT debouncing and if the localInputValue is not a single decimal
+		// The special case for the single dot allows the user to begin typing a decimal
+		setLocalInputValue(roundedGlobalValue.toString());
 	}
 
 	/**
@@ -59,16 +62,20 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 	function onTextBoxInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
 		let userInputValue = event.target.value;
 
-		// Only trigger debounced from local value change if the
-		// user defined input converts to a number
-		if (!Number.isNaN(userInputValue)) {
-			setIsDebouncing(true);
+		if (isValidInput(userInputValue)) {
+			// Only set local input value if the user defined input is a valid input
+			if (userInputValue === '.') {
+				// When input is changed to a single decimal, cancel debounce
+				setIsDebouncing(false);
+			} else {
+				// Otherwise, trigger new debounce
+				setIsDebouncing(true);
 
-			if (Number(userInputValue) < 0) {
-				// Enforce positive integers with Math.abs()
-				userInputValue = Math.abs(Number(userInputValue)).toString();
+				if (Number(userInputValue) < 0) {
+					// Enforce any negative integers into positive integers with Math.abs()
+					userInputValue = Math.abs(Number(userInputValue)).toString();
+				}
 			}
-
 			setLocalInputValue(userInputValue);
 		}
 	}
@@ -77,7 +84,8 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 		<TextBoxContainer>
 			<TextBoxInput
 				style={hideInput}
-				type="number"
+				type="text"
+				pattern={validInputRegExp.source}
 				name="textbox"
 				value={localInputValue}
 				onChange={onTextBoxInputChange}

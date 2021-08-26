@@ -4,7 +4,7 @@ import UpArrowIcon from './icons/UpArrowIcon';
 
 interface ExpandableProps {
 	title: string;
-	description: string;
+	description: React.ReactNode;
 	expanded: boolean;
 	setExpanded: () => void;
 }
