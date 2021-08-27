@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyledAnchor } from './AppHeader.style';
-import { ArDriveLogoLight } from './icons/ArDriveLogoLight';
+import { StyledHeader } from './AppHeader.style';
+import { HomePageLogo } from './HomePageLogo';
 
 export function AppHeader(): JSX.Element {
 	return (
-		<StyledAnchor href="https://ardrive.io" aria-label="Home page">
-			<ArDriveLogoLight />
-		</StyledAnchor>
+		<StyledHeader>
+			<HomePageLogo />
+		</StyledHeader>
 	);
 }

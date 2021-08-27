@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
 export const CalculatorContainer = styled.section`
-	width: 100%;
-	margin: 0.5rem;
+	flex-shrink: 0;
+	padding-top: 2rem;
+	width: 35vw;
+
 	@media (min-width: 720px) {
-		margin-right: 5rem;
 	}
 	@media (min-width: 1200px) {
-		margin-right: 10rem;
 	}
 `;
 export const SolidDivider = styled.div`
