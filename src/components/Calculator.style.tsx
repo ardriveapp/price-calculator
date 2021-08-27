@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const CalculatorContainer = styled.section`
 	padding: 0 2rem;
 	padding-top: 2rem;
+	width: 100%;
 
 	@media (min-width: 720px) {
 	}

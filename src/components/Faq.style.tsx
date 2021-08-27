@@ -7,6 +7,7 @@ export const FaqContainer = styled.section`
 	padding: 0 2rem;
 	padding-top: 2rem;
 	align-self: stretch;
+	width: 100%;
 
 	@media (min-width: 720px) {
 		padding-top: 0rem;
