@@ -5,7 +5,7 @@ import { ArDriveLogoLight } from './icons/ArDriveLogoLight';
 export function HomePageLogo(): JSX.Element {
 	return (
 		<LogoContainer>
-			<a href="https://ardrive.io" aria-label="Home page">
+			<a href="https://ardrive.io" aria-label="ArDrive Home page">
 				<ArDriveLogoLight />
 			</a>
 		</LogoContainer>
