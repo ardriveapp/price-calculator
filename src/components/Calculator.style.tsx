@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 
 export const CalculatorContainer = styled.section`
-	flex-shrink: 0;
+	padding: 0 2rem;
 	padding-top: 2rem;
-	width: 35vw;
 
 	@media (min-width: 720px) {
 	}

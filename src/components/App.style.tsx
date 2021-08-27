@@ -12,7 +12,7 @@ export const AppContainer = styled.section`
 export const AppContent = styled.section`
 	display: flex;
 	justify-content: space-between;
-	flex-direction: row;
+	flex-direction: column;
 	font-size: 16px;
 	letter-spacing: 0.19px;
 	flex-grow: 1;
