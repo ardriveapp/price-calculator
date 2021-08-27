@@ -1,5 +1,5 @@
 import React, { createContext, Dispatch, useContext, useReducer } from 'react';
-import { ArDriveCommunityTip, displayedByteUnitTypes, FiatToAr, displayedFiatUnitTypes, UnitBoxes } from '../types';
+import { ArDriveCommunityTip, displayedByteUnitTypes, displayedFiatUnitTypes, UnitBoxes } from '../types';
 import type { Action } from './reducer';
 
 export type State = {
@@ -8,9 +8,6 @@ export type State = {
 	 * from the SmartWeave contract on startup, uses known defaults until data arrives
 	 */
 	arDriveCommunityTip: ArDriveCommunityTip;
-
-	/** Fiat to AR conversions to be fetched from CoinGecko */
-	fiatToArData?: FiatToAr;
 
 	/** Current values and units for each field: 'bytes' | 'fiat' | 'ar' */
 	unitBoxes: UnitBoxes;

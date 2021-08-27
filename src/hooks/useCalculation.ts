@@ -3,6 +3,7 @@ import type { UnitBoxes } from '../types';
 import { useStateValue } from '../state/state';
 import { UnitBoxCalculator } from '../utils/calculate_unit_boxes';
 import convertUnit from '../utils/convert_unit';
+import type { FiatID } from '../utils/fiat_oracle_types';
 
 /** UnitBoxCalculator instance, will fire off initial fetch calls when constructed */
 const unitBoxCalculator = new UnitBoxCalculator();
@@ -30,19 +31,17 @@ export default function useCalculation(): void {
 
 	// Save previous byte unit for determining byte unit changes
 	const [byteCurrUnit, setByteCurrUnit] = useState(unitBoxes.bytes.currUnit);
+	const [fiatCurrUnit, setFiatCurrUnit] = useState(unitBoxes.fiat.currUnit);
 
 	/**
-	 * @TODO Conversion will come from fiatToArData[unitBoxes.fiat.currUnit] in PE-68
+	 * Whenever unitBoxes change, this useEffect hook will start a new calculation
 	 *
-	 * Added temporary conditional on unit switch from USD for testing currUnit changes
+	 * It will also fire off new calculations when the fiat oracle returns with fresh data
 	 */
-	const fiatPerAR = unitBoxes.fiat.currUnit === 'USD' ? 15.0 : 10.0;
-
-	/** Whenever unitBoxes change, this useEffect hook will start a new calculation */
 	useEffect(() => {
 		dispatchNewUnitBoxes();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [unitBoxes]);
+	}, [unitBoxes, unitBoxCalculator.fiatOracle.currentlyFetchingPrice]);
 
 	/**
 	 * Calculates new unit box values based on updated state. Then, dispatches
@@ -59,7 +58,7 @@ export default function useCalculation(): void {
 
 		if (unitBoxes.bytes.currUnit !== byteCurrUnit) {
 			// When byte unit has been changed by the user, only update the bytes value directly
-			const newBytesValue = Number(convertUnit(unitBoxes.bytes.value, byteCurrUnit, unitBoxes.bytes.currUnit));
+			const newBytesValue = convertUnit(unitBoxes.bytes.value, byteCurrUnit, unitBoxes.bytes.currUnit);
 
 			newUnitBoxValues = {
 				...prevUnitValues,
@@ -67,6 +66,32 @@ export default function useCalculation(): void {
 			};
 
 			setByteCurrUnit(unitBoxes.bytes.currUnit);
+		} else if (unitBoxes.fiat.currUnit !== fiatCurrUnit) {
+			// When fiat unit has been changed by the user, only update the fiat value directly
+			let newFiatPerAR: number;
+
+			try {
+				newFiatPerAR = (
+					await unitBoxCalculator.fiatOracle.getPriceForFiatTokenPair({
+						fiat: unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
+						token: 'arweave'
+					})
+				).fiatPerTokenRate;
+			} catch (err) {
+				console.error('Fiat rate could not be determined:', err);
+				setSendingCalculation(false);
+				// Fiat oracle has thrown an error, return early
+				return;
+			}
+
+			const newFiatValue = unitBoxes.ar.value * newFiatPerAR;
+
+			newUnitBoxValues = {
+				...prevUnitValues,
+				fiat: newFiatValue
+			};
+
+			setFiatCurrUnit(unitBoxes.fiat.currUnit);
 		} else {
 			let valueToCalculate: number;
 			let unitBoxType: keyof UnitBoxes;
@@ -89,9 +114,9 @@ export default function useCalculation(): void {
 				newUnitBoxValues = await unitBoxCalculator.calculateUnitBoxValues(
 					valueToCalculate,
 					unitBoxType,
-					fiatPerAR,
-					arDriveCommunityTip,
-					unitBoxes.bytes.currUnit
+					unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
+					unitBoxes.bytes.currUnit,
+					arDriveCommunityTip
 				);
 			} catch (err) {
 				console.error('Prices could not be calculated:', err);

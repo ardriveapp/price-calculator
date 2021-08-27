@@ -1,9 +1,8 @@
-import type { ArDriveCommunityTip, FiatToAr, UnitBoxes } from '../types';
+import type { ArDriveCommunityTip, UnitBoxes } from '../types';
 import type { State } from './state';
 
 export type Action =
 	| { type: 'setArDriveCommunityTip'; payload: ArDriveCommunityTip }
-	| { type: 'setFiatToAr'; payload: FiatToAr }
 	| { type: 'setUnitBoxes'; payload: UnitBoxes };
 
 export const reducer = (state: State, action: Action): State => {
@@ -12,12 +11,6 @@ export const reducer = (state: State, action: Action): State => {
 			return {
 				...state,
 				arDriveCommunityTip: action.payload
-			};
-
-		case 'setFiatToAr':
-			return {
-				...state,
-				fiatToArData: action.payload
 			};
 
 		/**
