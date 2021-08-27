@@ -10,7 +10,7 @@
 		"lint": "eslint --fix .",
 		"ci": "yarn test && yarn build",
 		"clean": "rimraf build",
-		"run:prod": "yarn build && http-server ./build"
+		"run:prod": "yarn build && http-server-spa ./build"
 	},
 	"license": "AGPL-3.0-or-later",
 	"author": {
