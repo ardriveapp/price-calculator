@@ -68,6 +68,12 @@ Your app is ready to be deployed!
 Launches the application test runner.
 Run with the `--watch` flag (`yarn test -- --watch`) to run in interactive watch mode.
 
+### yarn run:prod
+
+Builds a fresh snowpack production build to the `build/` folder
+Then launches that copy with `http-server-spa` for local testing
+The build will be available for preview at: <http://localhost:8080>
+
 [yarn-install]: https://yarnpkg.com/getting-started/install
 [nvm-install]: https://github.com/nvm-sh/nvm#installing-and-updating
 [wsl-install]: https://code.visualstudio.com/docs/remote/wsl
