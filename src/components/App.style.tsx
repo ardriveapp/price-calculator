@@ -49,11 +49,11 @@ export const AppContainer = styled.section`
 export const AppContent = styled.section`
 	display: flex;
 	flex-direction: column;
-	font-size: 14px;
+	font-size: 16px;
 	letter-spacing: 0.19px;
 
 	@media (min-width: 640px) {
-		font-size: 16px;
+		font-size: 18px;
 	}
 
 	@media (min-width: 800px) {

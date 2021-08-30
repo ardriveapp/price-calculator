@@ -5,15 +5,9 @@ export const FileComparisonContainer = styled.div`
 	align-items: center;
 	transform: translate(-1rem);
 	letter-spacing: 0.82px;
-	font-size: 11px;
+	font-size: 14px;
 
 	@media (min-width: 640px) {
-		font-size: 13px;
-	}
-	@media (min-width: 800px) {
-		font-size: 14px;
-	}
-	@media (min-width: 1200px) {
 		font-size: 16px;
 	}
 
