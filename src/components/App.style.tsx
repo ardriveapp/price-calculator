@@ -7,7 +7,11 @@ export const AppContainer = styled.section`
 	min-height: 100vh;
 	width: 100%;
 	max-width: 1200px;
-	padding: 2rem 4rem;
+	padding: 2rem 2rem;
+
+	@media (min-width: 640px) {
+		padding: 2rem 4rem;
+	}
 
 	@media (min-height: 1000px) and (min-width: 800px) {
 		padding-top: 10rem;
