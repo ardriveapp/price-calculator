@@ -5,24 +5,21 @@ export const FileComparisonContainer = styled.div`
 	align-items: center;
 	transform: translate(-1rem);
 	letter-spacing: 0.82px;
-	font-size: 12px;
+	font-size: 14px;
 
-	@media (min-width: 500px) {
-		font-size: 14px;
-	}
-	@media (min-width: 720px) {
+	@media (min-width: 640px) {
 		font-size: 16px;
-	}
-	@media (min-width: 1200px) {
-		font-size: 18px;
 	}
 
 	p {
 		font-family: 'Wavehaus-Book';
-		word-break: break-all;
 	}
 
 	span {
+		word-break: break-all;
+	}
+
+	strong {
 		font-family: 'Wavehaus-Bold';
 	}
 `;

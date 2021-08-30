@@ -1,10 +1,10 @@
 import styled, { css } from 'styled-components';
 
 export const ExpandableContainer = styled.div`
-	padding: 1.5rem 1rem 1.5rem 0;
+	padding: 1.5rem 0;
 	font-family: 'Wavehaus-Book';
 
-	:not(:last-child) {
+	:not(:last-of-type) {
 		border-bottom: 0.25px;
 		border-color: #121212;
 		border-bottom-style: solid;

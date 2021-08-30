@@ -3,20 +3,23 @@ import { FileComparisonTypeIconContainer, FileComparisonContainer } from './File
 
 interface FileComparisonProps {
 	fileIcon: JSX.Element;
-	comparisonText: string;
+	comparisonText: string[];
 }
 
 export default function FileComparison({ fileIcon, comparisonText }: FileComparisonProps): JSX.Element {
-	const indexOfTilde = comparisonText.indexOf('~');
-
-	const wavehausBookComparisonText = comparisonText.substr(0, indexOfTilde - 1);
-	const wavehausBoldComparisonText = comparisonText.substr(indexOfTilde);
+	const wavehausBookComparisonText = comparisonText[0];
+	const comparisonValue = comparisonText[1];
+	const wavehausBoldComparisonText = comparisonText[2];
 
 	return (
 		<FileComparisonContainer>
 			<FileComparisonTypeIconContainer>{fileIcon}</FileComparisonTypeIconContainer>
 			<p>
-				{wavehausBookComparisonText} <span>{wavehausBoldComparisonText}</span>
+				{wavehausBookComparisonText}{' '}
+				<strong>
+					<span>{comparisonValue}</span>
+					{wavehausBoldComparisonText}
+				</strong>
 			</p>
 		</FileComparisonContainer>
 	);
