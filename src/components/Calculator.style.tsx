@@ -1,14 +1,7 @@
 import styled from 'styled-components';
 
 export const CalculatorContainer = styled.section`
-	padding: 0 2rem;
-	padding-top: 2rem;
 	width: 100%;
-
-	@media (min-width: 720px) {
-	}
-	@media (min-width: 1200px) {
-	}
 `;
 export const SolidDivider = styled.div`
 	border-left-style: solid;
@@ -22,9 +15,17 @@ export const DottedDivider = styled.div`
 	background-position: left;
 	background-size: 2px 10px;
 	background-repeat: repeat-y;
+	margin-left: 3rem;
 	height: 21rem;
-	margin-left: 5rem;
 	display: flex;
 	justify-content: space-evenly;
 	flex-direction: column;
+
+	@media (min-width: 800px) {
+		margin-left: 4rem;
+	}
+
+	@media (min-width: 1200px) {
+		margin-left: 5rem;
+	}
 `;
