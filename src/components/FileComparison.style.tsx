@@ -19,10 +19,13 @@ export const FileComparisonContainer = styled.div`
 
 	p {
 		font-family: 'Wavehaus-Book';
-		word-break: break-all;
 	}
 
 	span {
+		word-break: break-all;
+	}
+
+	strong {
 		font-family: 'Wavehaus-Bold';
 	}
 `;

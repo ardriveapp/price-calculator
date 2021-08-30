@@ -19,7 +19,9 @@ const bytesPerSong = Math.pow(2, 20) * 1 * 3;
 // 300 KB per doc
 const bytesPerDoc = Math.pow(2, 10) * 300;
 
-export default function useFileComparisons(currentByteUnitBox: BytesUnitBox): [JSX.Element, string][] {
+export default function useFileComparisons(
+	currentByteUnitBox: BytesUnitBox
+): [JSX.Element, [string, string, string]][] {
 	const { value, currUnit } = currentByteUnitBox;
 	const [bytesToCalc, setBytesToCalc] = useState(convertUnit(value, currUnit, 'B'));
 
@@ -35,11 +37,11 @@ export default function useFileComparisons(currentByteUnitBox: BytesUnitBox): [J
 	const mp3Count = Math.round(bytesToCalc / bytesPerSong);
 	const docCount = Math.round(bytesToCalc / bytesPerDoc);
 
-	const fileComparisons: [JSX.Element, string][] = [
-		[PngIcon(), `That's like ~${numberWithCommas(pngCount)} pictures`],
-		[MovIcon(), `Or ~${numberWithCommas(movCount)} HD videos`],
-		[Mp3Icon(), `Or ~${numberWithCommas(mp3Count)} songs`],
-		[DocIcon(), `Or even ~${numberWithCommas(docCount)} office docs`]
+	const fileComparisons: [JSX.Element, [string, string, string]][] = [
+		[PngIcon(), ["That's like", `~${numberWithCommas(pngCount)}`, ' pictures']],
+		[MovIcon(), ['Or', `~${numberWithCommas(movCount)}`, ' HD videos']],
+		[Mp3Icon(), ['Or', `~${numberWithCommas(mp3Count)}`, ' songs']],
+		[DocIcon(), ['Or even', `~${numberWithCommas(docCount)}`, ' office docs']]
 	];
 
 	return fileComparisons;

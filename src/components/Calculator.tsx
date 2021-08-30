@@ -26,7 +26,7 @@ export default function Calculator(): JSX.Element {
 			<DottedDivider>
 				{fileComparisons.map((fileComparison) => (
 					<FileComparison
-						key={fileComparison[1]}
+						key={fileComparison[1][1]}
 						fileIcon={fileComparison[0]}
 						comparisonText={fileComparison[1]}
 					/>
