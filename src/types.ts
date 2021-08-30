@@ -31,8 +31,12 @@ export interface ArUnitBox extends UnitBox {
 export type ByteUnitType = 'B' | 'KB' | 'MB' | 'GB';
 export const displayedByteUnitTypes: ByteUnitType[] = ['KB', 'MB', 'GB'];
 
-/** Fiat unit types are translated from the coingecko supported currencies  */
-export const displayedFiatUnitTypes = currencyIDs.map((f) => f.toUpperCase());
+const currenciesFromOracle = currencyIDs.map((f) => f.toUpperCase());
+
+const currenciesNotToDisplay = ['XDR', 'XAG', 'XAU', 'BITS', 'SATS'];
+
+/** Fiat unit types translated from the coingecko supported currencies */
+export const displayedFiatUnitTypes = currenciesFromOracle.filter((f) => !currenciesNotToDisplay.includes(f));
 
 export type FiatUnitType = typeof displayedFiatUnitTypes[number];
 
