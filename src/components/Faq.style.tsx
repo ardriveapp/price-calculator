@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 
 export const FaqContainer = styled.section`
-	font-family: 'Wavehaus-Extra';
 	letter-spacing: 1.09px;
 	width: 100%;
 	padding-top: 4rem;
+	display: flex;
+	flex-direction: column;
 
 	h2 {
+		font-family: 'Wavehaus-Extra';
 		padding-bottom: 1rem;
 	}
 
