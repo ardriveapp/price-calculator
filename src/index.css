@@ -16,8 +16,9 @@ ul {
     list-style: none;
 }
 
-h1 {
+h2 {
     font-size: inherit;
+    margin: 0;
 }
 
 p {

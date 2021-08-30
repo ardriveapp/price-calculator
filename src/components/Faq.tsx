@@ -8,7 +8,7 @@ export default function Faq(): JSX.Element {
 
 	return (
 		<FaqContainer>
-			<h1>FAQs</h1>
+			<h2>FAQs</h2>
 			{faqQuestionsAnswers.map((qa, index) => (
 				<Expandable
 					key={qa.question}
