@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Expandable from './Expandable';
 import { faqQuestionsAnswers } from './Faq.content';
-import { FaqContainer } from './Faq.style';
+import { FaqContainer, VersionNumber } from './Faq.style';
 
 export default function Faq(): JSX.Element {
 	const [expanded, setExpanded] = useState<number | undefined>(undefined);
@@ -18,6 +18,7 @@ export default function Faq(): JSX.Element {
 					setExpanded={() => (index === expanded ? setExpanded(undefined) : setExpanded(index))}
 				></Expandable>
 			))}
+			<VersionNumber>v{import.meta.env.SNOWPACK_PUBLIC_VERSION}</VersionNumber>
 		</FaqContainer>
 	);
 }
