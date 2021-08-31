@@ -1,6 +1,6 @@
 {
 	"name": "price-calculator",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"description": "ArDrive Price Calculator",
 	"scripts": {
 		"start": "snowpack dev",
@@ -24,6 +24,7 @@
 	},
 	"dependencies": {
 		"arweave": "^1.10.16",
+		"chai-as-promised": "^7.1.1",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
 		"react-is": "^17.0.2",
@@ -39,6 +40,7 @@
 		"@snowpack/web-test-runner-plugin": "^0.2.2",
 		"@testing-library/react": "^11.2.6",
 		"@types/chai": "^4.2.17",
+		"@types/chai-as-promised": "^7",
 		"@types/eslint": "^7",
 		"@types/react": "^17.0.4",
 		"@types/react-dom": "^17.0.3",

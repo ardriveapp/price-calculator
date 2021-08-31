@@ -22,7 +22,7 @@ export default function Expandable({ title, description, expanded, setExpanded }
 					<UpArrowIcon />
 				</ExpandableTrailingIcon>
 			</ExpandableTitle>{' '}
-			{expanded && <p>{description}</p>}
+			{expanded && <>{description}</>}
 		</ExpandableContainer>
 	);
 }

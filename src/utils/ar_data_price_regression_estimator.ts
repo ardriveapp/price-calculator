@@ -25,10 +25,28 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 	 *
 	 * @param skipSetup allows for instantiation without prefetching pricing data from the oracle
 	 * @param oracle a datasource for Arweave data pricing
+	 * @param byteVolumes an array of non-negative byte integers to fetch for pricing data
+	 *
+	 * @throws when byteVolumes array has less than 2 values
+	 * @throws when volumes on byteVolumes array are negative or non-integer decimal values
 	 *
 	 * @returns an ARDataPriceEstimator
 	 */
-	constructor(skipSetup = false, private readonly oracle: ArweaveOracle = new GatewayOracle()) {
+	constructor(
+		skipSetup = false,
+		private readonly oracle: ArweaveOracle = new GatewayOracle(),
+		private readonly byteVolumes: number[] = ARDataPriceRegressionEstimator.sampleByteVolumes
+	) {
+		if (byteVolumes.length < 2) {
+			throw new Error('Byte volume array must contain at least 2 values to calculate regression');
+		}
+
+		for (const volume of byteVolumes) {
+			if (!Number.isInteger(volume) || volume < 0) {
+				throw new Error(`Byte volume (${volume}) on byte volume array should be a positive integer!`);
+			}
+		}
+
 		if (!skipSetup) {
 			this.refreshPriceData();
 		}
@@ -45,10 +63,10 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 			return this.setupPromise;
 		}
 
-		// Fetch the price for a handful of reference data volumes and feed them into a linear regression
+		// Fetch the price for all values in byteVolume array and feed them into a linear regression
 		this.setupPromise = Promise.all(
 			// TODO: What to do if one fails?
-			ARDataPriceRegressionEstimator.sampleByteVolumes.map(
+			this.byteVolumes.map(
 				async (sampleByteCount) =>
 					new ARDataPrice(sampleByteCount, await this.oracle.getWinstonPriceForByteCount(sampleByteCount))
 			)
@@ -92,7 +110,9 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 		const winstonPrice = await this.getWinstonPriceForByteCount(byteCount);
 		const communityWinstonFee = Math.max(winstonPrice * tipPercentage, minWinstonFee);
 
-		return (winstonPrice + communityWinstonFee) * arPerWinston;
+		const totalWinstonPrice = winstonPrice + communityWinstonFee;
+
+		return totalWinstonPrice * arPerWinston;
 	}
 
 	/**
@@ -116,7 +136,8 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 			}
 		}
 
-		return Math.max(0, winston - this.predictor.baseWinstonPrice()) / this.predictor.marginalWinstonPrice();
+		// Return 0 if winston price given does not cover the base winston price for a transaction
+		return Math.max(0, (winston - this.predictor.baseWinstonPrice()) / this.predictor.marginalWinstonPrice());
 	}
 
 	/**
@@ -129,8 +150,9 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 		arPrice: number,
 		{ minWinstonFee, tipPercentage }: ArDriveCommunityTip
 	): Promise<number> {
-		const winstonPrice = Math.round(arPrice / arPerWinston);
-		const communityWinstonFee = Math.max(winstonPrice * tipPercentage, minWinstonFee);
+		const winstonPrice = arPrice / arPerWinston;
+
+		const communityWinstonFee = Math.max(winstonPrice - winstonPrice / (1 + tipPercentage), minWinstonFee);
 
 		const winstonPriceWithoutFee = Math.round(winstonPrice - communityWinstonFee);
 
