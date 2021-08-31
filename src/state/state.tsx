@@ -18,6 +18,7 @@ const initialState: State = {
 	arDriveCommunityTip: {
 		/** Default ArDrive Community Tip percentage */
 		tipPercentage: 0.15,
+
 		/** Default ArDrive Minimum Community Tip in Winston */
 		minWinstonFee: 10_000_000
 	},
