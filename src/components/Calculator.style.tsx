@@ -3,13 +3,7 @@ import styled from 'styled-components';
 export const CalculatorContainer = styled.section`
 	width: 100%;
 `;
-export const SolidDivider = styled.div`
-	border-left-style: solid;
-	border-left-color: black;
-	border-left-width: 1px;
-	height: 5rem;
-	margin-left: 5rem;
-`;
+
 export const DottedDivider = styled.div`
 	background-image: linear-gradient(grey 17%, rgba(255, 255, 255, 0) 0%);
 	background-position: left;
