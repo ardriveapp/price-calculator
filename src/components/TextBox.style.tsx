@@ -30,6 +30,14 @@ export const TextBoxContainer = styled.div`
 		box-shadow: 0 0 15px 10px rgba(20, 46, 110, 0.1);
 	}
 
+	:first-child {
+		margin-bottom: 3rem;
+
+		@media (min-width: 800px) {
+			margin-bottom: 5rem;
+		}
+	}
+
 	@media (min-width: 800px) {
 		height: 65px;
 	}

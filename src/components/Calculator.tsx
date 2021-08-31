@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TextBox from './TextBox';
 import FileComparison from './FileComparison';
-import { CalculatorContainer, SolidDivider, DottedDivider } from './Calculator.style';
+import { CalculatorContainer, DottedDivider } from './Calculator.style';
 import useCalculation from '../hooks/useCalculation';
 import { useStateValue } from '../state/state';
 import useFileComparisons from '../hooks/useFileComparisons';
@@ -21,7 +21,6 @@ export default function Calculator(): JSX.Element {
 	return (
 		<CalculatorContainer>
 			<TextBox field={'fiat'}></TextBox>
-			<SolidDivider></SolidDivider>
 			<TextBox field={'bytes'}></TextBox>
 			<DottedDivider>
 				{fileComparisons.map((fileComparison) => (
