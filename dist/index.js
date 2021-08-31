@@ -173,7 +173,12 @@ Add a <Suspense fallback=...> component higher in the tree to provide a loading 
 	justify-content: center;
 	${e=>!e.expanded&&Cf};
 `;var K0=J.button`
-	padding: 1rem;
+	padding: 1.25rem 2.25rem;
+	width: 100%;
+
+	:hover {
+		background-color: #d8d8d8;
+	}
 `,b0=Gr`
 	display: flex;
 	justify-content: center;
@@ -185,11 +190,11 @@ Add a <Suspense fallback=...> component higher in the tree to provide a loading 
 	${b0}
 	padding-right: 3.5rem;
 `,ec=J.ul`
-	padding: 1rem;
-	transform: translateX(-1.5rem) translateY(-3.5rem);
+	padding: 0;
+	transform: translateX(-2.5rem) translateY(-4rem);
 	background-color: white;
 	overflow-y: scroll;
-	max-height: 10rem;
+	max-height: 14rem;
 	position: absolute;
 	z-index: 2;
 	border-radius: 8px;
