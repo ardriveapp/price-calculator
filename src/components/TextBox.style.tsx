@@ -3,11 +3,11 @@ import styled from 'styled-components';
 export const TextBoxInput = styled.input`
 	width: 65%;
 	height: 50%;
-	padding: 0 1rem;
 	outline: none;
+	margin: 0 1rem;
 
 	@media (min-width: 800px) {
-		padding: 0 2rem;
+		margin: 0 2rem;
 	}
 `;
 
