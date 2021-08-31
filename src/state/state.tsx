@@ -4,8 +4,8 @@ import type { Action } from './reducer';
 
 export type State = {
 	/**
-	 * ArDrive Community tip percentage and minimum community tip are to be read
-	 * from the SmartWeave contract on startup, uses known defaults until data arrives
+	 * ArDrive Community tip percentage and minimum community tip are hardcoded to their
+	 * known values until a more efficient method of reading the contract is identified
 	 */
 	arDriveCommunityTip: ArDriveCommunityTip;
 
