@@ -1,7 +1,8 @@
 import styled, { css } from 'styled-components';
 
 export const DropDownListItem = styled.button`
-	padding: 1rem;
+	padding: 1.25rem 2.25rem;
+	width: 100%;
 
 	:hover {
 		background-color: #d8d8d8;
@@ -25,11 +26,11 @@ export const CurrentUnitDivContainer = styled.div`
 `;
 
 export const UnitsDropDownContainer = styled.ul`
-	padding: 1rem;
-	transform: translateX(-1.5rem) translateY(-3.5rem);
+	padding: 0;
+	transform: translateX(-2.5rem) translateY(-4rem);
 	background-color: white;
 	overflow-y: scroll;
-	max-height: 10rem;
+	max-height: 14rem;
 	position: absolute;
 	z-index: 2;
 	border-radius: 8px;
