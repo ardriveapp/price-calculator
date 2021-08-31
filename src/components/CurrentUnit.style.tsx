@@ -2,6 +2,10 @@ import styled, { css } from 'styled-components';
 
 export const DropDownListItem = styled.button`
 	padding: 1rem;
+
+	:hover {
+		background-color: #d8d8d8;
+	}
 `;
 
 const CurrentUnitCSS = css`
