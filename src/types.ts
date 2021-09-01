@@ -33,7 +33,22 @@ export const displayedByteUnitTypes: ByteUnitType[] = ['KB', 'MB', 'GB'];
 
 const currenciesFromOracle = currencyIDs.map((f) => f.toUpperCase());
 
-const currenciesNotToDisplay = ['XDR', 'XAG', 'XAU', 'BITS', 'SATS'];
+const currenciesNotToDisplay = [
+	'XDR',
+	'XAG',
+	'XAU',
+	'BITS',
+	'SATS',
+	'LTC',
+	'BCH',
+	'BNB',
+	'EOS',
+	'XRP',
+	'XLM',
+	'LINK',
+	'DOT',
+	'YFI'
+];
 
 /** Fiat unit types translated from the coingecko supported currencies */
 export const displayedFiatUnitTypes = currenciesFromOracle.filter((f) => !currenciesNotToDisplay.includes(f));
