@@ -10,7 +10,12 @@ export function getSpokenWord(abbreviation: string): string {
 const abbreviationRecord = {
 	KB: 'kilobyte',
 	MB: 'megabyte',
-	GB: 'gigabyte'
+	GB: 'gigabyte',
+	ETH: 'ethereum',
+	BTC: 'bitcoin',
+	USD: 'us dollar',
+	JPY: 'japanese yen',
+	EUR: 'euro'
 };
 
 function isAbbreviation(key: string): key is keyof typeof abbreviationRecord {
