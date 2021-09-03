@@ -13,7 +13,7 @@ const abbreviationRecord = {
 	GB: 'gigabyte',
 	ETH: 'ethereum',
 	BTC: 'bitcoin',
-	USD: 'us dollar',
+	USD: 'u s dollar',
 	JPY: 'japanese yen',
 	EUR: 'euro'
 };
