@@ -77,10 +77,7 @@ function UnitDropDown({ units, closeDropDown }: UnitDropDownProps): JSX.Element 
 		<UnitsDropDownContainer>
 			{units.map((val) => (
 				<li key={val}>
-					<DropDownListItem
-						aria-label={`Set current unit to ${getSpokenWord(val)}`}
-						onClick={() => onUnitClick(val)}
-					>
+					<DropDownListItem aria-label={`Set unit to ${getSpokenWord(val)}`} onClick={() => onUnitClick(val)}>
 						{val}
 					</DropDownListItem>
 				</li>
