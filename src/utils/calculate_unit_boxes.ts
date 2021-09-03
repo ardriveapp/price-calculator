@@ -1,5 +1,5 @@
 import type { UnitBoxValues } from '../hooks/useCalculation';
-import type { ArDriveCommunityTip, ByteUnitType, OracleErrors, UnitBoxes } from '../types';
+import { ArDriveCommunityTip, ByteUnitType, doNotRenderValue, OracleErrors, UnitBoxes } from '../types';
 import { ARDataPriceRegressionEstimator } from './ar_data_price_regression_estimator';
 import convertUnit from './convert_unit';
 import type { ARDataPriceEstimator } from './ar_data_price_estimator';
@@ -99,14 +99,12 @@ export class UnitBoxCalculator {
 				byteCount = convertUnit(Math.round(rawByteCount), 'B', byteUnit);
 			} catch {
 				oracleErrors = { ...oracleErrors, dataToAR: true };
-				byteCount = -1;
+				byteCount = doNotRenderValue;
 			}
 		}
 
-		// If `fiatPerAR` remains initially undefined (is fetching) or there are,
-		// oracle errors set new values to -1 for conditionally hiding the unit boxes
-		const newFiatValue = !oracleErrors.fiatToAR && fiatPerAR ? newARValue * fiatPerAR : -1;
-		const newByteValue = !oracleErrors.dataToAR ? byteCount : -1;
+		const newFiatValue = !oracleErrors.fiatToAR && fiatPerAR ? newARValue * fiatPerAR : doNotRenderValue;
+		const newByteValue = !oracleErrors.dataToAR ? byteCount : doNotRenderValue;
 		const newArValue = newARValue;
 
 		return { unitBoxValues: { bytes: newByteValue, fiat: newFiatValue, ar: newArValue }, oracleErrors };
