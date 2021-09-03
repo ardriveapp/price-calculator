@@ -19,7 +19,7 @@ export interface UnitBoxValues {
  * with the newly calculated boxes with one dispatch call
  */
 export default function useCalculation(): void {
-	const [{ unitBoxes, arDriveCommunityTip }, dispatch] = useStateValue();
+	const [{ unitBoxes, arDriveCommunityTip, oracleErrors }, dispatch] = useStateValue();
 	const [sendingCalculation, setSendingCalculation] = useState(false);
 
 	// Save previous unit box values for determining if a value has changed
@@ -79,6 +79,7 @@ export default function useCalculation(): void {
 				).fiatPerTokenRate;
 			} catch (err) {
 				console.error('Fiat rate could not be determined:', err);
+				dispatch({ type: 'setFiatToARError' });
 				setSendingCalculation(false);
 				// Fiat oracle has thrown an error, return early
 				return;
@@ -111,13 +112,41 @@ export default function useCalculation(): void {
 			}
 
 			try {
-				newUnitBoxValues = await unitBoxCalculator.calculateUnitBoxValues(
+				const unitBoxValsAndErrors = await unitBoxCalculator.calculateUnitBoxValues(
 					valueToCalculate,
 					unitBoxType,
 					unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
 					unitBoxes.bytes.currUnit,
 					arDriveCommunityTip
 				);
+
+				newUnitBoxValues = unitBoxValsAndErrors[0];
+
+				if (unitBoxValsAndErrors[1].dataToAR !== oracleErrors.dataToAR) {
+					// Mismatch between dataToAR errors on global state and calc response
+					switch (unitBoxValsAndErrors[1].dataToAR) {
+						case true:
+							dispatch({ type: 'setDataToARError' });
+							break;
+
+						case false:
+							dispatch({ type: 'clearDataToARError' });
+							break;
+					}
+				}
+
+				if (unitBoxValsAndErrors[1].fiatToAR !== oracleErrors.fiatToAR) {
+					// Mismatch between fiatToAR errors on global state and calc response
+					switch (unitBoxValsAndErrors[1].fiatToAR) {
+						case true:
+							dispatch({ type: 'setFiatToARError' });
+							break;
+
+						case false:
+							dispatch({ type: 'clearFiatToARError' });
+							break;
+					}
+				}
 			} catch (err) {
 				console.error('Prices could not be calculated:', err);
 				setSendingCalculation(false);
