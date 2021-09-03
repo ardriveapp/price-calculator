@@ -1,5 +1,5 @@
 import type { UnitBoxValues } from '../hooks/useCalculation';
-import type { ArDriveCommunityTip, ByteUnitType, UnitBoxes } from '../types';
+import type { ArDriveCommunityTip, ByteUnitType, OracleErrors, UnitBoxes } from '../types';
 import { ARDataPriceRegressionEstimator } from './ar_data_price_regression_estimator';
 import convertUnit from './convert_unit';
 import type { ARDataPriceEstimator } from './ar_data_price_estimator';
@@ -15,7 +15,7 @@ import { currencyIDs, FiatID } from './fiat_oracle_types';
  */
 export class UnitBoxCalculator {
 	constructor(
-		private readonly arDataPriceEstimator: ARDataPriceEstimator = new ARDataPriceRegressionEstimator(),
+		private readonly arDataPriceEstimator: ARDataPriceEstimator = new ARDataPriceRegressionEstimator(true),
 		private readonly fiatCachingOracle: CachingTokenToFiatOracle = new CachingTokenToFiatOracle(
 			'arweave',
 			currencyIDs
@@ -44,15 +44,19 @@ export class UnitBoxCalculator {
 		fiatUnit: FiatID,
 		byteUnit: ByteUnitType,
 		arDriveCommunityTip: ArDriveCommunityTip
-	): Promise<UnitBoxValues> {
+	): Promise<[UnitBoxValues, OracleErrors]> {
 		let newARValue: number;
 		let userDefinedByteValue: number | undefined = undefined;
+		let oracleErrors: OracleErrors = { fiatToAR: false, dataToAR: false };
 
 		let fiatPerAR: number | undefined = undefined;
 
-		if (!this.fiatCachingOracle.currentlyFetchingPrice) {
+		try {
 			fiatPerAR = (await this.fiatCachingOracle.getPriceForFiatTokenPair({ token: 'arweave', fiat: fiatUnit }))
 				.fiatPerTokenRate;
+		} catch (error) {
+			oracleErrors = { ...oracleErrors, fiatToAR: true };
+			console.error('Fiat prices could not be fetched from the CoinGecko API..', error);
 		}
 
 		switch (unit) {
@@ -62,10 +66,16 @@ export class UnitBoxCalculator {
 					// rather than displaying the minimum fee
 					newARValue = 0;
 				} else {
-					newARValue = await this.arDataPriceEstimator.getARPriceForByteCount(
-						Math.round(convertUnit(value, byteUnit, 'B')),
-						arDriveCommunityTip
-					);
+					try {
+						newARValue = await this.arDataPriceEstimator.getARPriceForByteCount(
+							Math.round(convertUnit(value, byteUnit, 'B')),
+							arDriveCommunityTip
+						);
+					} catch (error) {
+						newARValue = 1;
+						oracleErrors = { ...oracleErrors, dataToAR: true };
+						console.error('Data prices could not be fetched from the Arweave gateway..', error);
+					}
 				}
 
 				userDefinedByteValue = value;
@@ -86,16 +96,22 @@ export class UnitBoxCalculator {
 			// Use user defined byte value to ensure user's intended value remains unchanged
 			byteCount = userDefinedByteValue;
 		} else {
-			const rawByteCount = await this.arDataPriceEstimator.getByteCountForAR(newARValue, arDriveCommunityTip);
-			byteCount = convertUnit(Math.round(rawByteCount), 'B', byteUnit);
+			try {
+				const rawByteCount = await this.arDataPriceEstimator.getByteCountForAR(newARValue, arDriveCommunityTip);
+				byteCount = convertUnit(Math.round(rawByteCount), 'B', byteUnit);
+			} catch (error) {
+				oracleErrors = { ...oracleErrors, dataToAR: true };
+				byteCount = -1;
+				console.error('Data prices could not be fetched from the Arweave gateway..', error);
+			}
 		}
 
-		// If `fiatPerAR` remains initially undefined (is fetching),
-		// set `newFiatValue` to -1 for conditionally hiding the Fiat unit box
-		const newFiatValue = fiatPerAR ? newARValue * fiatPerAR : -1;
-		const newByteValue = byteCount;
+		// If `fiatPerAR` remains initially undefined (is fetching) or there are,
+		// oracle errors set new values to -1 for conditionally hiding the unit boxes
+		const newFiatValue = !oracleErrors.fiatToAR && fiatPerAR ? newARValue * fiatPerAR : -1;
+		const newByteValue = !oracleErrors.dataToAR ? byteCount : -1;
 		const newArValue = newARValue;
 
-		return { bytes: newByteValue, fiat: newFiatValue, ar: newArValue };
+		return [{ bytes: newByteValue, fiat: newFiatValue, ar: newArValue }, oracleErrors];
 	}
 }

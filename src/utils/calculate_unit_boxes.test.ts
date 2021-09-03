@@ -42,21 +42,21 @@ describe('UnitBoxCalculator class', () => {
 
 	it('calculateUnitBoxValues function returns the correct UnitBoxValues for 0 bytes', async () => {
 		const actual = await unitBoxCalculator.calculateUnitBoxValues(0, 'bytes', 'usd', 'KB', arDriveCommunityTip);
-		expect(actual).to.deep.equal({ bytes: 0, fiat: 0, ar: 0 });
+		expect(actual[0]).to.deep.equal({ bytes: 0, fiat: 0, ar: 0 });
 	});
 
 	it('calculateUnitBoxValues function returns the correct unitBoxes when using the bytes unit to calculate', async () => {
 		const actual = await unitBoxCalculator.calculateUnitBoxValues(1, 'bytes', 'usd', 'KB', arDriveCommunityTip);
-		expect(actual).to.deep.equal(expectedResult);
+		expect(actual[0]).to.deep.equal(expectedResult);
 	});
 
 	it('calculateUnitBoxValues function returns the correct unitBoxes when using the fiat unit to calculate', async () => {
 		const actual = await unitBoxCalculator.calculateUnitBoxValues(10, 'fiat', 'usd', 'KB', arDriveCommunityTip);
-		expect(actual).to.deep.equal(expectedResult);
+		expect(actual[0]).to.deep.equal(expectedResult);
 	});
 
 	it('calculateUnitBoxValues function returns the correct unitBoxes when using the ar unit to calculate', async () => {
 		const actual = await unitBoxCalculator.calculateUnitBoxValues(1, 'ar', 'usd', 'KB', arDriveCommunityTip);
-		expect(actual).to.deep.equal(expectedResult);
+		expect(actual[0]).to.deep.equal(expectedResult);
 	});
 });
