@@ -9,9 +9,6 @@ import { currencyIDs, FiatID } from './fiat_oracle_types';
 /**
  * A utility class responsible for calculating the new unit boxes to
  * display to the user based on the changes to the global state
- *
- * @remarks Will construct a new ARDataPriceEstimator upon initial
- * creation, which fires off 3 network calls for AR<>Data models
  */
 export class UnitBoxCalculator {
 	constructor(
@@ -36,7 +33,10 @@ export class UnitBoxCalculator {
 	 * @param byteUnit current byte unit type from global state
 	 * @param arDriveCommunityTip current ArDrive community fee from global state
 	 *
-	 * @returns newly calculated unit box values
+	 * @remarks Will fire off three fetch calls for AR<>Data and one
+	 *          fetch call for Fiat<>AR on the first call of this function
+	 *
+	 * @returns newly calculated unit box values and any oracleErrors that occur
 	 */
 	async calculateUnitBoxValues(
 		value: number,
