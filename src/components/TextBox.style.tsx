@@ -11,7 +11,7 @@ export const TextBoxInput = styled.input`
 	}
 `;
 
-export const TextBoxContainer = styled.div`
+export const TextBoxContainer = styled.div<{ hasError: boolean }>`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -21,9 +21,11 @@ export const TextBoxContainer = styled.div`
 	box-shadow: 0 0 10px 5px rgba(213, 213, 213, 0.5);
 	font-family: 'Wavehaus-Bold';
 
-	border: 1px;
-	border-color: transparent;
+	border-width: ${(p) => (p.hasError ? `3px` : `1px`)};
+	border-color: ${(p) => (p.hasError ? `red` : `transparent`)};
 	border-style: solid;
+
+	${(p) => p.hasError && `border-color: red`}
 
 	:focus-within {
 		border-color: #4c4c4c;
@@ -44,5 +46,37 @@ export const TextBoxContainer = styled.div`
 
 	@media (min-width: 1200px) {
 		height: 75px;
+	}
+`;
+
+export const ErrorMessage = styled.span`
+	color: red;
+	position: absolute;
+	font-family: 'Wavehaus-Bold';
+
+	font-size: 12px;
+	padding-top: 6.5rem;
+
+	@media (min-width: 324px) {
+		padding-top: 5.5rem;
+	}
+
+	@media (min-width: 480px) {
+		font-size: 14px;
+		padding-left: 3rem;
+	}
+
+	@media (min-width: 640px) {
+		padding-left: 6rem;
+	}
+
+	@media (min-width: 800px) {
+		padding-left: 1rem;
+		padding-top: 6.5rem;
+	}
+
+	@media (min-width: 1200px) {
+		padding-left: 5rem;
+		padding-top: 7.5rem;
 	}
 `;
