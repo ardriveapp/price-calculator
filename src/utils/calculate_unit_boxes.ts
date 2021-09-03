@@ -44,7 +44,7 @@ export class UnitBoxCalculator {
 		fiatUnit: FiatID,
 		byteUnit: ByteUnitType,
 		arDriveCommunityTip: ArDriveCommunityTip
-	): Promise<[UnitBoxValues, OracleErrors]> {
+	): Promise<{ unitBoxValues: UnitBoxValues; oracleErrors: OracleErrors }> {
 		let newARValue: number;
 		let userDefinedByteValue: number | undefined = undefined;
 		let oracleErrors: OracleErrors = { fiatToAR: false, dataToAR: false };
@@ -109,6 +109,6 @@ export class UnitBoxCalculator {
 		const newByteValue = !oracleErrors.dataToAR ? byteCount : -1;
 		const newArValue = newARValue;
 
-		return [{ bytes: newByteValue, fiat: newFiatValue, ar: newArValue }, oracleErrors];
+		return { unitBoxValues: { bytes: newByteValue, fiat: newFiatValue, ar: newArValue }, oracleErrors };
 	}
 }

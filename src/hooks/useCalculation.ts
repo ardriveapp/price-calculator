@@ -19,7 +19,7 @@ export interface UnitBoxValues {
  * with the newly calculated boxes with one dispatch call
  */
 export default function useCalculation(): void {
-	const [{ unitBoxes, arDriveCommunityTip, oracleErrors }, dispatch] = useStateValue();
+	const [{ unitBoxes, arDriveCommunityTip, oracleErrors: oracleErrorsFromState }, dispatch] = useStateValue();
 	const [sendingCalculation, setSendingCalculation] = useState(false);
 
 	// Save previous unit box values for determining if a value has changed
@@ -112,7 +112,7 @@ export default function useCalculation(): void {
 			}
 
 			try {
-				const unitBoxValsAndErrors = await unitBoxCalculator.calculateUnitBoxValues(
+				const { unitBoxValues, oracleErrors } = await unitBoxCalculator.calculateUnitBoxValues(
 					valueToCalculate,
 					unitBoxType,
 					unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
@@ -120,31 +120,23 @@ export default function useCalculation(): void {
 					arDriveCommunityTip
 				);
 
-				newUnitBoxValues = unitBoxValsAndErrors[0];
+				newUnitBoxValues = unitBoxValues;
 
-				if (unitBoxValsAndErrors[1].dataToAR !== oracleErrors.dataToAR) {
+				if (oracleErrors.dataToAR !== oracleErrorsFromState.dataToAR) {
 					// Mismatch between dataToAR errors on global state and calc response
-					switch (unitBoxValsAndErrors[1].dataToAR) {
-						case true:
-							dispatch({ type: 'setDataToARError' });
-							break;
-
-						case false:
-							dispatch({ type: 'clearDataToARError' });
-							break;
+					if (oracleErrors.dataToAR) {
+						dispatch({ type: 'setDataToARError' });
+					} else {
+						dispatch({ type: 'clearDataToARError' });
 					}
 				}
 
-				if (unitBoxValsAndErrors[1].fiatToAR !== oracleErrors.fiatToAR) {
+				if (oracleErrors.fiatToAR !== oracleErrorsFromState.fiatToAR) {
 					// Mismatch between fiatToAR errors on global state and calc response
-					switch (unitBoxValsAndErrors[1].fiatToAR) {
-						case true:
-							dispatch({ type: 'setFiatToARError' });
-							break;
-
-						case false:
-							dispatch({ type: 'clearFiatToARError' });
-							break;
+					if (oracleErrors.fiatToAR) {
+						dispatch({ type: 'setFiatToARError' });
+					} else {
+						dispatch({ type: 'clearFiatToARError' });
 					}
 				}
 			} catch (err) {
