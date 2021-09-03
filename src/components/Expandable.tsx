@@ -3,26 +3,22 @@ import { ExpandableContainer, ExpandableTitle, ExpandableTrailingIcon } from './
 import UpArrowIcon from './icons/UpArrowIcon';
 
 interface ExpandableProps {
-	title: string;
-	description: React.ReactNode;
+	question: string;
+	answer: React.ReactNode;
 	expanded: boolean;
 	setExpanded: () => void;
 }
 
-export default function Expandable({ title, description, expanded, setExpanded }: ExpandableProps): JSX.Element {
+export default function Expandable({ question, answer, expanded, setExpanded }: ExpandableProps): JSX.Element {
 	return (
 		<ExpandableContainer>
-			<ExpandableTitle
-				aria-label={expanded ? 'Hide answer' : 'Expand answer'}
-				onClick={() => setExpanded()}
-				expanded={expanded}
-			>
-				{title}
+			<ExpandableTitle aria-label={question} onClick={() => setExpanded()} expanded={expanded}>
+				<h3>{question}</h3>
 				<ExpandableTrailingIcon expanded={expanded}>
 					<UpArrowIcon />
 				</ExpandableTrailingIcon>
 			</ExpandableTitle>{' '}
-			{expanded && <>{description}</>}
+			{expanded && <>{answer}</>}
 		</ExpandableContainer>
 	);
 }
