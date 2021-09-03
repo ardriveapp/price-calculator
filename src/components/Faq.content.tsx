@@ -5,8 +5,9 @@ export const faqQuestionsAnswers = [
 		answer: (
 			<>
 				<p>
-					A little bit of money can go a long way in data storage. For $1 USD you can purchase storage for
-					approximately 1000 documents, 55 photos, or a 30 second video.
+					A little bit of money can go a long way in data storage. As you can see with the price calculator
+					for a small amount of USD you can purchase storage for hundreds of documents or dozens of photos or
+					songs.
 				</p>
 				<p>
 					Files of the same type (docs, jpegs, or mp3) will vary in sizes, but some rules of thumb are: 1
