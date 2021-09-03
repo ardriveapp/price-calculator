@@ -54,9 +54,8 @@ export class UnitBoxCalculator {
 		try {
 			fiatPerAR = (await this.fiatCachingOracle.getPriceForFiatTokenPair({ token: 'arweave', fiat: fiatUnit }))
 				.fiatPerTokenRate;
-		} catch (error) {
+		} catch {
 			oracleErrors = { ...oracleErrors, fiatToAR: true };
-			console.error('Fiat prices could not be fetched from the CoinGecko API..', error);
 		}
 
 		switch (unit) {
@@ -71,10 +70,9 @@ export class UnitBoxCalculator {
 							Math.round(convertUnit(value, byteUnit, 'B')),
 							arDriveCommunityTip
 						);
-					} catch (error) {
+					} catch {
 						newARValue = 1;
 						oracleErrors = { ...oracleErrors, dataToAR: true };
-						console.error('Data prices could not be fetched from the Arweave gateway..', error);
 					}
 				}
 
@@ -99,10 +97,9 @@ export class UnitBoxCalculator {
 			try {
 				const rawByteCount = await this.arDataPriceEstimator.getByteCountForAR(newARValue, arDriveCommunityTip);
 				byteCount = convertUnit(Math.round(rawByteCount), 'B', byteUnit);
-			} catch (error) {
+			} catch {
 				oracleErrors = { ...oracleErrors, dataToAR: true };
 				byteCount = -1;
-				console.error('Data prices could not be fetched from the Arweave gateway..', error);
 			}
 		}
 
