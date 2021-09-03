@@ -60,3 +60,8 @@ export interface UnitBoxes {
 	fiat: FiatUnitBox;
 	ar: ArUnitBox;
 }
+
+export interface OracleErrors {
+	fiatToAR: boolean;
+	dataToAR: boolean;
+}

@@ -3,7 +3,11 @@ import type { State } from './state';
 
 export type Action =
 	| { type: 'setArDriveCommunityTip'; payload: ArDriveCommunityTip }
-	| { type: 'setUnitBoxes'; payload: UnitBoxes };
+	| { type: 'setUnitBoxes'; payload: UnitBoxes }
+	| { type: 'setFiatToARError' }
+	| { type: 'clearFiatToARError' }
+	| { type: 'setDataToARError' }
+	| { type: 'clearDataToARError' };
 
 export const reducer = (state: State, action: Action): State => {
 	switch (action.type) {
@@ -21,6 +25,42 @@ export const reducer = (state: State, action: Action): State => {
 			return {
 				...state,
 				unitBoxes: action.payload
+			};
+
+		case 'setFiatToARError':
+			return {
+				...state,
+				oracleErrors: {
+					...state.oracleErrors,
+					fiatToAR: true
+				}
+			};
+
+		case 'clearFiatToARError':
+			return {
+				...state,
+				oracleErrors: {
+					...state.oracleErrors,
+					fiatToAR: false
+				}
+			};
+
+		case 'setDataToARError':
+			return {
+				...state,
+				oracleErrors: {
+					...state.oracleErrors,
+					dataToAR: true
+				}
+			};
+
+		case 'clearDataToARError':
+			return {
+				...state,
+				oracleErrors: {
+					...state.oracleErrors,
+					dataToAR: false
+				}
 			};
 
 		default:

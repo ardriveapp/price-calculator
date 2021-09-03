@@ -1,5 +1,5 @@
 import React, { createContext, Dispatch, useContext, useReducer } from 'react';
-import { ArDriveCommunityTip, displayedByteUnitTypes, displayedFiatUnitTypes, UnitBoxes } from '../types';
+import { ArDriveCommunityTip, displayedByteUnitTypes, displayedFiatUnitTypes, OracleErrors, UnitBoxes } from '../types';
 import type { Action } from './reducer';
 
 export type State = {
@@ -11,6 +11,9 @@ export type State = {
 
 	/** Current values and units for each field: 'bytes' | 'fiat' | 'ar' */
 	unitBoxes: UnitBoxes;
+
+	/** State for displaying errors from fiat and data oracles */
+	oracleErrors: OracleErrors;
 };
 
 /** ArDrive Price Calculator's initial state */
@@ -29,6 +32,11 @@ const initialState: State = {
 		// Default -1 values here are to conditionally render input fields when data arrives
 		fiat: { value: -1, currUnit: 'USD', units: displayedFiatUnitTypes },
 		ar: { value: -1, currUnit: 'AR' }
+	},
+
+	oracleErrors: {
+		fiatToAR: false,
+		dataToAR: false
 	}
 };
 
