@@ -16,8 +16,11 @@ ul {
     list-style: none;
 }
 
-h2 {
+h2,
+h3 {
     font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
     margin: 0;
 }
 
