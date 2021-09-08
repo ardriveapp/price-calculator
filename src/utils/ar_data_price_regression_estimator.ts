@@ -150,6 +150,14 @@ export class ARDataPriceRegressionEstimator implements ARDataPriceEstimator {
 		arPrice: number,
 		{ minWinstonFee, tipPercentage }: ArDriveCommunityTip
 	): Promise<number> {
+		// Lazily generate the price predictor
+		if (!this.predictor) {
+			await this.refreshPriceData();
+			if (!this.predictor) {
+				throw Error('Failed to generate pricing model!');
+			}
+		}
+
 		const winstonPrice = arPrice / arPerWinston;
 
 		const communityWinstonFee = Math.max(winstonPrice - winstonPrice / (1 + tipPercentage), minWinstonFee);
