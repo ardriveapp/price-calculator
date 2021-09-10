@@ -19,7 +19,7 @@ export interface UnitBoxValues {
  * with the newly calculated boxes with one dispatch call
  */
 export default function useCalculation(): void {
-	const [{ unitBoxes, arDriveCommunityTip }, dispatch] = useStateValue();
+	const [{ unitBoxes, arDriveCommunityTip, oracleErrors: oracleErrorsFromState }, dispatch] = useStateValue();
 	const [sendingCalculation, setSendingCalculation] = useState(false);
 
 	// Save previous unit box values for determining if a value has changed
@@ -79,6 +79,7 @@ export default function useCalculation(): void {
 				).fiatPerTokenRate;
 			} catch (err) {
 				console.error('Fiat rate could not be determined:', err);
+				dispatch({ type: 'setFiatToARError' });
 				setSendingCalculation(false);
 				// Fiat oracle has thrown an error, return early
 				return;
@@ -111,13 +112,33 @@ export default function useCalculation(): void {
 			}
 
 			try {
-				newUnitBoxValues = await unitBoxCalculator.calculateUnitBoxValues(
+				const { unitBoxValues, oracleErrors } = await unitBoxCalculator.calculateUnitBoxValues(
 					valueToCalculate,
 					unitBoxType,
 					unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
 					unitBoxes.bytes.currUnit,
 					arDriveCommunityTip
 				);
+
+				newUnitBoxValues = unitBoxValues;
+
+				if (oracleErrors.dataToAR !== oracleErrorsFromState.dataToAR) {
+					// Mismatch between dataToAR errors on global state and calc response
+					if (oracleErrors.dataToAR) {
+						dispatch({ type: 'setDataToARError' });
+					} else {
+						dispatch({ type: 'clearDataToARError' });
+					}
+				}
+
+				if (oracleErrors.fiatToAR !== oracleErrorsFromState.fiatToAR) {
+					// Mismatch between fiatToAR errors on global state and calc response
+					if (oracleErrors.fiatToAR) {
+						dispatch({ type: 'setFiatToARError' });
+					} else {
+						dispatch({ type: 'clearFiatToARError' });
+					}
+				}
 			} catch (err) {
 				console.error('Prices could not be calculated:', err);
 				setSendingCalculation(false);

@@ -40,23 +40,54 @@ describe('UnitBoxCalculator class', () => {
 		expect(unitBoxCalculator.fiatOracle).to.deep.equal(cachingTokenToOracle);
 	});
 
-	it('calculateUnitBoxValues function returns the correct UnitBoxValues for 0 bytes', async () => {
-		const actual = await unitBoxCalculator.calculateUnitBoxValues(0, 'bytes', 'usd', 'KB', arDriveCommunityTip);
-		expect(actual).to.deep.equal({ bytes: 0, fiat: 0, ar: 0 });
-	});
+	describe('calculateUnitBoxValues function ', () => {
+		it('returns the correct UnitBoxValues for 0 bytes', async () => {
+			const actual = await unitBoxCalculator.calculateUnitBoxValues(0, 'bytes', 'usd', 'KB', arDriveCommunityTip);
+			expect(actual.unitBoxValues).to.deep.equal({ bytes: 0, fiat: 0, ar: 0 });
+		});
 
-	it('calculateUnitBoxValues function returns the correct unitBoxes when using the bytes unit to calculate', async () => {
-		const actual = await unitBoxCalculator.calculateUnitBoxValues(1, 'bytes', 'usd', 'KB', arDriveCommunityTip);
-		expect(actual).to.deep.equal(expectedResult);
-	});
+		it('returns the correct unitBoxes when using the bytes unit to calculate', async () => {
+			const actual = await unitBoxCalculator.calculateUnitBoxValues(1, 'bytes', 'usd', 'KB', arDriveCommunityTip);
+			expect(actual.unitBoxValues).to.deep.equal(expectedResult);
+		});
 
-	it('calculateUnitBoxValues function returns the correct unitBoxes when using the fiat unit to calculate', async () => {
-		const actual = await unitBoxCalculator.calculateUnitBoxValues(10, 'fiat', 'usd', 'KB', arDriveCommunityTip);
-		expect(actual).to.deep.equal(expectedResult);
-	});
+		it('returns the correct unitBoxes when using the fiat unit to calculate', async () => {
+			const actual = await unitBoxCalculator.calculateUnitBoxValues(10, 'fiat', 'usd', 'KB', arDriveCommunityTip);
+			expect(actual.unitBoxValues).to.deep.equal(expectedResult);
+		});
 
-	it('calculateUnitBoxValues function returns the correct unitBoxes when using the ar unit to calculate', async () => {
-		const actual = await unitBoxCalculator.calculateUnitBoxValues(1, 'ar', 'usd', 'KB', arDriveCommunityTip);
-		expect(actual).to.deep.equal(expectedResult);
+		it('returns the correct unitBoxes when using the ar unit to calculate', async () => {
+			const actual = await unitBoxCalculator.calculateUnitBoxValues(1, 'ar', 'usd', 'KB', arDriveCommunityTip);
+			expect(actual.unitBoxValues).to.deep.equal(expectedResult);
+		});
+
+		it('returns an arToData error when using the `getARPriceForByteCount` method and the ARDataPriceEstimator fails to fetch AR<>Data pricing estimates', async () => {
+			stubbedPriceEstimator.getARPriceForByteCount.throws();
+			unitBoxCalculator = new UnitBoxCalculator(stubbedPriceEstimator, cachingTokenToOracle);
+
+			const actual = await unitBoxCalculator.calculateUnitBoxValues(1, 'bytes', 'usd', 'KB', arDriveCommunityTip);
+
+			expect(actual.oracleErrors.dataToAR).to.be.true;
+		});
+
+		it('returns an arToData error when using the `getByteCountForAR` method and the ARDataPriceEstimator fails to fetch AR<>Data pricing estimates', async () => {
+			stubbedPriceEstimator.getByteCountForAR.throws();
+			unitBoxCalculator = new UnitBoxCalculator(stubbedPriceEstimator, cachingTokenToOracle);
+
+			const actual = await unitBoxCalculator.calculateUnitBoxValues(1, 'ar', 'usd', 'KB', arDriveCommunityTip);
+
+			expect(actual.oracleErrors.dataToAR).to.be.true;
+		});
+
+		it('returns a fiatToData error when the `getPriceForFiatTokenPair` method fails to retrieve the fiatPerAR price from the CachingTokenToFiatOracle', async () => {
+			stubbedCoinGeckoOracle.getFiatRatesForToken.throws();
+			cachingTokenToOracle = new CachingTokenToFiatOracle('arweave', currencyIDs, 2000, stubbedCoinGeckoOracle);
+
+			unitBoxCalculator = new UnitBoxCalculator(stubbedPriceEstimator, cachingTokenToOracle);
+
+			const actual = await unitBoxCalculator.calculateUnitBoxValues(1, 'bytes', 'usd', 'KB', arDriveCommunityTip);
+
+			expect(actual.oracleErrors.fiatToAR).to.be.true;
+		});
 	});
 });

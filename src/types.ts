@@ -60,3 +60,11 @@ export interface UnitBoxes {
 	fiat: FiatUnitBox;
 	ar: ArUnitBox;
 }
+
+export interface OracleErrors {
+	fiatToAR: boolean;
+	dataToAR: boolean;
+}
+
+/** Unit boxes will not render values when set to -1 */
+export const doNotRenderValue = -1;

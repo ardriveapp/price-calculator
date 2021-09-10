@@ -7,15 +7,17 @@ import { getSpokenWord } from '../utils/get_spoken_word';
 import useDebounce from '../hooks/useDebounce';
 import { useState } from 'react';
 import isValidInput, { validInputRegExp } from '../utils/valid_input_reg_exp';
+import { ErrorMessage } from './TextBox.style';
 
 const decimalLimits = { fiat: 8, bytes: 6, ar: 12 };
+const pricingOracleError = 'Unable to retrieve price estimate. Please try again.';
 
 interface TextBoxProps {
 	field: keyof UnitBoxes;
 }
 
 export default function TextBox({ field }: TextBoxProps): JSX.Element {
-	const [{ unitBoxes }, dispatch] = useStateValue();
+	const [{ unitBoxes, oracleErrors }, dispatch] = useStateValue();
 	const globalInputValue = unitBoxes[field].value;
 
 	const decimalLimit = decimalLimits[field];
@@ -57,9 +59,6 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 	 */
 	useDebounce(Number(localInputValue), isDebouncing, dispatchValueToState, 1000);
 
-	/** Initially hides fiat and AR inputs until data arrives and first calculation has settled */
-	const hideInput: React.CSSProperties = { visibility: globalInputValue !== -1 ? 'visible' : 'hidden' };
-
 	function onTextBoxInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
 		let userInputValue = event.target.value;
 
@@ -81,18 +80,20 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 		}
 	}
 
+	const hasError = (field === 'bytes' && oracleErrors.dataToAR) || (field === 'fiat' && oracleErrors.fiatToAR);
+
 	return (
-		<TextBoxContainer>
+		<TextBoxContainer hasError={hasError}>
 			<TextBoxInput
-				style={hideInput}
 				type="text"
 				pattern={validInputRegExp.source}
 				name="textbox"
-				value={localInputValue}
+				value={hasError || globalInputValue === -1 ? '-' : localInputValue}
 				onChange={onTextBoxInputChange}
 				aria-label={`${getSpokenWord(unitBoxes[field].currUnit)} input field`}
 			/>
 			<CurrentUnit units={unitBoxes[field].units} currentUnit={unitBoxes[field].currUnit}></CurrentUnit>
+			{hasError && <ErrorMessage>{pricingOracleError}</ErrorMessage>}
 		</TextBoxContainer>
 	);
 }

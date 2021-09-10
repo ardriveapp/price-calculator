@@ -1,5 +1,5 @@
 import type { UnitBoxValues } from '../hooks/useCalculation';
-import type { ArDriveCommunityTip, ByteUnitType, UnitBoxes } from '../types';
+import { ArDriveCommunityTip, ByteUnitType, doNotRenderValue, OracleErrors, UnitBoxes } from '../types';
 import { ARDataPriceRegressionEstimator } from './ar_data_price_regression_estimator';
 import convertUnit from './convert_unit';
 import type { ARDataPriceEstimator } from './ar_data_price_estimator';
@@ -9,13 +9,10 @@ import { currencyIDs, FiatID } from './fiat_oracle_types';
 /**
  * A utility class responsible for calculating the new unit boxes to
  * display to the user based on the changes to the global state
- *
- * @remarks Will construct a new ARDataPriceEstimator upon initial
- * creation, which fires off 3 network calls for AR<>Data models
  */
 export class UnitBoxCalculator {
 	constructor(
-		private readonly arDataPriceEstimator: ARDataPriceEstimator = new ARDataPriceRegressionEstimator(),
+		private readonly arDataPriceEstimator: ARDataPriceEstimator = new ARDataPriceRegressionEstimator(true),
 		private readonly fiatCachingOracle: CachingTokenToFiatOracle = new CachingTokenToFiatOracle(
 			'arweave',
 			currencyIDs
@@ -36,7 +33,10 @@ export class UnitBoxCalculator {
 	 * @param byteUnit current byte unit type from global state
 	 * @param arDriveCommunityTip current ArDrive community fee from global state
 	 *
-	 * @returns newly calculated unit box values
+	 * @remarks Will fire off three fetch calls for AR<>Data and one
+	 *          fetch call for Fiat<>AR on the first call of this function
+	 *
+	 * @returns newly calculated unit box values and any oracleErrors that occur
 	 */
 	async calculateUnitBoxValues(
 		value: number,
@@ -44,15 +44,18 @@ export class UnitBoxCalculator {
 		fiatUnit: FiatID,
 		byteUnit: ByteUnitType,
 		arDriveCommunityTip: ArDriveCommunityTip
-	): Promise<UnitBoxValues> {
+	): Promise<{ unitBoxValues: UnitBoxValues; oracleErrors: OracleErrors }> {
 		let newARValue: number;
 		let userDefinedByteValue: number | undefined = undefined;
+		let oracleErrors: OracleErrors = { fiatToAR: false, dataToAR: false };
 
 		let fiatPerAR: number | undefined = undefined;
 
-		if (!this.fiatCachingOracle.currentlyFetchingPrice) {
+		try {
 			fiatPerAR = (await this.fiatCachingOracle.getPriceForFiatTokenPair({ token: 'arweave', fiat: fiatUnit }))
 				.fiatPerTokenRate;
+		} catch {
+			oracleErrors = { ...oracleErrors, fiatToAR: true };
 		}
 
 		switch (unit) {
@@ -62,10 +65,15 @@ export class UnitBoxCalculator {
 					// rather than displaying the minimum fee
 					newARValue = 0;
 				} else {
-					newARValue = await this.arDataPriceEstimator.getARPriceForByteCount(
-						Math.round(convertUnit(value, byteUnit, 'B')),
-						arDriveCommunityTip
-					);
+					try {
+						newARValue = await this.arDataPriceEstimator.getARPriceForByteCount(
+							Math.round(convertUnit(value, byteUnit, 'B')),
+							arDriveCommunityTip
+						);
+					} catch {
+						newARValue = 1;
+						oracleErrors = { ...oracleErrors, dataToAR: true };
+					}
 				}
 
 				userDefinedByteValue = value;
@@ -86,16 +94,19 @@ export class UnitBoxCalculator {
 			// Use user defined byte value to ensure user's intended value remains unchanged
 			byteCount = userDefinedByteValue;
 		} else {
-			const rawByteCount = await this.arDataPriceEstimator.getByteCountForAR(newARValue, arDriveCommunityTip);
-			byteCount = convertUnit(Math.round(rawByteCount), 'B', byteUnit);
+			try {
+				const rawByteCount = await this.arDataPriceEstimator.getByteCountForAR(newARValue, arDriveCommunityTip);
+				byteCount = convertUnit(Math.round(rawByteCount), 'B', byteUnit);
+			} catch {
+				oracleErrors = { ...oracleErrors, dataToAR: true };
+				byteCount = doNotRenderValue;
+			}
 		}
 
-		// If `fiatPerAR` remains initially undefined (is fetching),
-		// set `newFiatValue` to -1 for conditionally hiding the Fiat unit box
-		const newFiatValue = fiatPerAR ? newARValue * fiatPerAR : -1;
-		const newByteValue = byteCount;
+		const newFiatValue = !oracleErrors.fiatToAR && fiatPerAR ? newARValue * fiatPerAR : doNotRenderValue;
+		const newByteValue = !oracleErrors.dataToAR ? byteCount : doNotRenderValue;
 		const newArValue = newARValue;
 
-		return { bytes: newByteValue, fiat: newFiatValue, ar: newArValue };
+		return { unitBoxValues: { bytes: newByteValue, fiat: newFiatValue, ar: newArValue }, oracleErrors };
 	}
 }

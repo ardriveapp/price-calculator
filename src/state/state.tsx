@@ -1,5 +1,12 @@
 import React, { createContext, Dispatch, useContext, useReducer } from 'react';
-import { ArDriveCommunityTip, displayedByteUnitTypes, displayedFiatUnitTypes, UnitBoxes } from '../types';
+import {
+	ArDriveCommunityTip,
+	displayedByteUnitTypes,
+	displayedFiatUnitTypes,
+	doNotRenderValue,
+	OracleErrors,
+	UnitBoxes
+} from '../types';
 import type { Action } from './reducer';
 
 export type State = {
@@ -11,6 +18,9 @@ export type State = {
 
 	/** Current values and units for each field: 'bytes' | 'fiat' | 'ar' */
 	unitBoxes: UnitBoxes;
+
+	/** State for displaying errors from fiat and data oracles */
+	oracleErrors: OracleErrors;
 };
 
 /** ArDrive Price Calculator's initial state */
@@ -26,9 +36,13 @@ const initialState: State = {
 	/** Unit boxes display only 1 GiB by default, other values to be filled in on first calculation */
 	unitBoxes: {
 		bytes: { value: 1, currUnit: 'GB', units: displayedByteUnitTypes },
-		// Default -1 values here are to conditionally render input fields when data arrives
-		fiat: { value: -1, currUnit: 'USD', units: displayedFiatUnitTypes },
-		ar: { value: -1, currUnit: 'AR' }
+		fiat: { value: doNotRenderValue, currUnit: 'USD', units: displayedFiatUnitTypes },
+		ar: { value: doNotRenderValue, currUnit: 'AR' }
+	},
+
+	oracleErrors: {
+		fiatToAR: false,
+		dataToAR: false
 	}
 };
 

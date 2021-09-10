@@ -4,9 +4,10 @@ import { FileComparisonTypeIconContainer, FileComparisonContainer } from './File
 interface FileComparisonProps {
 	fileIcon: JSX.Element;
 	comparisonText: string[];
+	dataToARError: boolean;
 }
 
-export default function FileComparison({ fileIcon, comparisonText }: FileComparisonProps): JSX.Element {
+export default function FileComparison({ fileIcon, comparisonText, dataToARError }: FileComparisonProps): JSX.Element {
 	const wavehausBookComparisonText = comparisonText[0];
 	const comparisonValue = comparisonText[1];
 	const wavehausBoldComparisonText = comparisonText[2];
@@ -15,11 +16,17 @@ export default function FileComparison({ fileIcon, comparisonText }: FileCompari
 		<FileComparisonContainer>
 			<FileComparisonTypeIconContainer>{fileIcon}</FileComparisonTypeIconContainer>
 			<p>
-				{wavehausBookComparisonText}{' '}
-				<strong>
-					<span>{comparisonValue}</span>
-					{wavehausBoldComparisonText}
-				</strong>
+				{dataToARError ? (
+					<strong>. . .</strong>
+				) : (
+					<>
+						{wavehausBookComparisonText}
+						<strong>
+							<span>{comparisonValue}</span>
+							{wavehausBoldComparisonText}
+						</strong>
+					</>
+				)}
 			</p>
 		</FileComparisonContainer>
 	);

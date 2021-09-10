@@ -12,7 +12,7 @@ export interface FileComparison {
 }
 
 export default function Calculator(): JSX.Element {
-	const [{ unitBoxes }] = useStateValue();
+	const [{ unitBoxes, oracleErrors }] = useStateValue();
 
 	useCalculation();
 
@@ -22,12 +22,13 @@ export default function Calculator(): JSX.Element {
 		<CalculatorContainer>
 			<TextBox field={'fiat'}></TextBox>
 			<TextBox field={'bytes'}></TextBox>
-			<DottedDivider>
+			<DottedDivider dataToARError={oracleErrors.dataToAR}>
 				{fileComparisons.map((fileComparison) => (
 					<FileComparison
 						key={fileComparison[1][2]}
 						fileIcon={fileComparison[0]}
 						comparisonText={fileComparison[1]}
+						dataToARError={oracleErrors.dataToAR}
 					/>
 				))}
 			</DottedDivider>
