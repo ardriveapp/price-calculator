@@ -1,8 +1,9 @@
 import { currencyIDs } from './utils/fiat_oracle_types';
+import type { Winston } from './utils/types';
 
 export interface ArDriveCommunityTip {
 	tipPercentage: number;
-	minWinstonFee: number;
+	minWinstonFee: Winston;
 }
 
 export interface UnitBox {

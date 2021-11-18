@@ -1,3 +1,5 @@
+import type { ByteCount, Winston } from './types';
+
 export interface ArweaveOracle {
-	getWinstonPriceForByteCount(byteCount: number): Promise<number>;
+	getWinstonPriceForByteCount(byteCount: ByteCount): Promise<Winston>;
 }

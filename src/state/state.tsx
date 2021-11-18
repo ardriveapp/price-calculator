@@ -1,4 +1,5 @@
 import React, { createContext, Dispatch, useContext, useReducer } from 'react';
+import { W } from '../utils/types';
 import {
 	ArDriveCommunityTip,
 	displayedByteUnitTypes,
@@ -30,7 +31,7 @@ const initialState: State = {
 		tipPercentage: 0.15,
 
 		/** Default ArDrive Minimum Community Tip in Winston */
-		minWinstonFee: 10_000_000
+		minWinstonFee: W(10_000_000)
 	},
 
 	/** Unit boxes display only 1 GiB by default, other values to be filled in on first calculation */
