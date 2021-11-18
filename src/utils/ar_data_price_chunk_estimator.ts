@@ -1,8 +1,8 @@
 import { GatewayOracle } from './gateway_oracle';
 import type { ArweaveOracle } from './arweave_oracle';
 import { AbstractARDataPriceAndCapacityEstimator } from './ar_data_price_estimator';
-import { AR, ByteCount, Winston } from './types';
-import type { ArDriveCommunityTip } from 'src/types';
+import { AR, ByteCount, Winston, W } from './types';
+import type { ArDriveCommunityTip } from '../types';
 
 const byteCountOfChunk = new ByteCount(Math.pow(2, 10) * 256); // 256 KiB
 
@@ -50,7 +50,7 @@ export class ARDataPriceChunkEstimator extends AbstractARDataPriceAndCapacityEst
 			const oneChunkPrice = await this.oracle.getWinstonPriceForByteCount(new ByteCount(1));
 
 			this.pricingInfo = {
-				baseWinstonPrice: basePrice,
+				baseWinstonPrice: basePrice.plus(W(2)),
 				oneChunkWinstonPrice: oneChunkPrice,
 				perChunkWinstonPrice: oneChunkPrice.minus(basePrice)
 			};
@@ -92,9 +92,13 @@ export class ARDataPriceChunkEstimator extends AbstractARDataPriceAndCapacityEst
 
 		const numberOfChunksToUpload = Math.ceil(byteCount.valueOf() / byteCountOfChunk.valueOf());
 
+		// Every 5th chunk, arweave.net pricing adds 1 winston
+		const mysteriousExtraWinston = W(Math.floor(numberOfChunksToUpload / 5));
+
 		const predictedPrice = this.pricingInfo.perChunkWinstonPrice
 			.times(numberOfChunksToUpload)
-			.plus(this.pricingInfo.baseWinstonPrice);
+			.plus(this.pricingInfo.baseWinstonPrice)
+			.plus(mysteriousExtraWinston);
 
 		return predictedPrice;
 	}
