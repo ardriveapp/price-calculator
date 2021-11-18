@@ -1,30 +1,30 @@
 import { expect } from 'chai';
 import { SinonStubbedInstance, stub } from 'sinon';
 import type { UnitBoxValues } from '../hooks/useCalculation';
-import { ARDataPriceRegressionEstimator } from './ar_data_price_regression_estimator';
 import { UnitBoxCalculator } from './calculate_unit_boxes';
-import type { ARDataPriceEstimator } from './ar_data_price_estimator';
-import type { ArDriveCommunityTip } from '../types';
 import type { FiatOracle } from './fiat_oracle';
 import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
 import { CoinGeckoTokenToFiatOracle } from './coingecko_token_to_fiat_oracle';
 import { currencyIDs } from './fiat_oracle_types';
+import { AR, ByteCount, W } from './types';
+import { ARDataPriceChunkEstimator } from './ar_data_price_chunk_estimator';
+import type { ArDriveCommunityTip } from '../types';
 
 describe('UnitBoxCalculator class', () => {
 	let unitBoxCalculator: UnitBoxCalculator;
 	let cachingTokenToOracle: CachingTokenToFiatOracle;
 
-	let stubbedPriceEstimator: SinonStubbedInstance<ARDataPriceEstimator>;
+	let stubbedPriceEstimator: SinonStubbedInstance<ARDataPriceChunkEstimator>;
 	let stubbedCoinGeckoOracle: SinonStubbedInstance<FiatOracle>;
 
 	const expectedResult: UnitBoxValues = { bytes: 1, fiat: 10, ar: 1 };
 
-	const arDriveCommunityTip: ArDriveCommunityTip = { minWinstonFee: 10, tipPercentage: 0.15 };
+	const arDriveCommunityTip: ArDriveCommunityTip = { minWinstonFee: W(10), tipPercentage: 0.15 };
 
 	before(() => {
-		stubbedPriceEstimator = stub(new ARDataPriceRegressionEstimator(true));
-		stubbedPriceEstimator.getByteCountForAR.callsFake((v) => Promise.resolve(v * Math.pow(2, 10)));
-		stubbedPriceEstimator.getARPriceForByteCount.callsFake(() => Promise.resolve(1));
+		stubbedPriceEstimator = stub(new ARDataPriceChunkEstimator(true));
+		stubbedPriceEstimator.getByteCountForAR.callsFake((v) => Promise.resolve(new ByteCount(+v * Math.pow(2, 10))));
+		stubbedPriceEstimator.getARPriceForByteCount.callsFake(() => Promise.resolve(AR.from(1)));
 
 		stubbedCoinGeckoOracle = stub(new CoinGeckoTokenToFiatOracle());
 		stubbedCoinGeckoOracle.getFiatRatesForToken.callsFake(() =>

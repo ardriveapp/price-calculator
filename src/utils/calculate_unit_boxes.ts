@@ -1,10 +1,11 @@
 import type { UnitBoxValues } from '../hooks/useCalculation';
 import { ArDriveCommunityTip, ByteUnitType, doNotRenderValue, OracleErrors, UnitBoxes } from '../types';
-import { ARDataPriceRegressionEstimator } from './ar_data_price_regression_estimator';
 import convertUnit from './convert_unit';
-import type { ARDataPriceEstimator } from './ar_data_price_estimator';
 import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
 import { currencyIDs, FiatID } from './fiat_oracle_types';
+import { ARDataPriceChunkEstimator } from './ar_data_price_chunk_estimator';
+import { AR, ByteCount } from './types';
+import type { AbstractARDataPriceAndCapacityEstimator } from './ar_data_price_estimator';
 
 /**
  * A utility class responsible for calculating the new unit boxes to
@@ -12,7 +13,9 @@ import { currencyIDs, FiatID } from './fiat_oracle_types';
  */
 export class UnitBoxCalculator {
 	constructor(
-		private readonly arDataPriceEstimator: ARDataPriceEstimator = new ARDataPriceRegressionEstimator(true),
+		private readonly arDataPriceEstimator: AbstractARDataPriceAndCapacityEstimator = new ARDataPriceChunkEstimator(
+			true
+		),
 		private readonly fiatCachingOracle: CachingTokenToFiatOracle = new CachingTokenToFiatOracle(
 			'arweave',
 			currencyIDs
@@ -66,10 +69,10 @@ export class UnitBoxCalculator {
 					newARValue = 0;
 				} else {
 					try {
-						newARValue = await this.arDataPriceEstimator.getARPriceForByteCount(
-							Math.round(convertUnit(value, byteUnit, 'B')),
+						newARValue = +(await this.arDataPriceEstimator.getARPriceForByteCount(
+							new ByteCount(Math.round(convertUnit(value, byteUnit, 'B'))),
 							arDriveCommunityTip
-						);
+						));
 					} catch {
 						newARValue = 1;
 						oracleErrors = { ...oracleErrors, dataToAR: true };
@@ -95,8 +98,11 @@ export class UnitBoxCalculator {
 			byteCount = userDefinedByteValue;
 		} else {
 			try {
-				const rawByteCount = await this.arDataPriceEstimator.getByteCountForAR(newARValue, arDriveCommunityTip);
-				byteCount = convertUnit(Math.round(rawByteCount), 'B', byteUnit);
+				const rawByteCount = await this.arDataPriceEstimator.getByteCountForAR(
+					AR.from(newARValue),
+					arDriveCommunityTip
+				);
+				byteCount = convertUnit(Math.round(+rawByteCount), 'B', byteUnit);
 			} catch {
 				oracleErrors = { ...oracleErrors, dataToAR: true };
 				byteCount = doNotRenderValue;
