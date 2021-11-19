@@ -99,7 +99,8 @@ export class UnitBoxCalculator {
 		} else {
 			try {
 				const rawByteCount = await this.arDataPriceEstimator.getByteCountForAR(
-					AR.from(newARValue),
+					// Use 12 decimal places to avoid AR constructor error
+					AR.from(newARValue.toFixed(12)),
 					arDriveCommunityTip
 				);
 				byteCount = convertUnit(Math.round(+rawByteCount), 'B', byteUnit);
