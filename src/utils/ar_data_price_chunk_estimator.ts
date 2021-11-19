@@ -92,13 +92,14 @@ export class ARDataPriceChunkEstimator extends AbstractARDataPriceAndCapacityEst
 
 		const numberOfChunksToUpload = Math.ceil(byteCount.valueOf() / byteCountOfChunk.valueOf());
 
-		// Every 5th chunk, arweave.net pricing adds 1 winston
-		const mysteriousExtraWinston = W(Math.floor(numberOfChunksToUpload / 5));
+		// Every 5th chunk, arweave.net pricing adds 1 Winston, which they define as a
+		// mining reward as a proportion of the estimated transaction storage costs
+		const minerFeeShareResidual = W(Math.floor(numberOfChunksToUpload / 5));
 
 		const predictedPrice = this.pricingInfo.perChunkWinstonPrice
 			.times(numberOfChunksToUpload)
 			.plus(this.pricingInfo.baseWinstonPrice)
-			.plus(mysteriousExtraWinston);
+			.plus(minerFeeShareResidual);
 
 		return predictedPrice;
 	}
@@ -119,17 +120,22 @@ export class ARDataPriceChunkEstimator extends AbstractARDataPriceAndCapacityEst
 				throw Error('Failed to generate pricing model!');
 			}
 		}
+		const { oneChunkWinstonPrice, baseWinstonPrice, perChunkWinstonPrice } = this.pricingInfo;
 
-		if (winston.isGreaterThanOrEqualTo(this.pricingInfo.oneChunkWinstonPrice)) {
-			// TODO: TEST THIS UPDATED ALGO!
-			const numberOfChunks = +winston
-				.minus(this.pricingInfo.baseWinstonPrice)
-				.dividedBy(+this.pricingInfo.perChunkWinstonPrice, 'ROUND_DOWN');
+		if (winston.isGreaterThanOrEqualTo(oneChunkWinstonPrice)) {
+			const winstonToSpend = winston.minus(baseWinstonPrice);
 
-			return new ByteCount(+byteCountOfChunk * numberOfChunks);
+			const fifthChunks = winstonToSpend
+				.dividedBy(perChunkWinstonPrice.toString(), 'ROUND_DOWN')
+				.dividedBy(5, 'ROUND_DOWN');
+			const actualWinstonToSpend = winstonToSpend.minus(fifthChunks);
+
+			const numChunks = actualWinstonToSpend.dividedBy(perChunkWinstonPrice.toString(), 'ROUND_DOWN');
+
+			return new ByteCount(+numChunks.times(byteCountOfChunk.toString()));
 		}
 
-		// Return 0 if winston price given does not cover the base winston price for a 1 byte transaction
+		// Return 0 if winston price given does not cover the base winston price for a 1 chunk transaction
 		return new ByteCount(0);
 	}
 
