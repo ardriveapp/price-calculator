@@ -3076,9 +3076,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ardrive-core-js@npm:0.6.0-alpha-6":
-  version: 0.6.0-alpha-6
-  resolution: "ardrive-core-js@npm:0.6.0-alpha-6"
+"ardrive-core-js@npm:1.0.3":
+  version: 1.0.3
+  resolution: "ardrive-core-js@npm:1.0.3"
   dependencies:
     arweave: ^1.10.16
     arweave-bundles: ^1.0.3
@@ -3090,12 +3090,11 @@ __metadata:
     jwk-to-pem: ^2.0.4
     lodash: ^4.17.21
     mime-types: ^2.1.29
-    node-fetch: ^2.6.1
     regression: ^2.0.1
     smartweave: ^0.4.45
     utf8: ^3.0.0
     uuid: ^8.3.2
-  checksum: 2633488e2baf90f4bf715d9eca3d8161cbceddf9da743df0e3a95db4c42a6e226179952446f094d3e86f6039214cc33a600fa206a5f7c6cd4dbf1e74d5d2cb80
+  checksum: 810f522f0656f5282f189f6432c0b2ccfa5135ce7063090fb5c6bbf4b25e096f15d8ddf3bb912f8a9149807bff5b3d5d3fa661976993c022724c12ed528e2160
   languageName: node
   linkType: hard
 
@@ -9667,7 +9666,7 @@ fsevents@~2.1.2:
     "@typescript-eslint/eslint-plugin": ^4.28.5
     "@typescript-eslint/parser": ^4.28.5
     "@web/test-runner": ^0.13.3
-    ardrive-core-js: 0.6.0-alpha-6
+    ardrive-core-js: 1.0.3
     chai: ^4.3.4
     chai-as-promised: ^7.1.1
     eslint: ^7.31.0
