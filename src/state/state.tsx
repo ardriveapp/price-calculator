@@ -1,13 +1,6 @@
+import { ArDriveCommunityTip, W } from 'ardrive-core-js';
 import React, { createContext, Dispatch, useContext, useReducer } from 'react';
-import { W } from '../utils/types';
-import {
-	ArDriveCommunityTip,
-	displayedByteUnitTypes,
-	displayedFiatUnitTypes,
-	doNotRenderValue,
-	OracleErrors,
-	UnitBoxes
-} from '../types';
+import { displayedByteUnitTypes, displayedFiatUnitTypes, doNotRenderValue, OracleErrors, UnitBoxes } from '../types';
 import type { Action } from './reducer';
 
 export type State = {

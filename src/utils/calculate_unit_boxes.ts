@@ -1,11 +1,15 @@
 import type { UnitBoxValues } from '../hooks/useCalculation';
-import { ArDriveCommunityTip, ByteUnitType, doNotRenderValue, OracleErrors, UnitBoxes } from '../types';
+import { ByteUnitType, doNotRenderValue, OracleErrors, UnitBoxes } from '../types';
 import convertUnit from './convert_unit';
 import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
 import { currencyIDs, FiatID } from './fiat_oracle_types';
-import { ARDataPriceChunkEstimator } from './ar_data_price_chunk_estimator';
-import { AR, ByteCount } from './types';
-import type { AbstractARDataPriceAndCapacityEstimator } from './ar_data_price_estimator';
+import {
+	AbstractARDataPriceAndCapacityEstimator,
+	ARDataPriceChunkEstimator,
+	ArDriveCommunityTip,
+	ByteCount,
+	AR
+} from 'ardrive-core-js';
 
 /**
  * A utility class responsible for calculating the new unit boxes to

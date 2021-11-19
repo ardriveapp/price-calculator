@@ -6,9 +6,7 @@ import type { FiatOracle } from './fiat_oracle';
 import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
 import { CoinGeckoTokenToFiatOracle } from './coingecko_token_to_fiat_oracle';
 import { currencyIDs } from './fiat_oracle_types';
-import { AR, ByteCount, W } from './types';
-import { ARDataPriceChunkEstimator } from './ar_data_price_chunk_estimator';
-import type { ArDriveCommunityTip } from '../types';
+import { ARDataPriceChunkEstimator, ArDriveCommunityTip, W, ByteCount, AR } from 'ardrive-core-js';
 
 describe('UnitBoxCalculator class', () => {
 	let unitBoxCalculator: UnitBoxCalculator;
