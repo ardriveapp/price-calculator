@@ -1,12 +1,6 @@
+import { ArDriveCommunityTip, W } from 'ardrive-core-js';
 import React, { createContext, Dispatch, useContext, useReducer } from 'react';
-import {
-	ArDriveCommunityTip,
-	displayedByteUnitTypes,
-	displayedFiatUnitTypes,
-	doNotRenderValue,
-	OracleErrors,
-	UnitBoxes
-} from '../types';
+import { displayedByteUnitTypes, displayedFiatUnitTypes, doNotRenderValue, OracleErrors, UnitBoxes } from '../types';
 import type { Action } from './reducer';
 
 export type State = {
@@ -30,7 +24,7 @@ const initialState: State = {
 		tipPercentage: 0.15,
 
 		/** Default ArDrive Minimum Community Tip in Winston */
-		minWinstonFee: 10_000_000
+		minWinstonFee: W(10_000_000)
 	},
 
 	/** Unit boxes display only 1 GiB by default, other values to be filled in on first calculation */

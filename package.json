@@ -1,6 +1,6 @@
 {
 	"name": "price-calculator",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "ArDrive Price Calculator",
 	"scripts": {
 		"start": "snowpack dev",
@@ -23,10 +23,10 @@
 		"url": "https://github.com/ardriveapp/price-calculator.git"
 	},
 	"dependencies": {
+		"ardrive-core-js": "1.0.3",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
 		"react-is": "^17.0.2",
-		"regression": "^2.0.1",
 		"styled-components": "^5.3.0"
 	},
 	"devDependencies": {
@@ -42,7 +42,6 @@
 		"@types/react": "^17.0.4",
 		"@types/react-dom": "^17.0.3",
 		"@types/react-is": "^17",
-		"@types/regression": "^2",
 		"@types/rimraf": "^3",
 		"@types/sinon": "^10.0.2",
 		"@types/snowpack-env": "^2.3.3",

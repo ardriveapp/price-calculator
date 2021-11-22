@@ -1,4 +1,5 @@
-import type { ArDriveCommunityTip, UnitBoxes } from '../types';
+import type { ArDriveCommunityTip } from 'ardrive-core-js';
+import type { UnitBoxes } from '../types';
 import type { State } from './state';
 
 export type Action =

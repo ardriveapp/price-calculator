@@ -4,6 +4,9 @@
  * This is the Snowpack configuration file
  */
 module.exports = {
+	alias: {
+		'safer-buffer': 'buffer'
+	},
 	mount: {
 		public: { url: '/', static: true },
 		src: { url: '/dist' }

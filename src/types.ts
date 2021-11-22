@@ -1,10 +1,5 @@
 import { currencyIDs } from './utils/fiat_oracle_types';
 
-export interface ArDriveCommunityTip {
-	tipPercentage: number;
-	minWinstonFee: number;
-}
-
 export interface UnitBox {
 	/** Value displayed on left on unit box */
 	value: number;
