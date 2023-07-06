@@ -10,7 +10,7 @@ import {
 import useOnOutsideClick from '../hooks/useOnOutsideClick';
 import UpArrowIcon from './icons/UpArrowIcon';
 import { useStateValue } from '../state/state';
-import type { ByteUnitType } from '../types';
+import type { ArUnitType, ByteUnitType, FiatUnitType } from '../types';
 import { getSpokenWord } from '../utils/get_spoken_word';
 
 interface CurrentUnitProps {
@@ -57,17 +57,24 @@ function UnitDropDown({ units, closeDropDown }: UnitDropDownProps): JSX.Element 
 	const [{ unitBoxes }, dispatch] = useStateValue();
 
 	const isFiatUnitBox = units === unitBoxes.fiat.units;
+	const isBytesUnitBox = units === unitBoxes.bytes.units;
+	const isArUnitBox = units === unitBoxes.ar.units;
 
 	function onUnitClick(unit: string): void {
 		if (isFiatUnitBox && unit !== unitBoxes.fiat.currUnit) {
 			dispatch({
 				type: 'setUnitBoxes',
-				payload: { ...unitBoxes, fiat: { ...unitBoxes.fiat, currUnit: unit } }
+				payload: { ...unitBoxes, fiat: { ...unitBoxes.fiat, currUnit: unit as FiatUnitType } }
 			});
-		} else if (!isFiatUnitBox && unit !== unitBoxes.bytes.currUnit) {
+		} else if (isBytesUnitBox && unit !== unitBoxes.bytes.currUnit) {
 			dispatch({
 				type: 'setUnitBoxes',
 				payload: { ...unitBoxes, bytes: { ...unitBoxes.bytes, currUnit: unit as ByteUnitType } }
+			});
+		} else if (isArUnitBox && unit !== unitBoxes.ar.currUnit) {
+			dispatch({
+				type: 'setUnitBoxes',
+				payload: { ...unitBoxes, ar: { ...unitBoxes.ar, currUnit: unit as ArUnitType } }
 			});
 		}
 		closeDropDown();

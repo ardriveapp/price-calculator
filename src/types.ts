@@ -20,7 +20,7 @@ export interface FiatUnitBox extends UnitBox {
 }
 
 export interface ArUnitBox extends UnitBox {
-	currUnit: 'AR';
+	currUnit: ArUnitType;
 	units: ArUnitType[];
 }
 
