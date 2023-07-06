@@ -1,6 +1,13 @@
 import { ArDriveCommunityTip, W } from 'ardrive-core-js';
 import React, { createContext, Dispatch, useContext, useReducer } from 'react';
-import { displayedByteUnitTypes, displayedFiatUnitTypes, doNotRenderValue, OracleErrors, UnitBoxes } from '../types';
+import {
+	displayedByteUnitTypes,
+	displayedArUnitTypes,
+	displayedFiatUnitTypes,
+	doNotRenderValue,
+	OracleErrors,
+	UnitBoxes
+} from '../types';
 import type { Action } from './reducer';
 
 export type State = {
@@ -31,7 +38,7 @@ const initialState: State = {
 	unitBoxes: {
 		bytes: { value: 1, currUnit: 'GB', units: displayedByteUnitTypes },
 		fiat: { value: doNotRenderValue, currUnit: 'USD', units: displayedFiatUnitTypes },
-		ar: { value: doNotRenderValue, currUnit: 'AR' }
+		ar: { value: doNotRenderValue, currUnit: 'AR', units: displayedArUnitTypes }
 	},
 
 	oracleErrors: {

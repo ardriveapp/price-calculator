@@ -32,6 +32,7 @@ export default function useCalculation(): void {
 	// Save previous byte unit for determining byte unit changes
 	const [byteCurrUnit, setByteCurrUnit] = useState(unitBoxes.bytes.currUnit);
 	const [fiatCurrUnit, setFiatCurrUnit] = useState(unitBoxes.fiat.currUnit);
+	const [arCurrUnit, setArCurrUnit] = useState(unitBoxes.ar.currUnit);
 
 	/**
 	 * Whenever unitBoxes change, this useEffect hook will start a new calculation
@@ -93,6 +94,16 @@ export default function useCalculation(): void {
 			};
 
 			setFiatCurrUnit(unitBoxes.fiat.currUnit);
+		} else if (unitBoxes.ar.currUnit !== arCurrUnit) {
+			// Turbo rates fetch and calculation
+			const newARValue = unitBoxes.ar.value;
+
+			newUnitBoxValues = {
+				...prevUnitValues,
+				ar: newARValue
+			};
+
+			setArCurrUnit(unitBoxes.ar.currUnit);
 		} else {
 			let valueToCalculate: number;
 			let unitBoxType: keyof UnitBoxes;

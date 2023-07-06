@@ -21,10 +21,14 @@ export interface FiatUnitBox extends UnitBox {
 
 export interface ArUnitBox extends UnitBox {
 	currUnit: 'AR';
+	units: ArUnitType[];
 }
 
 export type ByteUnitType = 'B' | 'KB' | 'MB' | 'GB';
 export const displayedByteUnitTypes: ByteUnitType[] = ['KB', 'MB', 'GB'];
+
+export type ArUnitType = 'AR' | 'Credits';
+export const displayedArUnitTypes: ArUnitType[] = ['AR', 'Credits'];
 
 const currenciesFromOracle = currencyIDs.map((f) => f.toUpperCase());
 
