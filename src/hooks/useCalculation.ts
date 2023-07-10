@@ -97,9 +97,37 @@ export default function useCalculation(): void {
 		} else if (unitBoxes.ar.currUnit !== arCurrUnit) {
 			// Turbo rates fetch and calculation
 			const newARValue = unitBoxes.ar.value;
+			let newFiatPerAR: number;
+
+			try {
+				if (unitBoxes.ar.currUnit === 'Credits') {
+					newFiatPerAR = (
+						await unitBoxCalculator.turboRatesOracle.getPriceForFiatTokenPair({
+							fiat: unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
+							token: 'credits'
+						})
+					).fiatPerTokenRate;
+				} else {
+					newFiatPerAR = (
+						await unitBoxCalculator.fiatOracle.getPriceForFiatTokenPair({
+							fiat: unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
+							token: 'arweave'
+						})
+					).fiatPerTokenRate;
+				}
+			} catch (err) {
+				console.error('Fiat rate could not be determined:', err);
+				dispatch({ type: 'setFiatToARError' });
+				setSendingCalculation(false);
+				// Fiat oracle has thrown an error, return early
+				return;
+			}
+
+			const newFiatValue = unitBoxes.ar.value * newFiatPerAR;
 
 			newUnitBoxValues = {
 				...prevUnitValues,
+				fiat: newFiatValue,
 				ar: newARValue
 			};
 
