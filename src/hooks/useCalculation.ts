@@ -128,6 +128,7 @@ export default function useCalculation(): void {
 					unitBoxType,
 					unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
 					unitBoxes.bytes.currUnit,
+					unitBoxes.ar.currUnit,
 					arDriveCommunityTip
 				);
 

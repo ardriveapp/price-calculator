@@ -1,7 +1,8 @@
 import type { UnitBoxValues } from '../hooks/useCalculation';
-import { ByteUnitType, doNotRenderValue, OracleErrors, UnitBoxes } from '../types';
+import { ArUnitType, ByteUnitType, doNotRenderValue, OracleErrors, UnitBoxes } from '../types';
 import convertUnit from './convert_unit';
 import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
+import { CachingTurboRatesOracle } from './caching_turbo_rates_oracle';
 import { currencyIDs, FiatID } from './fiat_oracle_types';
 import {
 	AbstractARDataPriceAndCapacityEstimator,
@@ -23,12 +24,17 @@ export class UnitBoxCalculator {
 		private readonly fiatCachingOracle: CachingTokenToFiatOracle = new CachingTokenToFiatOracle(
 			'arweave',
 			currencyIDs
-		)
+		),
+		private readonly turboRatesCachingOracle: CachingTurboRatesOracle = new CachingTurboRatesOracle()
 	) {}
 
 	/** Expose fiat oracle to determine when prices get fetched */
 	public get fiatOracle(): CachingTokenToFiatOracle {
 		return this.fiatCachingOracle;
+	}
+
+	public get turboRatesOracle(): CachingTurboRatesOracle {
+		return this.turboRatesCachingOracle;
 	}
 
 	/**
@@ -50,6 +56,7 @@ export class UnitBoxCalculator {
 		unit: keyof UnitBoxes,
 		fiatUnit: FiatID,
 		byteUnit: ByteUnitType,
+		arUnit: ArUnitType,
 		arDriveCommunityTip: ArDriveCommunityTip
 	): Promise<{ unitBoxValues: UnitBoxValues; oracleErrors: OracleErrors }> {
 		let newARValue: number;
@@ -59,8 +66,16 @@ export class UnitBoxCalculator {
 		let fiatPerAR: number | undefined = undefined;
 
 		try {
-			fiatPerAR = (await this.fiatCachingOracle.getPriceForFiatTokenPair({ token: 'arweave', fiat: fiatUnit }))
-				.fiatPerTokenRate;
+			if (arUnit === 'Credits') {
+				console.log('Fetching credits per fiat');
+				fiatPerAR = (
+					await this.turboRatesCachingOracle.getPriceForFiatTokenPair({ token: 'credits', fiat: fiatUnit })
+				).fiatPerTokenRate;
+			} else {
+				fiatPerAR = (
+					await this.fiatCachingOracle.getPriceForFiatTokenPair({ token: 'arweave', fiat: fiatUnit })
+				).fiatPerTokenRate;
+			}
 		} catch {
 			oracleErrors = { ...oracleErrors, fiatToAR: true };
 		}

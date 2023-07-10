@@ -1,4 +1,4 @@
-import { FiatRates, TurboRates } from './turbo_rates';
+import { TurboRates } from './turbo_rates';
 
 export interface Fetcher {
 	fetch(input: RequestInfo, init?: RequestInit | undefined): Promise<Response>;
@@ -18,21 +18,7 @@ export class TurboRatesOracle {
 		const fetchResponse = await this.fetcher.fetch(queryUrl);
 		const responseData = await fetchResponse.json();
 
-		const rates: TurboRates = new TurboRates(
-			responseData.winc,
-			new FiatRates(
-				responseData.fiat.aud,
-				responseData.fiat.brl,
-				responseData.fiat.cad,
-				responseData.fiat.eur,
-				responseData.fiat.gbp,
-				responseData.fiat.hkd,
-				responseData.fiat.inr,
-				responseData.fiat.jpy,
-				responseData.fiat.sgd,
-				responseData.fiat.usd
-			)
-		);
+		const rates: TurboRates = new TurboRates(responseData.winc, responseData.fiat);
 
 		return rates;
 	}
