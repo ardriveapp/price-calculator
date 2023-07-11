@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { UnitBoxes } from '../types';
+import { displayedFiatUnitTypes, UnitBoxes } from '../types';
 import { useStateValue } from '../state/state';
 import { UnitBoxCalculator } from '../utils/calculate_unit_boxes';
 import convertUnit from '../utils/convert_unit';
@@ -33,6 +33,8 @@ export default function useCalculation(): void {
 	const [byteCurrUnit, setByteCurrUnit] = useState(unitBoxes.bytes.currUnit);
 	const [fiatCurrUnit, setFiatCurrUnit] = useState(unitBoxes.fiat.currUnit);
 	const [arCurrUnit, setArCurrUnit] = useState(unitBoxes.ar.currUnit);
+
+	const [, setDisplayedFiatUnits] = useState(unitBoxes.fiat.units);
 
 	/**
 	 * Whenever unitBoxes change, this useEffect hook will start a new calculation
@@ -72,12 +74,23 @@ export default function useCalculation(): void {
 			let newFiatPerAR: number;
 
 			try {
-				newFiatPerAR = (
-					await unitBoxCalculator.fiatOracle.getPriceForFiatTokenPair({
-						fiat: unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
-						token: 'arweave'
-					})
-				).fiatPerTokenRate;
+				if (unitBoxes.ar.currUnit === 'Credits') {
+					newFiatPerAR = (
+						await unitBoxCalculator.turboRatesOracle.getPriceForFiatTokenPair({
+							fiat: unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
+							token: 'credits'
+						})
+					).fiatPerTokenRate;
+					setDisplayedFiatUnits(unitBoxCalculator.turboRatesOracle.getSupportedCurrencyIDs());
+				} else {
+					newFiatPerAR = (
+						await unitBoxCalculator.fiatOracle.getPriceForFiatTokenPair({
+							fiat: unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
+							token: 'arweave'
+						})
+					).fiatPerTokenRate;
+					setDisplayedFiatUnits(displayedFiatUnitTypes);
+				}
 			} catch (err) {
 				console.error('Fiat rate could not be determined:', err);
 				dispatch({ type: 'setFiatToARError' });
@@ -107,6 +120,7 @@ export default function useCalculation(): void {
 							token: 'credits'
 						})
 					).fiatPerTokenRate;
+					setDisplayedFiatUnits(unitBoxCalculator.turboRatesOracle.getSupportedCurrencyIDs());
 				} else {
 					newFiatPerAR = (
 						await unitBoxCalculator.fiatOracle.getPriceForFiatTokenPair({
@@ -114,6 +128,7 @@ export default function useCalculation(): void {
 							token: 'arweave'
 						})
 					).fiatPerTokenRate;
+					setDisplayedFiatUnits(displayedFiatUnitTypes);
 				}
 			} catch (err) {
 				console.error('Fiat rate could not be determined:', err);

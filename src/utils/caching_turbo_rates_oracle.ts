@@ -32,6 +32,14 @@ export class CachingTurboRatesOracle implements FiatOracle {
 		});
 	}
 
+	getSupportedCurrencyIDs(): FiatID[] {
+		if (!this.cachedRate) {
+			throw new Error("Can't get supported currency IDs without cached rate");
+		}
+
+		return Object.keys(this.cachedRate.fiat) as FiatID[];
+	}
+
 	async getFiatRatesForToken(token: TokenID, fiats: FiatID[]): Promise<TokenFiatRate[]> {
 		await this.checkCache();
 
