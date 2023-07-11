@@ -34,8 +34,6 @@ export default function useCalculation(): void {
 	const [fiatCurrUnit, setFiatCurrUnit] = useState(unitBoxes.fiat.currUnit);
 	const [arCurrUnit, setArCurrUnit] = useState(unitBoxes.ar.currUnit);
 
-	const [, setDisplayedFiatUnits] = useState(unitBoxes.fiat.units);
-
 	/**
 	 * Whenever unitBoxes change, this useEffect hook will start a new calculation
 	 *
@@ -58,6 +56,7 @@ export default function useCalculation(): void {
 		setSendingCalculation(true);
 
 		let newUnitBoxValues: UnitBoxValues;
+		let fiatUnits = displayedFiatUnitTypes;
 
 		if (unitBoxes.bytes.currUnit !== byteCurrUnit) {
 			// When byte unit has been changed by the user, only update the bytes value directly
@@ -81,7 +80,8 @@ export default function useCalculation(): void {
 							token: 'credits'
 						})
 					).fiatPerTokenRate;
-					setDisplayedFiatUnits(unitBoxCalculator.turboRatesOracle.getSupportedCurrencyIDs());
+
+					fiatUnits = unitBoxCalculator.turboRatesOracle.getSupportedCurrencyIDs();
 				} else {
 					newFiatPerAR = (
 						await unitBoxCalculator.fiatOracle.getPriceForFiatTokenPair({
@@ -89,7 +89,6 @@ export default function useCalculation(): void {
 							token: 'arweave'
 						})
 					).fiatPerTokenRate;
-					setDisplayedFiatUnits(displayedFiatUnitTypes);
 				}
 			} catch (err) {
 				console.error('Fiat rate could not be determined:', err);
@@ -120,7 +119,8 @@ export default function useCalculation(): void {
 							token: 'credits'
 						})
 					).fiatPerTokenRate;
-					setDisplayedFiatUnits(unitBoxCalculator.turboRatesOracle.getSupportedCurrencyIDs());
+
+					fiatUnits = unitBoxCalculator.turboRatesOracle.getSupportedCurrencyIDs();
 				} else {
 					newFiatPerAR = (
 						await unitBoxCalculator.fiatOracle.getPriceForFiatTokenPair({
@@ -128,7 +128,6 @@ export default function useCalculation(): void {
 							token: 'arweave'
 						})
 					).fiatPerTokenRate;
-					setDisplayedFiatUnits(displayedFiatUnitTypes);
 				}
 			} catch (err) {
 				console.error('Fiat rate could not be determined:', err);
@@ -172,6 +171,7 @@ export default function useCalculation(): void {
 					unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
 					unitBoxes.bytes.currUnit,
 					unitBoxes.ar.currUnit,
+					// TODO: conditionally set ardrive comm tip to 0 pct if AR unit is: "Credits"
 					arDriveCommunityTip
 				);
 
@@ -205,7 +205,13 @@ export default function useCalculation(): void {
 		// Construct new unit boxes with their previous state and the calculated values
 		const newUnitBoxes = {
 			bytes: { ...unitBoxes.bytes, value: newUnitBoxValues.bytes },
-			fiat: { ...unitBoxes.fiat, value: newUnitBoxValues.fiat },
+			fiat: {
+				...unitBoxes.fiat,
+				value: newUnitBoxValues.fiat,
+				units: fiatUnits.map((u) => u.toUpperCase()),
+				// TODO: Handle switching to non supported currency when
+				currUnit: !fiatUnits.includes(unitBoxes.fiat.currUnit) ? 'USD' : unitBoxes.fiat.currUnit
+			},
 			ar: { ...unitBoxes.ar, value: newUnitBoxValues.ar }
 		};
 
