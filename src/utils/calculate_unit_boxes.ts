@@ -65,10 +65,10 @@ export class UnitBoxCalculator {
 
 		let fiatPerAR: number | undefined = undefined;
 
-		await this.turboRatesCachingOracle.getPriceForFiatTokenPair({ token: 'credits', fiat: fiatUnit });
-		await this.fiatCachingOracle.getPriceForFiatTokenPair({ token: 'arweave', fiat: fiatUnit });
-
 		try {
+			await this.turboRatesCachingOracle.getPriceForFiatTokenPair({ token: 'credits', fiat: fiatUnit });
+			await this.fiatCachingOracle.getPriceForFiatTokenPair({ token: 'arweave', fiat: fiatUnit });
+
 			if (arUnit === 'Credits') {
 				console.log('Fetching credits per fiat');
 				fiatPerAR = (

@@ -19,7 +19,8 @@ export interface UnitBoxValues {
  * with the newly calculated boxes with one dispatch call
  */
 export default function useCalculation(): void {
-	const [{ unitBoxes, arDriveCommunityTip, oracleErrors: oracleErrorsFromState }, dispatch] = useStateValue();
+	const [{ unitBoxes, arDriveCommunityTip, turboFees, oracleErrors: oracleErrorsFromState }, dispatch] =
+		useStateValue();
 	const [sendingCalculation, setSendingCalculation] = useState(false);
 
 	// Save previous unit box values for determining if a value has changed
@@ -171,8 +172,7 @@ export default function useCalculation(): void {
 					unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
 					unitBoxes.bytes.currUnit,
 					unitBoxes.ar.currUnit,
-					// TODO: conditionally set ardrive comm tip to 0 pct if AR unit is: "Credits"
-					arDriveCommunityTip
+					unitBoxes.ar.currUnit === 'Credits' ? turboFees : arDriveCommunityTip
 				);
 
 				newUnitBoxValues = unitBoxValues;

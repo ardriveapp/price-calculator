@@ -16,6 +16,7 @@ export type State = {
 	 * known values until a more efficient method of reading the contract is identified
 	 */
 	arDriveCommunityTip: ArDriveCommunityTip;
+	turboFees: ArDriveCommunityTip;
 
 	/** Current values and units for each field: 'bytes' | 'fiat' | 'ar' */
 	unitBoxes: UnitBoxes;
@@ -33,7 +34,10 @@ const initialState: State = {
 		/** Default ArDrive Minimum Community Tip in Winston */
 		minWinstonFee: W(10_000_000)
 	},
-
+	turboFees: {
+		tipPercentage: 0,
+		minWinstonFee: W(0)
+	},
 	/** Unit boxes display only 1 GiB by default, other values to be filled in on first calculation */
 	unitBoxes: {
 		bytes: { value: 1, currUnit: 'GB', units: displayedByteUnitTypes },
