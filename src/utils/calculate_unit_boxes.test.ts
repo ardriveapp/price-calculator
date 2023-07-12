@@ -7,13 +7,17 @@ import { CachingTokenToFiatOracle } from './caching_token_to_fiat_oracle';
 import { CoinGeckoTokenToFiatOracle } from './coingecko_token_to_fiat_oracle';
 import { currencyIDs } from './fiat_oracle_types';
 import { ARDataPriceChunkEstimator, ArDriveCommunityTip, W, ByteCount, AR } from 'ardrive-core-js';
+import { RatesOracle, TurboRatesOracle } from './turbo_rates_oracle';
+import { CachingTurboRatesOracle } from './caching_turbo_rates_oracle';
 
 describe('UnitBoxCalculator class', () => {
 	let unitBoxCalculator: UnitBoxCalculator;
 	let cachingTokenToOracle: CachingTokenToFiatOracle;
+	let cachingTurboRatesOracle: CachingTurboRatesOracle;
 
 	let stubbedPriceEstimator: SinonStubbedInstance<ARDataPriceChunkEstimator>;
 	let stubbedCoinGeckoOracle: SinonStubbedInstance<FiatOracle>;
+	let stubbedTurboRatesOracle: SinonStubbedInstance<RatesOracle>;
 
 	const expectedResult: UnitBoxValues = { bytes: 1, fiat: 10, ar: 1 };
 
@@ -29,8 +33,18 @@ describe('UnitBoxCalculator class', () => {
 			Promise.resolve([{ token: 'arweave', fiat: 'usd', fiatPerTokenRate: 10 }])
 		);
 
-		cachingTokenToOracle = new CachingTokenToFiatOracle('arweave', currencyIDs, 2000, stubbedCoinGeckoOracle);
+		stubbedTurboRatesOracle = stub(new TurboRatesOracle());
+		stubbedTurboRatesOracle.getTurboRates.callsFake(() =>
+			Promise.resolve({
+				winc: 1,
+				fiat: {
+					usd: 10
+				}
+			})
+		);
 
+		cachingTokenToOracle = new CachingTokenToFiatOracle('arweave', currencyIDs, 2000, stubbedCoinGeckoOracle);
+		cachingTurboRatesOracle = new CachingTurboRatesOracle(2000, stubbedTurboRatesOracle);
 		unitBoxCalculator = new UnitBoxCalculator(stubbedPriceEstimator, cachingTokenToOracle);
 	});
 
@@ -121,9 +135,16 @@ describe('UnitBoxCalculator class', () => {
 
 		it('returns a fiatToData error when the `getPriceForFiatTokenPair` method fails to retrieve the fiatPerAR price from the CachingTokenToFiatOracle', async () => {
 			stubbedCoinGeckoOracle.getFiatRatesForToken.throws();
-			cachingTokenToOracle = new CachingTokenToFiatOracle('arweave', currencyIDs, 2000, stubbedCoinGeckoOracle);
+			stubbedTurboRatesOracle.getTurboRates.throws();
 
-			unitBoxCalculator = new UnitBoxCalculator(stubbedPriceEstimator, cachingTokenToOracle);
+			cachingTokenToOracle = new CachingTokenToFiatOracle('arweave', currencyIDs, 2000, stubbedCoinGeckoOracle);
+			cachingTurboRatesOracle = new CachingTurboRatesOracle(2000, stubbedTurboRatesOracle);
+
+			unitBoxCalculator = new UnitBoxCalculator(
+				stubbedPriceEstimator,
+				cachingTokenToOracle,
+				cachingTurboRatesOracle
+			);
 
 			const actual = await unitBoxCalculator.calculateUnitBoxValues(
 				1,

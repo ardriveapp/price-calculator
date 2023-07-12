@@ -1,16 +1,7 @@
+import { Fetcher, JSFetcher } from './fetcher';
 import { TurboRates } from './turbo_rates';
 
-export interface Fetcher {
-	fetch(input: RequestInfo, init?: RequestInit | undefined): Promise<Response>;
-}
-
-export class JSFetcher implements Fetcher {
-	fetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
-		return fetch(input, init);
-	}
-}
-
-export class TurboRatesOracle {
+export class TurboRatesOracle implements RatesOracle {
 	constructor(private readonly fetcher: Fetcher = new JSFetcher()) {}
 
 	public async getTurboRates(): Promise<TurboRates> {
@@ -30,4 +21,9 @@ export class TurboRatesOracle {
 		const queryUrl = `https://payment.ardrive.dev/v1/rates`;
 		return queryUrl;
 	}
+}
+
+export abstract class RatesOracle {
+	public abstract getTurboRates(): Promise<TurboRates>;
+	public abstract getQueryRequestUrl(): string;
 }

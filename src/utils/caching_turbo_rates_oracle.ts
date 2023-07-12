@@ -1,4 +1,4 @@
-import { TurboRatesOracle } from './turbo_rates_oracle';
+import { RatesOracle, TurboRatesOracle } from './turbo_rates_oracle';
 import type { TurboRates } from './turbo_rates';
 import type { FiatOracle } from './fiat_oracle';
 import type { FiatID, TokenID } from './fiat_oracle_types';
@@ -14,7 +14,7 @@ export class CachingTurboRatesOracle implements FiatOracle {
 
 	constructor(
 		private readonly cacheLifespan = pollingIntervalMilliseconds,
-		private readonly turboRatesOracle: TurboRatesOracle = new TurboRatesOracle()
+		private readonly turboRatesOracle: RatesOracle = new TurboRatesOracle()
 	) {}
 
 	getPriceForFiatTokenPair(pair: TokenFiatPair): Promise<TokenFiatRate> {
