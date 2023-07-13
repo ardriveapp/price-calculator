@@ -9,9 +9,9 @@
 		"coverage": "vitest run --coverage",
 		"format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
 		"lint": "eslint --fix .",
-		"ci": "yarn test && yarn build",
+		"ci": "pnpm test && pnpm build",
 		"clean": "rimraf build",
-		"run:prod": "yarn build && http-server-spa ./build"
+		"run:prod": "pnpm build && http-server-spa ./build"
 	},
 	"license": "AGPL-3.0-or-later",
 	"author": {
