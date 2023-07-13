@@ -9,6 +9,7 @@ import { currencyIDs } from './fiat_oracle_types';
 import { ARDataPriceChunkEstimator, ArDriveCommunityTip, W, ByteCount, AR } from 'ardrive-core-js';
 import { RatesOracle, TurboRatesOracle } from './turbo_rates_oracle';
 import { CachingTurboRatesOracle } from './caching_turbo_rates_oracle';
+import { beforeAll, describe, it } from 'vitest';
 
 describe('UnitBoxCalculator class', () => {
 	let unitBoxCalculator: UnitBoxCalculator;
@@ -23,7 +24,7 @@ describe('UnitBoxCalculator class', () => {
 
 	const arDriveCommunityTip: ArDriveCommunityTip = { minWinstonFee: W(10), tipPercentage: 0.15 };
 
-	before(() => {
+	beforeAll(() => {
 		stubbedPriceEstimator = stub(new ARDataPriceChunkEstimator(true));
 		stubbedPriceEstimator.getByteCountForAR.callsFake((v) => Promise.resolve(new ByteCount(+v * Math.pow(2, 10))));
 		stubbedPriceEstimator.getARPriceForByteCount.callsFake(() => Promise.resolve(AR.from(1)));

@@ -7,6 +7,7 @@ import type { FiatOracle } from './fiat_oracle';
 import { CoinGeckoTokenToFiatOracle } from './coingecko_token_to_fiat_oracle';
 import chaiAsPromised from 'chai-as-promised';
 import { TokenFiatRate } from './token_fiat_rate';
+import { beforeEach, describe, it } from 'vitest';
 
 chai.use(chaiAsPromised);
 

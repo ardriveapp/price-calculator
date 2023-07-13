@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import convertBytes from './convert_unit';
+import { beforeEach, describe, it } from 'vitest';
 
 describe('The convertBytes function', () => {
 	it('correctly converts bytes to KB', () => {

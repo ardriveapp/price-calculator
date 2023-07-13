@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import isValidNumericUserInputString from './valid_input_reg_exp';
+import { beforeEach, describe, it } from 'vitest';
 
 const invalidValues = [
 	'pants',

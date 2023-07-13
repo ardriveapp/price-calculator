@@ -2,9 +2,11 @@ import chai, { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { SinonStubbedInstance, stub } from 'sinon';
 import { TokenFiatPair } from './token_fiat_pair';
-import { CoinGeckoTokenToFiatOracle, Fetcher, JSFetcher } from './coingecko_token_to_fiat_oracle';
+import { CoinGeckoTokenToFiatOracle } from './coingecko_token_to_fiat_oracle';
 import type { FiatID, TokenID } from './fiat_oracle_types';
 import { TokenFiatRate } from './token_fiat_rate';
+import { beforeEach, describe, it } from 'vitest';
+import { Fetcher, JSFetcher } from './fetcher';
 
 chai.use(chaiAsPromised);
 
