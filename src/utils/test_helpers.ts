@@ -6,7 +6,7 @@ export async function expectAsyncErrorThrow(method: () => Promise<unknown>): Pro
 	try {
 		await method();
 	} catch (err) {
-		error = err;
+		error = err as string;
 	}
 	expect(error).to.be.an('Error');
 }

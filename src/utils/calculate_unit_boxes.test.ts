@@ -29,7 +29,7 @@ describe('UnitBoxCalculator class', () => {
 		stubbedPriceEstimator.getByteCountForAR.callsFake((v) => Promise.resolve(new ByteCount(+v * Math.pow(2, 10))));
 		stubbedPriceEstimator.getARPriceForByteCount.callsFake(() => Promise.resolve(AR.from(1)));
 
-		stubbedCoinGeckoOracle = stub(new CoinGeckoTokenToFiatOracle());
+		stubbedCoinGeckoOracle = stub(new CoinGeckoTokenToFiatOracle()) as unknown as SinonStubbedInstance<FiatOracle>;
 		stubbedCoinGeckoOracle.getFiatRatesForToken.callsFake(() =>
 			Promise.resolve([{ token: 'arweave', fiat: 'usd', fiatPerTokenRate: 10 }])
 		);

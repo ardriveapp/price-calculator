@@ -27,12 +27,12 @@ describe('The CachingTokenToFiatOracle class', () => {
 
 	beforeEach(() => {
 		// TODO: Get ts-sinon working with snowpack so we don't have to use a concrete type here
-		fiatOracleStub = stub(new CoinGeckoTokenToFiatOracle());
+		fiatOracleStub = stub(new CoinGeckoTokenToFiatOracle()) as unknown as SinonStubbedInstance<FiatOracle>;
 		fiatOracleStub.getFiatRatesForToken.callsFake(async () => expectedTokenFiatRates);
 		cachingOracle = new CachingTokenToFiatOracle(token, [fiat], oneSecondCacheLifespan, fiatOracleStub);
 		noncachingOracle = new CachingTokenToFiatOracle(token, [fiat], noCachingLifespan, fiatOracleStub);
 
-		longFetchingOracleStub = stub(new CoinGeckoTokenToFiatOracle());
+		longFetchingOracleStub = stub(new CoinGeckoTokenToFiatOracle()) as unknown as SinonStubbedInstance<FiatOracle>;
 		longFetchingOracleStub.getFiatRatesForToken.callsFake(
 			() =>
 				new Promise((res) => {
