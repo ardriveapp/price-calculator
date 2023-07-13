@@ -58,9 +58,15 @@ export default function useCalculation(): void {
 
 		let newUnitBoxValues: UnitBoxValues;
 		let fiatUnits = displayedFiatUnitTypes;
+		if (unitBoxes.ar.currUnit === 'Credits') {
+			fiatUnits = unitBoxCalculator.turboRatesOracle.getSupportedCurrencyIDs();
+		} else {
+			fiatUnits = displayedFiatUnitTypes;
+		}
 
 		if (unitBoxes.bytes.currUnit !== byteCurrUnit) {
 			// When byte unit has been changed by the user, only update the bytes value directly
+			console.log('Byte unit has changed, only updating bytes value');
 			const newBytesValue = convertUnit(unitBoxes.bytes.value, byteCurrUnit, unitBoxes.bytes.currUnit);
 
 			newUnitBoxValues = {
@@ -81,8 +87,6 @@ export default function useCalculation(): void {
 							token: 'credits'
 						})
 					).fiatPerTokenRate;
-
-					fiatUnits = unitBoxCalculator.turboRatesOracle.getSupportedCurrencyIDs();
 				} else {
 					newFiatPerAR = (
 						await unitBoxCalculator.fiatOracle.getPriceForFiatTokenPair({
@@ -120,8 +124,6 @@ export default function useCalculation(): void {
 							token: 'credits'
 						})
 					).fiatPerTokenRate;
-
-					fiatUnits = unitBoxCalculator.turboRatesOracle.getSupportedCurrencyIDs();
 				} else {
 					newFiatPerAR = (
 						await unitBoxCalculator.fiatOracle.getPriceForFiatTokenPair({
@@ -129,6 +131,7 @@ export default function useCalculation(): void {
 							token: 'arweave'
 						})
 					).fiatPerTokenRate;
+					fiatUnits = displayedFiatUnitTypes;
 				}
 			} catch (err) {
 				console.error('Fiat rate could not be determined:', err);
