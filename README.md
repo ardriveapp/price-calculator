@@ -4,16 +4,16 @@
 
 Follow these steps to get the developer environment up and running:
 
-### Install Yarn 2
+### Install PNPM
 
-The ArDrive Price Calculator uses Yarn 2, so install the latest version with the [yarn installation instructions][yarn-install]. In most cases:
+The ArDrive Price Calculator uses PNPM, so install the latest version with the [pnpm install instructions][pnpm-install]. In most cases:
 
 ```shell
 # Brew:
-brew install yarn
+brew install pnpm
 
 # Or with NPM:
-npm install -g yarn
+npm install -g pnpm
 ```
 
 We also use husky to manage the git commit hooks that help to improve the quality of our commits. Without installing husky, you risk committing non-compliant code to the repository.
@@ -23,7 +23,7 @@ Using husky triggers two pre-commit hooks. The first will run `lint-staged` on e
 To enable hooks locally, you will need to run:
 
 ```shell
-yarn husky install
+pnpm husky install
 ```
 
 ### NVM
@@ -50,7 +50,7 @@ To ensure your environment is compatible, we also recommend the following VSCode
 
 ## Available Scripts
 
-### yarn start
+### pnpm start
 
 Runs the app in the development mode.
 Open http://localhost:8080 to view it in the browser.
@@ -58,23 +58,16 @@ Open http://localhost:8080 to view it in the browser.
 The page will reload if you make edits.
 You will also see any lint errors in the console.
 
-### yarn build
+### pnpm build
 
-Builds a static copy of your site to the `build/` folder.
+Builds a static copy of your site to the `dist/` folder.
 Your app is ready to be deployed!
 
-### yarn test
+### pnpm test
 
 Launches the application test runner.
-Run with the `--watch` flag (`yarn test -- --watch`) to run in interactive watch mode.
 
-### yarn run:prod
-
-Builds a fresh snowpack production build to the `build/` folder
-Then launches that copy with `http-server-spa` for local testing
-The build will be available for preview at: <http://localhost:8080>
-
-[yarn-install]: https://yarnpkg.com/getting-started/install
+[pnpm-install]: https://pnpm.io/installation
 [nvm-install]: https://github.com/nvm-sh/nvm#installing-and-updating
 [wsl-install]: https://code.visualstudio.com/docs/remote/wsl
 [editor-config-vscode]: https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig
