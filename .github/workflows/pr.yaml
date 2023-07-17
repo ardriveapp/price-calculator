@@ -57,17 +57,7 @@ jobs:
                 folder: dist
     
       
-            - name: Deploy PR preview
-              uses: unsplash/comment-on-pr@master
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                msg: |
-                  Preview: https://{{ secrets.GITHUB_REPOSITORY }}.github.io/pr-deploy/
-                  <details>
-                    <summary>Preview</summary>
-                    <img src="https://{{ secrets.GITHUB_REPOSITORY }}.github.io/pr-deploy/preview.png" alt="Preview">
-                  </details>
+     
               
       
       
