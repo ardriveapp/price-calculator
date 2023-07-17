@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import numberWithCommas from './number_with_commas';
+import { beforeEach, describe, it } from 'vitest';
 
 const englishUSLocale = 'en-US';
 

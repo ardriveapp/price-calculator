@@ -5,6 +5,7 @@ import type { FiatID } from './fiat_oracle_types';
 import { TurboRatesOracle } from './turbo_rates_oracle';
 import { TurboRates } from './turbo_rates';
 import { Fetcher, JSFetcher } from './fetcher';
+import { beforeEach, describe, it } from 'vitest';
 
 chai.use(chaiAsPromised);
 

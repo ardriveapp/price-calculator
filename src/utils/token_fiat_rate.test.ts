@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { TokenFiatRate } from './token_fiat_rate';
+import { beforeEach, describe, it } from 'vitest';
 
 describe('The TokenFiatRate class', () => {
 	it('constructor throws an error when a negative rate is provided', async () => {
