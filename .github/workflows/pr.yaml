@@ -49,13 +49,25 @@ jobs:
       
             - name: Test and Build Codebase
               run: pnpm run ci
+
+            - name: Deploy to GitHub Pages
+              uses: JamesIves/github-pages-deploy-action@4.1.4
+              with:
+                branch: pr-deploy
+                folder: dist
+    
       
             - name: Deploy PR preview
               uses: unsplash/comment-on-pr@master
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                msg: "Preview for this PR is [here](https://${{ github.actor }}.github.io/${{ github.repository }}/pr/${{ github.event.pull_request.number }})."
+                msg: |
+                  Preview: https://{{ secrets.GITHUB_REPOSITORY }}.github.io/pr-deploy/
+                  <details>
+                    <summary>Preview</summary>
+                    <img src="https://{{ secrets.GITHUB_REPOSITORY }}.github.io/pr-deploy/preview.png" alt="Preview">
+                  </details>
               
       
       
