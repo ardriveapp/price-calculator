@@ -67,6 +67,9 @@ Your app is ready to be deployed!
 
 Launches the application test runner.
 
+### pnpm preview
+Runs the production build locally
+
 [pnpm-install]: https://pnpm.io/installation
 [nvm-install]: https://github.com/nvm-sh/nvm#installing-and-updating
 [wsl-install]: https://code.visualstudio.com/docs/remote/wsl
