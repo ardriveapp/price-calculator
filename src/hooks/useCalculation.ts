@@ -78,7 +78,7 @@ export default function useCalculation(): void {
 		} else if (unitBoxes.fiat.currUnit !== fiatCurrUnit) {
 			// When fiat unit has been changed by the user, only update the fiat value directly
 			let newFiatPerAR: number;
-
+			console.log('Fiat unit has changed, only updating fiat value');
 			try {
 				if (unitBoxes.ar.currUnit === 'Credits') {
 					newFiatPerAR = (
@@ -206,6 +206,7 @@ export default function useCalculation(): void {
 		}
 
 		// Construct new unit boxes with their previous state and the calculated values
+
 		const newUnitBoxes = {
 			bytes: { ...unitBoxes.bytes, value: newUnitBoxValues.bytes },
 			fiat: {
@@ -213,7 +214,7 @@ export default function useCalculation(): void {
 				value: newUnitBoxValues.fiat,
 				units: fiatUnits.map((u) => u.toUpperCase()),
 				// TODO: Handle switching to non supported currency when
-				currUnit: !fiatUnits.includes(unitBoxes.fiat.currUnit) ? 'USD' : unitBoxes.fiat.currUnit
+				currUnit: fiatUnits.includes(unitBoxes.fiat.currUnit.toLowerCase()) ? unitBoxes.fiat.currUnit : 'USD'
 			},
 			ar: { ...unitBoxes.ar, value: newUnitBoxValues.ar }
 		};
