@@ -35,7 +35,7 @@ const initialState: State = {
 		minWinstonFee: W(10_000_000)
 	},
 	turboFees: {
-		tipPercentage: 0,
+		tipPercentage: 0.2,
 		minWinstonFee: W(0)
 	},
 	/** Unit boxes display only 1 GiB by default, other values to be filled in on first calculation */

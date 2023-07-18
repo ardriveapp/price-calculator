@@ -10,7 +10,8 @@
 		"format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
 		"lint": "eslint --fix .",
 		"ci": "pnpm test && pnpm build",
-		"clean": "rimraf build"
+		"clean": "rimraf build",
+		"preview": "vite preview"
 	},
 	"license": "AGPL-3.0-or-later",
 	"author": {
