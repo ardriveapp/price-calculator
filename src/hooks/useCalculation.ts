@@ -118,12 +118,21 @@ export default function useCalculation(): void {
 
 			try {
 				if (unitBoxes.ar.currUnit === 'Credits') {
-					newFiatPerAR = (
-						await unitBoxCalculator.turboRatesOracle.getPriceForFiatTokenPair({
-							fiat: unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
-							token: 'credits'
-						})
-					).fiatPerTokenRate;
+					if (fiatUnits.includes(unitBoxes.fiat.currUnit.toLowerCase() as FiatID)) {
+						newFiatPerAR = (
+							await unitBoxCalculator.turboRatesOracle.getPriceForFiatTokenPair({
+								fiat: unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
+								token: 'credits'
+							})
+						).fiatPerTokenRate;
+					} else {
+						newFiatPerAR = (
+							await unitBoxCalculator.turboRatesOracle.getPriceForFiatTokenPair({
+								fiat: 'usd',
+								token: 'credits'
+							})
+						).fiatPerTokenRate;
+					}
 				} else {
 					newFiatPerAR = (
 						await unitBoxCalculator.fiatOracle.getPriceForFiatTokenPair({
@@ -214,7 +223,11 @@ export default function useCalculation(): void {
 				value: newUnitBoxValues.fiat,
 				units: fiatUnits.map((u) => u.toUpperCase()),
 				// TODO: Handle switching to non supported currency when
-				currUnit: fiatUnits.includes(unitBoxes.fiat.currUnit.toLowerCase()) ? unitBoxes.fiat.currUnit : 'USD'
+				currUnit:
+					fiatUnits.includes(unitBoxes.fiat.currUnit.toLowerCase()) ||
+					fiatUnits.includes(unitBoxes.fiat.currUnit.toUpperCase())
+						? unitBoxes.fiat.currUnit
+						: 'USD'
 			},
 			ar: { ...unitBoxes.ar, value: newUnitBoxValues.ar }
 		};
