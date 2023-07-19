@@ -43,8 +43,10 @@ export class CachingTurboRatesOracle implements FiatOracle {
 
 	// Function to get the byte count for a given winc value
 	public getByteCountForWinc(wincValue: number): number {
-		
-    // todo
+		// Calculate the byte count using the known conversion factor (1 GiB in bytes)
+		const byteCountPerGiB = this.cachedRate!.winc;
+
+		return (wincValue / byteCountPerGiB) * 1_073_741_824;
 	}
 
 	// Function to get the winc value for a given byte count

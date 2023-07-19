@@ -134,7 +134,6 @@ export default function useCalculation(): void {
 				);
 
 				newBytesValue = unitBoxValues.bytes;
-
 				newFiatValue = unitBoxValues.fiat;
 			} catch (err) {
 				console.error('Fiat rate could not be determined:', err);

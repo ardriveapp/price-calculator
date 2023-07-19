@@ -125,11 +125,14 @@ export class UnitBoxCalculator {
 			byteCount = userDefinedByteValue;
 		} else {
 			try {
-				const rawByteCount = await this.arDataPriceEstimator.getByteCountForAR(
-					// Use 12 decimal places to avoid AR constructor error
-					AR.from(newARValue.toFixed(12)),
-					arDriveCommunityTip
-				);
+				const rawByteCount =
+					arUnit === 'Credits'
+						? this.turboRatesCachingOracle.getByteCountForWinc(newARValue * 1e12)
+						: await this.arDataPriceEstimator.getByteCountForAR(
+								// Use 12 decimal places to avoid AR constructor error
+								AR.from(newARValue.toFixed(12)),
+								arDriveCommunityTip
+						  );
 				byteCount = convertUnit(Math.round(+rawByteCount), 'B', byteUnit);
 			} catch {
 				oracleErrors = { ...oracleErrors, dataToAR: true };
