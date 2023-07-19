@@ -4,7 +4,6 @@ import type { FiatOracle } from './fiat_oracle';
 import type { FiatID, TokenID } from './fiat_oracle_types';
 import type { TokenFiatPair } from './token_fiat_pair';
 import { TokenFiatRate } from './token_fiat_rate';
-import { ByteCount, Winston } from 'ardrive-core-js';
 
 const pollingIntervalMilliseconds = 1000 * 60 * 15; // 15 min
 

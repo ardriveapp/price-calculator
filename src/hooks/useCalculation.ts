@@ -57,7 +57,7 @@ export default function useCalculation(): void {
 		setSendingCalculation(true);
 
 		let newUnitBoxValues: UnitBoxValues;
-		let fiatUnits = displayedFiatUnitTypes;
+		let fiatUnits;
 		if (unitBoxes.ar.currUnit === 'Credits') {
 			fiatUnits = unitBoxCalculator.turboRatesOracle.getSupportedCurrencyIDs();
 		} else {
