@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { AppContainer, AppContent } from './App.style';
+import { AppContainer, AppContent, VersionNumber } from './App.style';
 import { AppHeader } from './AppHeader';
 import Calculator from './Calculator';
 import Faq from './Faq';
-import { VersionNumber } from './App.style';
 
 export default function App(): JSX.Element {
+	console.log(import.meta.env);
 	return (
 		<AppContainer>
 			<AppHeader />
@@ -13,7 +13,7 @@ export default function App(): JSX.Element {
 				<Calculator></Calculator>
 				<Faq></Faq>
 			</AppContent>
-			<VersionNumber>v{import.meta.env.SNOWPACK_PUBLIC_VERSION}</VersionNumber>
+			<VersionNumber>v{import.meta.env.PACKAGE_VERSION}</VersionNumber>
 		</AppContainer>
 	);
 }
