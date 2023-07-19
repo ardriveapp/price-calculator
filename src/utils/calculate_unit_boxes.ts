@@ -91,10 +91,15 @@ export class UnitBoxCalculator {
 					newARValue = 0;
 				} else {
 					try {
-						newARValue = +(await this.arDataPriceEstimator.getARPriceForByteCount(
-							new ByteCount(Math.round(convertUnit(value, byteUnit, 'B'))),
-							arDriveCommunityTip
-						));
+						newARValue =
+							arUnit === 'Credits'
+								? +this.turboRatesCachingOracle.getWincForByteCount(
+										Math.round(convertUnit(value, byteUnit, 'B'))
+								  )
+								: +(await this.arDataPriceEstimator.getARPriceForByteCount(
+										new ByteCount(Math.round(convertUnit(value, byteUnit, 'B'))),
+										arDriveCommunityTip
+								  ));
 					} catch {
 						newARValue = 1;
 						oracleErrors = { ...oracleErrors, dataToAR: true };

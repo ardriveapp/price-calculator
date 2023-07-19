@@ -114,34 +114,28 @@ export default function useCalculation(): void {
 		} else if (unitBoxes.ar.currUnit !== arCurrUnit) {
 			// Turbo rates fetch and calculation
 			const newARValue = unitBoxes.ar.value;
-			let newFiatPerAR: number;
+			let newFiatValue: number;
+			let newBytesValue: number;
 
 			try {
-				if (unitBoxes.ar.currUnit === 'Credits') {
-					if (fiatUnits.includes(unitBoxes.fiat.currUnit.toLowerCase() as FiatID)) {
-						newFiatPerAR = (
-							await unitBoxCalculator.turboRatesOracle.getPriceForFiatTokenPair({
-								fiat: unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
-								token: 'credits'
-							})
-						).fiatPerTokenRate;
-					} else {
-						newFiatPerAR = (
-							await unitBoxCalculator.turboRatesOracle.getPriceForFiatTokenPair({
-								fiat: 'usd',
-								token: 'credits'
-							})
-						).fiatPerTokenRate;
-					}
-				} else {
-					newFiatPerAR = (
-						await unitBoxCalculator.fiatOracle.getPriceForFiatTokenPair({
-							fiat: unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
-							token: 'arweave'
-						})
-					).fiatPerTokenRate;
+				if (unitBoxes.ar.currUnit === 'AR') {
 					fiatUnits = displayedFiatUnitTypes;
+				} else {
+					fiatUnits = unitBoxCalculator.turboRatesOracle.getSupportedCurrencyIDs();
 				}
+
+				const { unitBoxValues } = await unitBoxCalculator.calculateUnitBoxValues(
+					newARValue,
+					'ar',
+					unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
+					unitBoxes.bytes.currUnit,
+					unitBoxes.ar.currUnit,
+					unitBoxes.ar.currUnit === 'Credits' ? turboFees : arDriveCommunityTip
+				);
+
+				newBytesValue = unitBoxValues.bytes;
+
+				newFiatValue = unitBoxValues.fiat;
 			} catch (err) {
 				console.error('Fiat rate could not be determined:', err);
 				dispatch({ type: 'setFiatToARError' });
@@ -150,10 +144,9 @@ export default function useCalculation(): void {
 				return;
 			}
 
-			const newFiatValue = unitBoxes.ar.value * newFiatPerAR;
-
 			newUnitBoxValues = {
 				...prevUnitValues,
+				bytes: newBytesValue,
 				fiat: newFiatValue,
 				ar: newARValue
 			};

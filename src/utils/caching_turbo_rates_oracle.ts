@@ -4,6 +4,7 @@ import type { FiatOracle } from './fiat_oracle';
 import type { FiatID, TokenID } from './fiat_oracle_types';
 import type { TokenFiatPair } from './token_fiat_pair';
 import { TokenFiatRate } from './token_fiat_rate';
+import { ByteCount, Winston } from 'ardrive-core-js';
 
 const pollingIntervalMilliseconds = 1000 * 60 * 15; // 15 min
 
@@ -38,6 +39,22 @@ export class CachingTurboRatesOracle implements FiatOracle {
 		}
 
 		return Object.keys(this.cachedRate.fiat) as FiatID[];
+	}
+
+	// Function to get the byte count for a given winc value
+	public getByteCountForWinc(wincValue: number): number {
+		
+    // todo
+	}
+
+	// Function to get the winc value for a given byte count
+	public getWincForByteCount(byteCount: number): number {
+		// Calculate the winc value using the known conversion factor (1 GiB in bytes)
+		const byteCountMult = byteCount / 1_073_741_824;
+
+		// return pct of winc on that
+		const wincValue = +this.cachedRate!.winc * byteCountMult;
+		return wincValue / 1_000_000_000_000;
 	}
 
 	async getFiatRatesForToken(token: TokenID, fiats: FiatID[]): Promise<TokenFiatRate[]> {
