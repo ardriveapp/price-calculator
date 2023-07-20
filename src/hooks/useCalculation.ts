@@ -116,6 +116,7 @@ export default function useCalculation(): void {
 			const newARValue = unitBoxes.ar.value;
 			let newFiatValue: number;
 			let newBytesValue: number;
+			let fiatUnit;
 
 			try {
 				if (unitBoxes.ar.currUnit === 'AR') {
@@ -123,11 +124,16 @@ export default function useCalculation(): void {
 				} else {
 					fiatUnits = unitBoxCalculator.turboRatesOracle.getSupportedCurrencyIDs();
 				}
+				fiatUnit =
+					fiatUnits.includes(unitBoxes.fiat.currUnit.toLowerCase()) ||
+					fiatUnits.includes(unitBoxes.fiat.currUnit.toUpperCase())
+						? unitBoxes.fiat.currUnit
+						: 'USD';
 
 				const { unitBoxValues } = await unitBoxCalculator.calculateUnitBoxValues(
 					newARValue,
 					'ar',
-					unitBoxes.fiat.currUnit.toLowerCase() as FiatID,
+					fiatUnit.toLowerCase() as FiatID,
 					unitBoxes.bytes.currUnit,
 					unitBoxes.ar.currUnit,
 					unitBoxes.ar.currUnit === 'Credits' ? turboFees : arDriveCommunityTip
