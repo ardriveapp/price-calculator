@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { getSpokenWord } from './get_spoken_word';
+import { beforeEach, describe, it } from 'vitest';
 
 describe('getSpokenWord function', () => {
 	it('correctly converts KB into kilobyte', () => {

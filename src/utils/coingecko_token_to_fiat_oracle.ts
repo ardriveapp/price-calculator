@@ -24,18 +24,9 @@ import type { FiatOracle } from './fiat_oracle';
 import type { FiatID, TokenID } from './fiat_oracle_types';
 import type { TokenFiatPair } from './token_fiat_pair';
 import { TokenFiatRate } from './token_fiat_rate';
+import { Fetcher, JSFetcher } from './fetcher';
 
 const COMMA_SEPARATOR = ',';
-
-export interface Fetcher {
-	fetch(input: RequestInfo, init?: RequestInit | undefined): Promise<Response>;
-}
-
-export class JSFetcher implements Fetcher {
-	fetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
-		return fetch(input, init);
-	}
-}
 
 export class CoinGeckoTokenToFiatOracle implements FiatOracle {
 	constructor(private readonly fetcher: Fetcher = new JSFetcher()) {}

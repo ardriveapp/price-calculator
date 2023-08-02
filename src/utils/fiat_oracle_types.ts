@@ -68,5 +68,5 @@ export const currencyIDs = [
  *   -H 'accept: application/json'
  */
 
-export type TokenID = 'arweave' | typeof currencyIDs[number];
+export type TokenID = 'arweave' | 'credits' | typeof currencyIDs[number];
 export type FiatID = typeof currencyIDs[number];
