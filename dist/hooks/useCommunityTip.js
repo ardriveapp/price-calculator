@@ -1,3 +1,0 @@
-export default async function useCommunityTip() {
-}
-//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiL2hvbWUvcnVubmVyL3dvcmsvcHJpY2UtY2FsY3VsYXRvci9wcmljZS1jYWxjdWxhdG9yL3NyYy9ob29rcy91c2VDb21tdW5pdHlUaXAudHMiXSwKICAibWFwcGluZ3MiOiAiQUFJQSxnREFBK0Q7QUFBQTsiLAogICJuYW1lcyI6IFtdCn0K
