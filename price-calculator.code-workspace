@@ -6,11 +6,10 @@
     ],
 
     "settings": {
-        "eslint.nodePath": ".yarn/sdks",
-        "eslint.packageManager": "yarn",
-        "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
-        "typescript.tsdk": ".yarn/sdks/typescript/lib",
+        "eslint.nodePath": "node_modules",
+        "prettier.prettierPath": "node_modules/prettier/index.js",
         "typescript.enablePromptUseWorkspaceTsdk": true,
-        "workbench.editorAssociations": {}
+        "workbench.editorAssociations": {},
+        "typescript.tsdk": "node_modules/typescript/lib"
     }
 }
