@@ -6,11 +6,14 @@ import * as ReactDOM from 'react-dom';
 import App from './components/App';
 import StateProvider from './state/state';
 import { reducer } from './state/reducer';
+import { AppThemeProvider } from './components/theme_provider';
 
 ReactDOM.render(
 	<React.StrictMode>
 		<StateProvider reducer={reducer}>
-			<App />
+			<AppThemeProvider>
+				<App />
+			</AppThemeProvider>
 		</StateProvider>
 	</React.StrictMode>,
 	document.getElementById('root')
