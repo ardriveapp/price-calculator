@@ -6,7 +6,12 @@ export enum ThemeType {
 	dark = 'dark'
 }
 
-export type ThemesWithCurrentType = ThemeType | 'current';
+export type ThemeDataType = {
+	[ThemeType.light]: AppTheme;
+	[ThemeType.dark]: AppTheme;
+	current: ThemeType;
+	isEmbedded: boolean;
+};
 
 export type AppTheme = {
 	background: string;

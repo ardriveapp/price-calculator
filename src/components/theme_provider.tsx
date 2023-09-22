@@ -1,13 +1,13 @@
-import { AppTheme, themes, ThemeType, ThemesWithCurrentType as ThemeWithDefaultType } from 'src/themes';
+import { ThemeDataType, themes, ThemeType } from 'src/themes';
 import { ThemeProvider } from 'styled-components';
 
-export function AppThemeProvider({ children }: { children: React.ReactNode }): JSX.Element {
+export function AppThemeProvider({
+	children
+}: {
+	children: React.ReactNode;
+}): JSX.Element {
 	const themeName: ThemeType = getThemeName();
-	const currentTheme: AppTheme = themes[themeName];
-	const themeData: Record<ThemeWithDefaultType, AppTheme> = {
-		...themes,
-		current: currentTheme
-	};
+	const themeData: ThemeDataType = getThemeData(themeName);
 
 	console.log(`Using theme: ${themeName}`);
 
@@ -18,4 +18,20 @@ function getThemeName(): ThemeType {
 	const searchParams = new URLSearchParams(window.location.search);
 	const themeName = searchParams.get('theme');
 	return themeName === ThemeType.dark ? ThemeType.dark : ThemeType.light;
+}
+
+function getThemeData(themeName: ThemeType): ThemeDataType {
+	const isEmbedded = getIsEmbedded();
+	const themeData: ThemeDataType = {
+		...themes,
+		current: themeName,
+		isEmbedded
+	};
+	return themeData;
+}
+
+function getIsEmbedded(): boolean {
+	const searchParams = new URLSearchParams(window.location.search);
+	const isEmbedded = searchParams.get('embedded');
+	return isEmbedded === 'true' || isEmbedded === 'YAS';
 }
