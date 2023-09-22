@@ -33,6 +33,6 @@ export const FileComparisonTypeIconContainer = styled.div`
 	margin-right: 1rem;
 	border-radius: 4px;
 	background-color: ${(p) => p.theme.current.backgroundColor};
-	box-shadow: 0 0 10px 5px rgba(213, 213, 213, 0.5);
+	box-shadow: ${(p) => p.theme.current.boxShadow};
 	color: ${(p) => p.theme.current.textColor};
 `;
