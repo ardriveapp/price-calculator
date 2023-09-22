@@ -23,7 +23,9 @@ export default function useFileComparisons(
 	currentByteUnitBox: BytesUnitBox
 ): [JSX.Element, [string, string, string]][] {
 	const { value, currUnit } = currentByteUnitBox;
-	const [bytesToCalc, setBytesToCalc] = useState(convertUnit(value, currUnit, 'B'));
+	const [bytesToCalc, setBytesToCalc] = useState(
+		convertUnit(value, currUnit, 'B')
+	);
 
 	useEffect(() => {
 		// Only change displayed file comparison value when byte value changes
@@ -38,10 +40,16 @@ export default function useFileComparisons(
 	const docCount = Math.round(bytesToCalc / bytesPerDoc);
 
 	const fileComparisons: [JSX.Element, [string, string, string]][] = [
-		[PngIcon(), ["That's like", `~${numberWithCommas(pngCount)}`, ' pictures']],
+		[
+			PngIcon(),
+			["That's like", `~${numberWithCommas(pngCount)}`, ' pictures']
+		],
 		[MovIcon(), ['Or', `~${numberWithCommas(movCount)}`, ' HD videos']],
 		[Mp3Icon(), ['Or', `~${numberWithCommas(mp3Count)}`, ' songs']],
-		[DocIcon(), ['Or even', `~${numberWithCommas(docCount)}`, ' office docs']]
+		[
+			DocIcon(),
+			['Or even', `~${numberWithCommas(docCount)}`, ' office docs']
+		]
 	];
 
 	return fileComparisons;
