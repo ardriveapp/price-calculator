@@ -9,7 +9,6 @@ export function HomePageLogo(): JSX.Element {
 	const themeData = useTheme() as unknown as ThemeDataType;
 	const { isEmbedded } = themeData;
 	const { current } = themeData;
-
 	const style: React.CSSProperties = {
 		display: isEmbedded ? 'none' : 'block'
 	};
@@ -19,6 +18,7 @@ export function HomePageLogo(): JSX.Element {
 		) : (
 			<ArDriveLogoDark />
 		);
+
 	return (
 		<LogoContainer style={style}>
 			<a href="https://ardrive.io" aria-label="ArDrive Home page">
