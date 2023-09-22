@@ -9,13 +9,19 @@ export enum ThemeType {
 export type ThemeDataType = {
 	[ThemeType.light]: AppTheme;
 	[ThemeType.dark]: AppTheme;
-	current: ThemeType;
+	current: AppTheme;
+	themeName: ThemeType;
 	isEmbedded: boolean;
 };
 
 export type AppTheme = {
-	background: string;
-	color: string;
+	backgroundColor: string;
+	borderColorSelected: string;
+	boxShadow: string;
+	boxShadowSelected: string;
+	dividerColor: string;
+	dottedDividerBckgroundImage: string;
+	textColor: string;
 };
 
 export const themes: Record<ThemeType, AppTheme> = {

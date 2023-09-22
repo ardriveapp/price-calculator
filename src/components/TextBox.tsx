@@ -10,7 +10,8 @@ import isValidInput, { validInputRegExp } from '../utils/valid_input_reg_exp';
 import { ErrorMessage } from './TextBox.style';
 
 const decimalLimits = { fiat: 8, bytes: 6, ar: 12 };
-const pricingOracleError = 'Unable to retrieve price estimate. Please try again.';
+const pricingOracleError =
+	'Unable to retrieve price estimate. Please try again.';
 
 interface TextBoxProps {
 	field: keyof UnitBoxes;
@@ -22,13 +23,19 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 
 	const decimalLimit = decimalLimits[field];
 
-	const [localInputValue, setLocalInputValue] = useState(globalInputValue.toString());
+	const [localInputValue, setLocalInputValue] = useState(
+		globalInputValue.toString()
+	);
 	const [isDebouncing, setIsDebouncing] = useState(false);
 
 	/** Rounds and removes any unnecessary 0s from calculated value only before displaying to user */
 	const roundedGlobalValue = Number(globalInputValue.toFixed(decimalLimit));
 
-	if (Number(localInputValue) !== roundedGlobalValue && !isDebouncing && localInputValue !== '.') {
+	if (
+		Number(localInputValue) !== roundedGlobalValue &&
+		!isDebouncing &&
+		localInputValue !== '.'
+	) {
 		// Calculation has been changed in the global state, set to new local value
 		// only if NOT debouncing and if the localInputValue is not a single decimal
 		// The special case for the single dot allows the user to begin typing a decimal
@@ -44,7 +51,10 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 			// Don't dispatch to state if the values remain equal
 			dispatch({
 				type: 'setUnitBoxes',
-				payload: { ...unitBoxes, [field]: { ...unitBoxes[field], value: debouncedValue } }
+				payload: {
+					...unitBoxes,
+					[field]: { ...unitBoxes[field], value: debouncedValue }
+				}
 			});
 		}
 		setIsDebouncing(false);
@@ -57,9 +67,16 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 	 * Will skip the debounce if `!isDebouncing`. This allows the localInputValue
 	 * to freely be changed by global state calculation without triggering debounces
 	 */
-	useDebounce(Number(localInputValue), isDebouncing, dispatchValueToState, 1000);
+	useDebounce(
+		Number(localInputValue),
+		isDebouncing,
+		dispatchValueToState,
+		1000
+	);
 
-	function onTextBoxInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
+	function onTextBoxInputChange(
+		event: React.ChangeEvent<HTMLInputElement>
+	): void {
 		let userInputValue = event.target.value;
 
 		if (isValidInput(userInputValue)) {
@@ -73,14 +90,18 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 
 				if (Number(userInputValue) < 0) {
 					// Enforce any negative integers into positive integers with Math.abs()
-					userInputValue = Math.abs(Number(userInputValue)).toString();
+					userInputValue = Math.abs(
+						Number(userInputValue)
+					).toString();
 				}
 			}
 			setLocalInputValue(userInputValue);
 		}
 	}
 
-	const hasError = (field === 'bytes' && oracleErrors.dataToAR) || (field === 'fiat' && oracleErrors.fiatToAR);
+	const hasError =
+		(field === 'bytes' && oracleErrors.dataToAR) ||
+		(field === 'fiat' && oracleErrors.fiatToAR);
 
 	return (
 		<TextBoxContainer hasError={hasError}>
@@ -88,11 +109,18 @@ export default function TextBox({ field }: TextBoxProps): JSX.Element {
 				type="text"
 				pattern={validInputRegExp.source}
 				name="textbox"
-				value={hasError || globalInputValue === -1 ? '-' : localInputValue}
+				value={
+					hasError || globalInputValue === -1 ? '-' : localInputValue
+				}
 				onChange={onTextBoxInputChange}
-				aria-label={`${getSpokenWord(unitBoxes[field].currUnit)} input field`}
+				aria-label={`${getSpokenWord(
+					unitBoxes[field].currUnit
+				)} input field`}
 			/>
-			<CurrentUnit units={unitBoxes[field].units} currentUnit={unitBoxes[field].currUnit}></CurrentUnit>
+			<CurrentUnit
+				units={unitBoxes[field].units}
+				currentUnit={unitBoxes[field].currUnit}
+			></CurrentUnit>
 			{hasError && <ErrorMessage>{pricingOracleError}</ErrorMessage>}
 		</TextBoxContainer>
 	);

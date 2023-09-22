@@ -6,6 +6,7 @@ export const FaqContainer = styled.section`
 	padding-top: 4rem;
 	display: flex;
 	flex-direction: column;
+	color: ${(props) => props.theme.current.textColor};
 
 	h2 {
 		font-family: 'Wavehaus-Extra';

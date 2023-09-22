@@ -8,8 +8,9 @@ export function AppThemeProvider({
 }): JSX.Element {
 	const themeName: ThemeType = getThemeName();
 	const themeData: ThemeDataType = getThemeData(themeName);
+	const isEmbedded = themeData.isEmbedded;
 
-	console.log(`Using theme: ${themeName}`);
+	console.log(`Using theme: ${themeName} - isEmbedded: ${isEmbedded}`);
 
 	return <ThemeProvider theme={themeData}>{children}</ThemeProvider>;
 }
@@ -24,7 +25,8 @@ function getThemeData(themeName: ThemeType): ThemeDataType {
 	const isEmbedded = getIsEmbedded();
 	const themeData: ThemeDataType = {
 		...themes,
-		current: themeName,
+		current: themes[themeName],
+		themeName: themeName,
 		isEmbedded
 	};
 	return themeData;

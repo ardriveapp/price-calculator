@@ -5,6 +5,7 @@ export const TextBoxInput = styled.input`
 	height: 50%;
 	outline: none;
 	margin: 0 1rem;
+	color: ${(props) => props.theme.current.textColor};
 
 	@media (min-width: 800px) {
 		margin: 0 2rem;
@@ -17,19 +18,20 @@ export const TextBoxContainer = styled.div<{ hasError: boolean }>`
 	align-items: center;
 	height: 55px;
 	border-radius: 8px;
-	background-color: #fafafa;
-	box-shadow: 0 0 10px 5px rgba(213, 213, 213, 0.5);
+	background-color: ${(props) => props.theme.current.backgroundColor};
+	box-shadow: ${(props) => props.theme.current.boxShadow};
 	font-family: 'Wavehaus-Bold';
 
 	border-width: ${(p) => (p.hasError ? `3px` : `1px`)};
-	border-color: ${(p) => (p.hasError ? `red` : `transparent`)};
+	border-color: ${(p) =>
+		p.hasError ? 'red' : p.theme.current.borderColorSelected};
 	border-style: solid;
 
 	${(p) => p.hasError && `border-color: red`}
 
 	:focus-within {
-		border-color: #4c4c4c;
-		box-shadow: 0 0 15px 10px rgba(20, 46, 110, 0.1);
+		// border-color: ${(props) => props.theme.current.borderColorSelected};
+		box-shadow: ${(props) => props.theme.current.boxShadowSelected};
 	}
 
 	:first-child {

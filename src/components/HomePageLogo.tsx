@@ -8,7 +8,7 @@ import { ArDriveLogoDark } from './icons/ArDriveLogoDark';
 export function HomePageLogo(): JSX.Element {
 	const themeData = useTheme() as unknown as ThemeDataType;
 	const { isEmbedded } = themeData;
-	const { current } = themeData;
+	const { themeName: current } = themeData;
 	const style: React.CSSProperties = {
 		display: isEmbedded ? 'none' : 'block'
 	};

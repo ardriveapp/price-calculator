@@ -7,12 +7,15 @@ import App from './components/App';
 import StateProvider from './state/state';
 import { reducer } from './state/reducer';
 import { AppThemeProvider } from './components/theme_provider';
+import { Root } from './components/Root.style';
 
 ReactDOM.render(
 	<React.StrictMode>
 		<StateProvider reducer={reducer}>
 			<AppThemeProvider>
-				<App />
+				<Root>
+					<App />
+				</Root>
 			</AppThemeProvider>
 		</StateProvider>
 	</React.StrictMode>,

@@ -18,7 +18,10 @@ interface CurrentUnitProps {
 	currentUnit: string;
 }
 
-export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): JSX.Element {
+export default function CurrentUnit({
+	units,
+	currentUnit
+}: CurrentUnitProps): JSX.Element {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 
 	const dropDownRef = useRef(null);
@@ -29,14 +32,21 @@ export default function CurrentUnit({ units, currentUnit }: CurrentUnitProps): J
 			<div ref={dropdownOpen ? dropDownRef : null}>
 				<CurrentUnitButtonContainer
 					onClick={() => setDropdownOpen(!dropdownOpen)}
-					aria-label={`${dropdownOpen ? 'Close' : 'Open'} unit selector dropdown`}
+					aria-label={`${
+						dropdownOpen ? 'Close' : 'Open'
+					} unit selector dropdown`}
 				>
 					<span>{currentUnit}</span>
 					<ExpandableTrailingIcon expanded={dropdownOpen}>
 						<UpArrowIcon />
 					</ExpandableTrailingIcon>
 				</CurrentUnitButtonContainer>
-				{dropdownOpen && <UnitDropDown units={units} closeDropDown={() => setDropdownOpen(false)} />}
+				{dropdownOpen && (
+					<UnitDropDown
+						units={units}
+						closeDropDown={() => setDropdownOpen(false)}
+					/>
+				)}
 			</div>
 		);
 	}
@@ -53,7 +63,10 @@ interface UnitDropDownProps {
 	closeDropDown: () => void;
 }
 
-function UnitDropDown({ units, closeDropDown }: UnitDropDownProps): JSX.Element {
+function UnitDropDown({
+	units,
+	closeDropDown
+}: UnitDropDownProps): JSX.Element {
 	const [{ unitBoxes }, dispatch] = useStateValue();
 
 	const isFiatUnitBox = units === unitBoxes.fiat.units;
@@ -64,17 +77,29 @@ function UnitDropDown({ units, closeDropDown }: UnitDropDownProps): JSX.Element 
 		if (isFiatUnitBox && unit !== unitBoxes.fiat.currUnit) {
 			dispatch({
 				type: 'setUnitBoxes',
-				payload: { ...unitBoxes, fiat: { ...unitBoxes.fiat, currUnit: unit as FiatUnitType } }
+				payload: {
+					...unitBoxes,
+					fiat: { ...unitBoxes.fiat, currUnit: unit as FiatUnitType }
+				}
 			});
 		} else if (isBytesUnitBox && unit !== unitBoxes.bytes.currUnit) {
 			dispatch({
 				type: 'setUnitBoxes',
-				payload: { ...unitBoxes, bytes: { ...unitBoxes.bytes, currUnit: unit as ByteUnitType } }
+				payload: {
+					...unitBoxes,
+					bytes: {
+						...unitBoxes.bytes,
+						currUnit: unit as ByteUnitType
+					}
+				}
 			});
 		} else if (isArUnitBox && unit !== unitBoxes.ar.currUnit) {
 			dispatch({
 				type: 'setUnitBoxes',
-				payload: { ...unitBoxes, ar: { ...unitBoxes.ar, currUnit: unit as ArUnitType } }
+				payload: {
+					...unitBoxes,
+					ar: { ...unitBoxes.ar, currUnit: unit as ArUnitType }
+				}
 			});
 		}
 		closeDropDown();
@@ -84,7 +109,10 @@ function UnitDropDown({ units, closeDropDown }: UnitDropDownProps): JSX.Element 
 		<UnitsDropDownContainer>
 			{units.map((val) => (
 				<li key={val}>
-					<DropDownListItem aria-label={`Set unit to ${getSpokenWord(val)}`} onClick={() => onUnitClick(val)}>
+					<DropDownListItem
+						aria-label={`Set unit to ${getSpokenWord(val)}`}
+						onClick={() => onUnitClick(val)}
+					>
 						{val}
 					</DropDownListItem>
 				</li>

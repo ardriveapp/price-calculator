@@ -18,6 +18,7 @@ const CurrentUnitCSS = css`
 
 export const CurrentUnitButtonContainer = styled.button`
 	${CurrentUnitCSS}
+	color: ${(props) => props.theme.current.textColor};
 `;
 
 export const CurrentUnitDivContainer = styled.div`

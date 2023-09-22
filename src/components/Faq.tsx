@@ -15,7 +15,11 @@ export default function Faq(): JSX.Element {
 					question={qa.question}
 					answer={qa.answer}
 					expanded={index === expanded}
-					setExpanded={() => (index === expanded ? setExpanded(undefined) : setExpanded(index))}
+					setExpanded={() =>
+						index === expanded
+							? setExpanded(undefined)
+							: setExpanded(index)
+					}
 				></Expandable>
 			))}
 		</FaqContainer>
