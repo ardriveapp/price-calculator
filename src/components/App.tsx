@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { JSX } from 'react';
 import { AppContainer, AppContent, VersionNumber } from './App.style';
 import { AppHeader } from './AppHeader';
 import Calculator from './Calculator';

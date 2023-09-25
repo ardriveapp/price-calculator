@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { ThemeDataType, themes, ThemeType } from 'src/themes';
 import { ThemeProvider } from 'styled-components';
 

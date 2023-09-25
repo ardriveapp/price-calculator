@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import DocIcon from '../components/icons/DocIcon';
 import MovIcon from '../components/icons/MovIcon';
 import Mp3Icon from '../components/icons/Mp3Icon';

@@ -1,15 +1,11 @@
 import * as React from 'react';
+import { JSX } from 'react';
 import TextBox from './TextBox';
 import FileComparison from './FileComparison';
 import { CalculatorContainer, DottedDivider } from './Calculator.style';
 import useCalculation from '../hooks/useCalculation';
 import { useStateValue } from '../state/state';
 import useFileComparisons from '../hooks/useFileComparisons';
-
-export interface FileComparison {
-	fileIcon: JSX.Element;
-	comparisonText: string;
-}
 
 export default function Calculator(): JSX.Element {
 	const [{ unitBoxes, oracleErrors }] = useStateValue();

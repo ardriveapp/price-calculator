@@ -1,5 +1,11 @@
 import { ArDriveCommunityTip, W } from 'ardrive-core-js';
-import React, { createContext, Dispatch, useContext, useReducer } from 'react';
+import React, {
+	createContext,
+	Dispatch,
+	useContext,
+	useReducer,
+	JSX
+} from 'react';
 import {
 	displayedByteUnitTypes,
 	displayedArUnitTypes,
@@ -41,8 +47,16 @@ const initialState: State = {
 	/** Unit boxes display only 1 GiB by default, other values to be filled in on first calculation */
 	unitBoxes: {
 		bytes: { value: 1, currUnit: 'GB', units: displayedByteUnitTypes },
-		fiat: { value: doNotRenderValue, currUnit: 'USD', units: displayedFiatUnitTypes },
-		ar: { value: doNotRenderValue, currUnit: 'AR', units: displayedArUnitTypes }
+		fiat: {
+			value: doNotRenderValue,
+			currUnit: 'USD',
+			units: displayedFiatUnitTypes
+		},
+		ar: {
+			value: doNotRenderValue,
+			currUnit: 'AR',
+			units: displayedArUnitTypes
+		}
 	},
 
 	oracleErrors: {
@@ -52,7 +66,10 @@ const initialState: State = {
 };
 
 /** Create a context with initial state, and a dispatch function */
-const StateContext = createContext<[State, Dispatch<Action>]>([initialState, () => initialState]);
+const StateContext = createContext<[State, Dispatch<Action>]>([
+	initialState,
+	() => initialState
+]);
 
 /**
  *  Export easy to use context hook
@@ -61,7 +78,8 @@ const StateContext = createContext<[State, Dispatch<Action>]>([initialState, () 
  *  const [{ arDriveCommunityTip }, dispatch] = useStateValue()
  *  dispatch({ type: 'setArDriveCommunityTip', payload: arDriveCommTipFromContract })
  */
-export const useStateValue = (): [State, Dispatch<Action>] => useContext(StateContext);
+export const useStateValue = (): [State, Dispatch<Action>] =>
+	useContext(StateContext);
 
 type StateProviderProps = {
 	reducer: React.Reducer<State, Action>;
@@ -69,7 +87,14 @@ type StateProviderProps = {
 };
 
 /** Create provider to wrap app in */
-export default function StateProvider({ reducer, children }: StateProviderProps): JSX.Element {
+export default function StateProvider({
+	reducer,
+	children
+}: StateProviderProps): JSX.Element {
 	const [state, dispatch] = useReducer(reducer, initialState);
-	return <StateContext.Provider value={[state, dispatch]}>{children}</StateContext.Provider>;
+	return (
+		<StateContext.Provider value={[state, dispatch]}>
+			{children}
+		</StateContext.Provider>
+	);
 }

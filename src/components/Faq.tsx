@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { JSX, useState } from 'react';
 import Expandable from './Expandable';
 import { faqQuestionsAnswers } from './Faq.content';
 import { FaqContainer } from './Faq.style';

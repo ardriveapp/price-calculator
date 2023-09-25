@@ -1,13 +1,12 @@
+import { JSX, useState } from 'react';
 import * as React from 'react';
-import { TextBoxContainer, TextBoxInput } from './TextBox.style';
+import { TextBoxContainer, TextBoxInput, ErrorMessage } from './TextBox.style';
 import CurrentUnit from './CurrentUnit';
 import type { UnitBoxes } from '../types';
 import { useStateValue } from '../state/state';
 import { getSpokenWord } from '../utils/get_spoken_word';
 import useDebounce from '../hooks/useDebounce';
-import { useState } from 'react';
 import isValidInput, { validInputRegExp } from '../utils/valid_input_reg_exp';
-import { ErrorMessage } from './TextBox.style';
 
 const decimalLimits = { fiat: 8, bytes: 6, ar: 12 };
 const pricingOracleError =

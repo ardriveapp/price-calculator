@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { StyledHeader } from './AppHeader.style';
 import { HomePageLogo } from './HomePageLogo';
 

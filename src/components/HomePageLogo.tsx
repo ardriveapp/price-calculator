@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { ThemeDataType, ThemeType } from 'src/themes';
 import { useTheme } from 'styled-components';
 import { LogoContainer } from './HomePageLogo.style';

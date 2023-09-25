@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { JSX, useState, useRef } from 'react';
 import { ExpandableTrailingIcon } from './Expandable.style';
 
 import {
