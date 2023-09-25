@@ -6,6 +6,7 @@ export const FileComparisonContainer = styled.div`
 	transform: translate(-1rem);
 	letter-spacing: 0.82px;
 	font-size: 14px;
+	color: ${(p) => p.theme.current.textColor};
 
 	@media (min-width: 640px) {
 		font-size: 16px;
