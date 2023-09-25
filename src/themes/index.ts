@@ -21,6 +21,7 @@ export type AppTheme = {
 	boxShadowSelected: string;
 	dividerColor: string;
 	dottedDividerBckgroundImage: string;
+	dropdownHoverColor: string;
 	textColor: string;
 };
 

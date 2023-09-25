@@ -10,5 +10,6 @@ export default {
 	dividerColor: '#9E9E9E',
 	dottedDividerBckgroundImage:
 		'linear-gradient(transparent 17%, rgba(255, 255, 255, 0) 0%)',
+	dropdownHoverColor: '#d8d8d8',
 	textColor: '#000000'
 } as AppTheme;
