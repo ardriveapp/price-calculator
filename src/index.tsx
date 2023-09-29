@@ -6,7 +6,7 @@ import * as ReactDOM from 'react-dom';
 import App from './components/App';
 import StateProvider from './state/state';
 import { reducer } from './state/reducer';
-import { AppThemeProvider } from './components/theme_provider';
+import { AppThemeProvider } from './components/ThemeProvider';
 import { Root } from './components/Root.style';
 
 ReactDOM.render(
