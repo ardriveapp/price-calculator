@@ -11,9 +11,6 @@ export function AppThemeProvider({
 }): JSX.Element {
 	const themeName: ThemeType = getThemeName();
 	const themeData: ThemeDataType = getThemeData(themeName);
-	const isEmbedded = themeData.isEmbedded;
-
-	console.log(`Using theme: ${themeName} - isEmbedded: ${isEmbedded}`);
 
 	return <ThemeProvider theme={themeData}>{children}</ThemeProvider>;
 }
