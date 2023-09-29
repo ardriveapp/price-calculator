@@ -2,6 +2,8 @@ import { JSX } from 'react';
 import { ThemeDataType, themes, ThemeType } from 'src/themes';
 import { ThemeProvider } from 'styled-components';
 
+const TRUE_STRING = 'TRUE';
+
 export function AppThemeProvider({
 	children
 }: {
@@ -35,6 +37,6 @@ function getThemeData(themeName: ThemeType): ThemeDataType {
 
 function getIsEmbedded(): boolean {
 	const searchParams = new URLSearchParams(window.location.search);
-	const isEmbedded = searchParams.get('embedded');
-	return isEmbedded === 'true' || isEmbedded === 'YAS';
+	const isEmbedded = searchParams.get('embedded')?.toUpperCase();
+	return isEmbedded === TRUE_STRING;
 }
