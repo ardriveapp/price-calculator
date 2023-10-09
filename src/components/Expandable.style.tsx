@@ -6,7 +6,7 @@ export const ExpandableContainer = styled.div`
 
 	:not(:last-of-type) {
 		border-bottom: 0.25px;
-		border-color: #121212;
+		border-color: ${(p) => p.theme.current.dividerColor};
 		border-bottom-style: solid;
 	}
 
@@ -27,6 +27,7 @@ export const ExpandableTitle = styled.button<{ expanded: boolean }>`
 	text-align: left;
 	letter-spacing: 1.09px;
 	font-family: ${(p) => (p.expanded ? 'Wavehaus-Semi' : 'Wavehaus-Book')};
+	color: ${(p) => p.theme.current.textColor};
 `;
 
 export const flipIcon = css`

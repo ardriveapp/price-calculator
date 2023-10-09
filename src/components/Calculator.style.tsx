@@ -18,7 +18,11 @@ export const DottedDivider = styled.div<{ dataToARError: boolean }>`
 	justify-content: space-evenly;
 	flex-direction: column;
 
-	${(p) => p.dataToARError && { backgroundImage: 'linear-gradient(transparent 17%, rgba(255, 255, 255, 0) 0%)' }}
+	${(p) =>
+		p.dataToARError && {
+			backgroundImage:
+				'linear-gradient(transparent 17%, rgba(255, 255, 255, 0) 0%)'
+		}}
 
 	@media (min-width: 800px) {
 		margin-left: 4rem;

@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import * as React from 'react';
 
 export default function Mp3Icon(): JSX.Element {
@@ -9,10 +10,24 @@ export default function Mp3Icon(): JSX.Element {
 			viewBox="0.5 0.98 85 90"
 		>
 			<title>Mp3 Icon</title>
-			<g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+			<g
+				id="Page-1"
+				stroke="none"
+				strokeWidth="1"
+				fill="none"
+				fillRule="evenodd"
+			>
 				<g id="Artboard" transform="translate(-72.000000, -710.000000)">
-					<g id="Group-13" transform="translate(75.000000, 713.476190)">
-						<g id="Group-2" transform="translate(19.000000, 23.285998)" fill="#121212" fillRule="nonzero">
+					<g
+						id="Group-13"
+						transform="translate(75.000000, 713.476190)"
+					>
+						<g
+							id="Group-2"
+							transform="translate(19.000000, 23.285998)"
+							fill="currentColor"
+							fillRule="nonzero"
+						>
 							<path
 								d="M8.5,40.4761905 C3.80557963,40.4761905 0,36.6253063 0,31.875 C0,27.1246937 3.80557963,23.2738095 8.5,23.2738095 C13.1944204,23.2738095 17,27.1246937 17,31.875 C17,36.6253063 13.1944204,40.4761905 8.5,40.4761905 Z M8.5,27.4238839 C6.15278981,27.4238839 4.25,29.349326 4.25,31.7244792 C4.25,34.0996323 6.15278981,36.0250744 8.5,36.0250744 C10.8472102,36.0250744 12.75,34.0996323 12.75,31.7244792 C12.75,29.349326 10.8472102,27.4238839 8.5,27.4238839 Z"
 								id="Shape"
@@ -28,7 +43,7 @@ export default function Mp3Icon(): JSX.Element {
 						</g>
 						<rect
 							id="Rectangle"
-							stroke="#121212"
+							stroke="currentColor"
 							strokeWidth="5"
 							x="0"
 							y="0"

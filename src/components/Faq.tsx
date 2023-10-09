@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { JSX, useState } from 'react';
 import Expandable from './Expandable';
 import { faqQuestionsAnswers } from './Faq.content';
 import { FaqContainer } from './Faq.style';
@@ -15,7 +15,11 @@ export default function Faq(): JSX.Element {
 					question={qa.question}
 					answer={qa.answer}
 					expanded={index === expanded}
-					setExpanded={() => (index === expanded ? setExpanded(undefined) : setExpanded(index))}
+					setExpanded={() =>
+						index === expanded
+							? setExpanded(undefined)
+							: setExpanded(index)
+					}
 				></Expandable>
 			))}
 		</FaqContainer>

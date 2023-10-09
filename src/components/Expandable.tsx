@@ -1,5 +1,10 @@
+import { JSX } from 'react';
 import * as React from 'react';
-import { ExpandableContainer, ExpandableTitle, ExpandableTrailingIcon } from './Expandable.style';
+import {
+	ExpandableContainer,
+	ExpandableTitle,
+	ExpandableTrailingIcon
+} from './Expandable.style';
 import UpArrowIcon from './icons/UpArrowIcon';
 
 interface ExpandableProps {
@@ -9,15 +14,24 @@ interface ExpandableProps {
 	setExpanded: () => void;
 }
 
-export default function Expandable({ question, answer, expanded, setExpanded }: ExpandableProps): JSX.Element {
+export default function Expandable({
+	question,
+	answer,
+	expanded,
+	setExpanded
+}: ExpandableProps): JSX.Element {
 	return (
 		<ExpandableContainer>
-			<ExpandableTitle aria-label={question} onClick={() => setExpanded()} expanded={expanded}>
+			<ExpandableTitle
+				aria-label={question}
+				onClick={() => setExpanded()}
+				expanded={expanded}
+			>
 				<h3>{question}</h3>
 				<ExpandableTrailingIcon expanded={expanded}>
 					<UpArrowIcon />
 				</ExpandableTrailingIcon>
-			</ExpandableTitle>{' '}
+			</ExpandableTitle>
 			{expanded && <>{answer}</>}
 		</ExpandableContainer>
 	);

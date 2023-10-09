@@ -6,6 +6,7 @@ export const FileComparisonContainer = styled.div`
 	transform: translate(-1rem);
 	letter-spacing: 0.82px;
 	font-size: 14px;
+	color: ${(p) => p.theme.current.textColor};
 
 	@media (min-width: 640px) {
 		font-size: 16px;
@@ -32,6 +33,7 @@ export const FileComparisonTypeIconContainer = styled.div`
 	justify-content: center;
 	margin-right: 1rem;
 	border-radius: 4px;
-	background-color: #fafafa;
-	box-shadow: 0 0 10px 5px rgba(213, 213, 213, 0.5);
+	background-color: ${(p) => p.theme.current.backgroundColor};
+	box-shadow: ${(p) => p.theme.current.boxShadow};
+	color: ${(p) => p.theme.current.textColor};
 `;
