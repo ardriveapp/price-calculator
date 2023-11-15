@@ -42,35 +42,44 @@ describe('The CoinGeckoTokenToFiatOracle class', () => {
 
 	describe('getQueryRequestUrl function', () => {
 		it('generates the correct URL', async () => {
-			expect(coingeckoOracle.getQueryRequestUrl('arweave', ['usd', 'btc'])).to.equal(
+			expect(
+				coingeckoOracle.getQueryRequestUrl('arweave', ['usd', 'btc'])
+			).to.equal(
 				'https://api.coingecko.com/api/v3/simple/price?ids=arweave&vs_currencies=usd%2Cbtc'
 			);
 		});
 
 		it('throws an error when no fiats are provided', async () => {
-			expect(() => coingeckoOracle.getQueryRequestUrl('arweave', [])).to.throw(Error);
+			expect(() =>
+				coingeckoOracle.getQueryRequestUrl('arweave', [])
+			).to.throw(Error);
 		});
 	});
 
 	describe('getFiatRatesForToken function', () => {
 		it('returns the expected response after a single fetch', async () => {
-			expect(await coingeckoOracle.getFiatRatesForToken(token, [fiat])).to.deep.equal([
+			expect(
+				await coingeckoOracle.getFiatRatesForToken(token, [fiat])
+			).to.deep.equal([
 				new TokenFiatRate(token, fiat, examplePriceValue)
 			]);
 			expect(stubbedFetcher.fetch.callCount).to.equal(1);
 		});
 
 		it('throws an error when no fiats are provided', async () => {
-			expect(coingeckoOracle.getFiatRatesForToken(token, [])).to.be.rejected;
+			expect(coingeckoOracle.getFiatRatesForToken(token, [])).to.be
+				.rejected;
 			expect(stubbedFetcher.fetch.callCount).to.equal(0);
 		});
 	});
 
 	describe('getPriceForFiatTokenPair function', () => {
 		it('returns the expected response after a single fetch', async () => {
-			expect(await coingeckoOracle.getPriceForFiatTokenPair(new TokenFiatPair(token, fiat))).to.deep.equal(
-				new TokenFiatRate(token, fiat, examplePriceValue)
-			);
+			expect(
+				await coingeckoOracle.getPriceForFiatTokenPair(
+					new TokenFiatPair(token, fiat)
+				)
+			).to.deep.equal(new TokenFiatRate(token, fiat, examplePriceValue));
 			expect(stubbedFetcher.fetch.callCount).to.equal(1);
 		});
 	});

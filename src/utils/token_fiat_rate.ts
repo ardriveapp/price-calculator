@@ -13,10 +13,16 @@ export class TokenFiatRate extends TokenFiatPair {
 	 * @returns {TokenFiatRate} an instance with the given pair
 	 * @throws {@link Error} if negative values are provided for the conversion rate
 	 */
-	constructor(readonly token: TokenID, readonly fiat: FiatID, readonly fiatPerTokenRate: number) {
+	constructor(
+		readonly token: TokenID,
+		readonly fiat: FiatID,
+		readonly fiatPerTokenRate: number
+	) {
 		super(token, fiat);
 		if (fiatPerTokenRate < 0) {
-			throw new Error(`rate (${fiatPerTokenRate}) must be a non-negative number value.`);
+			throw new Error(
+				`rate (${fiatPerTokenRate}) must be a non-negative number value.`
+			);
 		}
 	}
 }
