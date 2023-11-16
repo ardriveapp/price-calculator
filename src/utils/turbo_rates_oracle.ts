@@ -1,7 +1,13 @@
-import { TurboFactory, TurboRatesResponse } from '@ardrive/turbo-sdk';
+import {
+	TurboFactory,
+	TurboRatesResponse,
+	TurboUnauthenticatedClient
+} from '@ardrive/turbo-sdk';
 
 export class TurboRatesOracle implements RatesOracle {
-	private turbo = TurboFactory.unauthenticated();
+	constructor(
+		private turbo: TurboUnauthenticatedClient = TurboFactory.unauthenticated()
+	) {}
 
 	public async getTurboRates(): Promise<TurboRatesResponse> {
 		return this.turbo.getFiatRates();
