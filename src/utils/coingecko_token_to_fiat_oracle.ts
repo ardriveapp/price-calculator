@@ -31,11 +31,15 @@ const COMMA_SEPARATOR = ',';
 export class CoinGeckoTokenToFiatOracle implements FiatOracle {
 	constructor(private readonly fetcher: Fetcher = new JSFetcher()) {}
 
-	public async getFiatRatesForToken(token: TokenID, fiats: FiatID[]): Promise<TokenFiatRate[]> {
+	public async getFiatRatesForToken(
+		token: TokenID,
+		fiats: FiatID[]
+	): Promise<TokenFiatRate[]> {
 		const allRates: TokenFiatRate[] = [];
 		const queryUrl = this.getQueryRequestUrl(token, fiats);
 		const fetchResponse = await this.fetcher.fetch(queryUrl);
-		const responseData: { [t in TokenID]: { [f in FiatID]: number } } = await fetchResponse.json();
+		const responseData: { [t in TokenID]: { [f in FiatID]: number } } =
+			await fetchResponse.json();
 		(Object.keys(responseData) as TokenID[]).forEach((token) => {
 			const fiats = responseData[token];
 			(Object.keys(fiats) as FiatID[]).forEach((fiat) => {
@@ -50,7 +54,9 @@ export class CoinGeckoTokenToFiatOracle implements FiatOracle {
 	 * @param {TokenFiatPair} pair The specific pair you want to query
 	 * @returns {Promise<TokenToFiatPrice>} The cached price value
 	 */
-	public async getPriceForFiatTokenPair(pair: TokenFiatPair): Promise<TokenFiatRate> {
+	public async getPriceForFiatTokenPair(
+		pair: TokenFiatPair
+	): Promise<TokenFiatRate> {
 		const rates = await this.getFiatRatesForToken(pair.token, [pair.fiat]);
 		return rates[0];
 	}

@@ -68,5 +68,6 @@ export const currencyIDs = [
  *   -H 'accept: application/json'
  */
 
-export type TokenID = 'arweave' | 'credits' | typeof currencyIDs[number];
-export type FiatID = typeof currencyIDs[number];
+import { Currency } from '@ardrive/turbo-sdk';
+export type TokenID = 'arweave' | 'credits' | (typeof currencyIDs)[number];
+export type FiatID = (typeof currencyIDs)[number] | Currency;

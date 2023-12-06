@@ -1,58 +1,49 @@
 import chai, { expect } from 'chai';
+import sinon from 'sinon';
 import chaiAsPromised from 'chai-as-promised';
-import { SinonStubbedInstance, stub } from 'sinon';
-import type { FiatID } from './fiat_oracle_types';
 import { TurboRatesOracle } from './turbo_rates_oracle';
-import { TurboRates } from './turbo_rates';
-import { Fetcher, JSFetcher } from './fetcher';
 import { beforeEach, describe, it } from 'vitest';
+import {
+	TurboUnauthenticatedClient,
+	TurboRatesResponse
+} from '@ardrive/turbo-sdk';
+
+const turboStubbedResponse: TurboRatesResponse = {
+	winc: '10000',
+	fiat: {
+		aud: 10.123,
+		brl: 10.123,
+		cad: 10.123,
+		eur: 10.123,
+		gbp: 10.123,
+		hkd: 10.123,
+		inr: 10.123,
+		jpy: 10.123,
+		sgd: 10.123,
+		usd: 10.123
+	},
+	adjustments: []
+};
 
 chai.use(chaiAsPromised);
 
-const fiat: FiatID = 'usd';
-const examplePriceValue = 15.05;
-
-const turboRatesResponseSample = `{
-	"winc": 1,
-	"fiat": {
-		"${fiat}": ${examplePriceValue}
-	}
-}`;
-
-const myCustomResponse: Response = {
-	async json(): Promise<string> {
-		return JSON.parse(turboRatesResponseSample);
-	}
-} as Response;
-
 describe('The TurboRatesOracle class', () => {
-	let stubbedFetcher: SinonStubbedInstance<Fetcher>;
 	let turboRatesOracle: TurboRatesOracle;
+	let turboSpy: TurboUnauthenticatedClient;
 
 	beforeEach(() => {
-		stubbedFetcher = stub(new JSFetcher());
-		stubbedFetcher.fetch.callsFake(async () => myCustomResponse);
-		turboRatesOracle = new TurboRatesOracle(stubbedFetcher);
-	});
-
-	it('does not perform a fetch when oracle is initialized', () => {
-		expect(stubbedFetcher.fetch.callCount).to.equal(0);
-	});
-
-	describe('getQueryRequestUrl function', () => {
-		it('generates the correct URL', async () => {
-			expect(turboRatesOracle.getQueryRequestUrl()).to.equal('https://payment.ardrive.dev/v1/rates');
+		turboSpy = sinon.createStubInstance(TurboUnauthenticatedClient, {
+			getFiatRates: Promise.resolve(turboStubbedResponse)
 		});
+		turboRatesOracle = new TurboRatesOracle(turboSpy);
 	});
 
 	describe('getFiatRatesForToken function', () => {
-		it('returns the expected response after a single fetch', async () => {
-			expect(await turboRatesOracle.getTurboRates()).to.deep.equal(
-				new TurboRates(1, {
-					[fiat]: examplePriceValue
-				})
-			);
-			expect(stubbedFetcher.fetch.callCount).to.equal(1);
+		it('returns the expected response from turbo', async () => {
+			const rates = await turboRatesOracle.getTurboRates();
+			expect(rates).to.deep.equal(turboStubbedResponse);
+			expect((turboSpy.getFiatRates as sinon.SinonStub).calledOnce).to.be
+				.true;
 		});
 	});
 });

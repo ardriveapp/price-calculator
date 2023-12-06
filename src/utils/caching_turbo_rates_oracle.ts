@@ -1,14 +1,13 @@
 import { RatesOracle, TurboRatesOracle } from './turbo_rates_oracle';
-import type { TurboRates } from './turbo_rates';
 import type { FiatOracle } from './fiat_oracle';
 import type { FiatID, TokenID } from './fiat_oracle_types';
 import type { TokenFiatPair } from './token_fiat_pair';
 import { TokenFiatRate } from './token_fiat_rate';
-
+import { TurboRatesResponse, Currency } from '@ardrive/turbo-sdk';
 const pollingIntervalMilliseconds = 1000 * 60 * 15; // 15 min
 
 export class CachingTurboRatesOracle implements FiatOracle {
-	private cachedRate: TurboRates | undefined = undefined;
+	private cachedRate: TurboRatesResponse | undefined = undefined;
 	private cacheTimestamp = 0;
 	private syncPromise?: Promise<void>;
 
@@ -22,10 +21,10 @@ export class CachingTurboRatesOracle implements FiatOracle {
 			throw new Error('Only credits are supported');
 		}
 
-		return this.getTurboRates().then((turboRates) => {
-			const winstonForOneGiB = turboRates.winc;
+		return this.getTurboRates().then((turboRates: TurboRatesResponse) => {
+			const winstonForOneGiB = +turboRates.winc;
 			const arForOneGiB = winstonForOneGiB / 1e12;
-			const fiatPerOneGiB = turboRates.fiat[pair.fiat];
+			const fiatPerOneGiB = turboRates.fiat[pair.fiat as Currency];
 			const fiatPerOneAR = fiatPerOneGiB / arForOneGiB;
 
 			return new TokenFiatRate(pair.token, pair.fiat, fiatPerOneAR);
@@ -34,7 +33,9 @@ export class CachingTurboRatesOracle implements FiatOracle {
 
 	getSupportedCurrencyIDs(): FiatID[] {
 		if (!this.cachedRate) {
-			throw new Error("Can't get supported currency IDs without cached rate");
+			throw new Error(
+				"Can't get supported currency IDs without cached rate"
+			);
 		}
 
 		return Object.keys(this.cachedRate.fiat) as FiatID[];
@@ -43,7 +44,7 @@ export class CachingTurboRatesOracle implements FiatOracle {
 	// Function to get the byte count for a given winc value
 	public getByteCountForWinc(wincValue: number): number {
 		// Calculate the byte count using the known conversion factor (1 GiB in bytes)
-		const byteCountPerGiB = this.cachedRate!.winc;
+		const byteCountPerGiB = +this.cachedRate!.winc;
 
 		return (wincValue / byteCountPerGiB) * 1_073_741_824;
 	}
@@ -58,7 +59,10 @@ export class CachingTurboRatesOracle implements FiatOracle {
 		return wincValue / 1_000_000_000_000;
 	}
 
-	async getFiatRatesForToken(token: TokenID, fiats: FiatID[]): Promise<TokenFiatRate[]> {
+	async getFiatRatesForToken(
+		token: TokenID,
+		fiats: FiatID[]
+	): Promise<TokenFiatRate[]> {
 		await this.checkCache();
 
 		if (token !== 'credits') {
@@ -69,9 +73,9 @@ export class CachingTurboRatesOracle implements FiatOracle {
 		}
 		const tokenFiatRates: TokenFiatRate[] = [];
 		for (const fiat of fiats) {
-			const winstonForOneGiB = this.cachedRate.winc;
+			const winstonForOneGiB = +this.cachedRate.winc;
 			const arForOneGiB = winstonForOneGiB / 1e12;
-			const fiatPerOneGiB = this.cachedRate.fiat[fiat];
+			const fiatPerOneGiB = +this.cachedRate.fiat[fiat as Currency];
 			const fiatPerOneAR = fiatPerOneGiB / arForOneGiB;
 
 			tokenFiatRates.push(new TokenFiatRate(token, fiat, fiatPerOneAR));
@@ -91,12 +95,14 @@ export class CachingTurboRatesOracle implements FiatOracle {
 	private get shouldRefreshCacheData(): boolean {
 		const currentTimestamp = Date.now();
 		const deltaTimestamp = currentTimestamp - this.cacheTimestamp;
-		return this.cacheTimestamp === 0 || deltaTimestamp >= this.cacheLifespan;
+		return (
+			this.cacheTimestamp === 0 || deltaTimestamp >= this.cacheLifespan
+		);
 	}
 
-	public async getTurboRates(): Promise<TurboRates> {
+	public async getTurboRates(): Promise<TurboRatesResponse> {
 		await this.checkCache();
-		return this.cachedRate as TurboRates;
+		return this.cachedRate as TurboRatesResponse;
 	}
 
 	private async checkCache(): Promise<void> {
